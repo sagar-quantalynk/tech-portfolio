@@ -893,6 +893,394 @@ body::after {
   .header-meta { justify-content: flex-start; }
   .meta-block { text-align: left; }
 }
+
+/* ─── SYSTEM SNAPSHOT (HERO) ─── */
+.system-snapshot {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px 48px 40px;
+  margin-bottom: 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.system-snapshot::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--blue), transparent);
+}
+
+.system-snapshot::after {
+  content: '';
+  position: absolute;
+  top: -60%; right: -20%;
+  width: 60%; height: 120%;
+  background: radial-gradient(ellipse, rgba(91, 160, 224, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.snapshot-category {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--blue);
+  margin-bottom: 12px;
+}
+
+.snapshot-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 42px;
+  font-weight: 400;
+  color: var(--cream);
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+  line-height: 1.1;
+}
+
+.snapshot-purpose {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 800px;
+  margin-bottom: 28px;
+}
+
+.snapshot-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.snapshot-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  letter-spacing: 0.3px;
+}
+
+.snapshot-outcome {
+  background: rgba(94, 189, 115, 0.06);
+  border: 1px solid rgba(94, 189, 115, 0.15);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.snapshot-outcome-dot {
+  width: 8px; height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(94, 189, 115, 0.4);
+}
+
+.snapshot-outcome-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--green);
+  letter-spacing: 0.3px;
+}
+
+/* ─── PROBLEM → SOLUTION → OUTCOME ─── */
+.pso-section { margin-bottom: 48px; }
+
+.pso-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.pso-card {
+  background: var(--surface-1);
+  padding: 32px 28px;
+  transition: background 0.3s;
+}
+
+.pso-card:hover { background: var(--surface-2); }
+
+.pso-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pso-label .pso-num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.pso-card:nth-child(1) .pso-label { color: var(--red); }
+.pso-card:nth-child(1) .pso-num { background: rgba(224, 91, 91, 0.12); color: var(--red); }
+.pso-card:nth-child(2) .pso-label { color: var(--blue); }
+.pso-card:nth-child(2) .pso-num { background: rgba(91, 160, 224, 0.12); color: var(--blue); }
+.pso-card:nth-child(3) .pso-label { color: var(--green); }
+.pso-card:nth-child(3) .pso-num { background: rgba(94, 189, 115, 0.12); color: var(--green); }
+
+.pso-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+/* ─── KEY ENGINEERING DECISIONS ─── */
+.decisions-section { margin-bottom: 48px; }
+.decisions-section .layer-header { margin-bottom: 20px; }
+
+.decisions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.decision-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 18px;
+  border-left: 2px solid var(--blue-dim);
+  transition: all 0.3s;
+}
+
+.decision-card:hover {
+  border-color: var(--border-hover);
+  border-left-color: var(--blue);
+  background: var(--surface-2);
+  transform: translateY(-2px);
+}
+
+.decision-card .decision-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.decision-card .decision-why {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+/* ─── PLATFORM METRICS ─── */
+.metrics-bar {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+
+.metric-cell {
+  background: var(--surface-1);
+  padding: 28px 16px;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.metric-cell:hover { background: var(--surface-2); }
+
+.metric-number {
+  font-family: 'Instrument Serif', serif;
+  font-size: 40px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.metric-number.gold { color: var(--gold); }
+.metric-number.blue { color: var(--blue); }
+.metric-number.green { color: var(--green); }
+.metric-number.purple { color: var(--purple); }
+.metric-number.orange { color: var(--orange); }
+
+.metric-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* ─── MY ROLE ─── */
+.role-section { margin-bottom: 56px; }
+
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.role-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: all 0.3s;
+}
+
+.role-card:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-2);
+}
+
+.role-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.role-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ─── NAVIGATION ─── */
+.nav-section { margin-top: 56px; margin-bottom: 0; }
+.nav-section .layer-header { margin-bottom: 20px; }
+
+.nav-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.nav-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 22px;
+  text-decoration: none;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  display: block;
+  position: relative;
+}
+
+.nav-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: transparent;
+  transition: background 0.35s;
+}
+
+.nav-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.nav-card:hover::before {
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+.nav-card-arrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--gold-dim);
+  margin-bottom: 10px;
+  transition: transform 0.3s, color 0.3s;
+}
+
+.nav-card:hover .nav-card-arrow {
+  transform: translateX(4px);
+  color: var(--gold);
+}
+
+.nav-card-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.nav-card-desc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+}
+
+.nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  padding: 10px 18px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  transition: all 0.3s;
+}
+
+.nav-back:hover {
+  color: var(--gold);
+  border-color: var(--gold-dim);
+  background: rgba(232, 185, 49, 0.05);
+}
+
+/* ─── RESPONSIVE (new sections) ─── */
+@media (max-width: 1200px) {
+  .decisions-grid { grid-template-columns: repeat(2, 1fr); }
+  .pso-grid { grid-template-columns: 1fr; }
+  .metrics-bar { grid-template-columns: repeat(3, 1fr); }
+  .role-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .system-snapshot { padding: 32px 24px; }
+  .snapshot-title { font-size: 28px; }
+  .decisions-grid { grid-template-columns: 1fr; }
+  .metrics-bar { grid-template-columns: repeat(2, 1fr); }
+  .role-grid { grid-template-columns: 1fr; }
+  .nav-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
@@ -925,6 +1313,141 @@ body::after {
       </div>
     </div>
   </header>
+
+  <!-- SYSTEM SNAPSHOT (HERO) -->
+  <div class="system-snapshot animate-in delay-1">
+    <div class="snapshot-category">Immigration Workflow Management Platform</div>
+    <div class="snapshot-title">Relokate HR</div>
+    <div class="snapshot-purpose">Immigration &amp; relocation management for companies bringing employees to Germany</div>
+    <div class="snapshot-meta-row">
+      <span class="snapshot-chip">NestJS 8</span>
+      <span class="snapshot-chip">Next.js 12</span>
+      <span class="snapshot-chip">MongoDB</span>
+      <span class="snapshot-chip">Auth0</span>
+      <span class="snapshot-chip">Stripe</span>
+      <span class="snapshot-chip">AWS S3</span>
+    </div>
+    <div class="snapshot-meta-row">
+      <span class="snapshot-chip">25 API Modules</span>
+      <span class="snapshot-chip">14 Database Models</span>
+      <span class="snapshot-chip">3 Visa Workflow Types</span>
+      <span class="snapshot-chip">4-Role RBAC</span>
+    </div>
+    <div class="snapshot-outcome">
+      <div class="snapshot-outcome-dot"></div>
+      <div class="snapshot-outcome-text">Streamlined visa processing with credit-based billing and multi-role access control</div>
+    </div>
+  </div>
+
+  <!-- PROBLEM / SOLUTION / OUTCOME -->
+  <div class="pso-section animate-in delay-2">
+    <div class="pso-grid">
+      <div class="pso-card">
+        <div class="pso-label"><span class="pso-num">1</span>Problem</div>
+        <div class="pso-text">Companies relocating employees to Germany face complex visa workflows, document management, and compliance tracking across HR teams, employees, and immigration consultants</div>
+      </div>
+      <div class="pso-card">
+        <div class="pso-label"><span class="pso-num">2</span>Solution</div>
+        <div class="pso-text">Built workflow management platform with 3 relocation service types (Non-EU 19 steps, EU 11 steps, Other 10 steps), dual-database strategy (MongoDB for cases, MySQL for templates), Auth0 SSO, Stripe credit system (ReloCoins), and 4-role RBAC</div>
+      </div>
+      <div class="pso-card">
+        <div class="pso-label"><span class="pso-num">3</span>Outcome</div>
+        <div class="pso-text">25 API modules, automated workflow tracking, credit-based billing reducing payment friction</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY ENGINEERING DECISIONS -->
+  <div class="decisions-section animate-in delay-2">
+    <div class="layer-header">
+      <div class="layer-title">Key Engineering Decisions</div>
+      <div class="layer-line"></div>
+    </div>
+    <div class="decisions-grid">
+      <div class="decision-card">
+        <div class="decision-text">Dual ORM strategy: Typegoose (MongoDB) for dynamic case data + TypeORM (MySQL) for structured templates</div>
+        <div class="decision-why">Schema flexibility vs. structure</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-text">Auth0 JWT for enterprise SSO integration</div>
+        <div class="decision-why">Enterprise auth delegation</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-text">Credit-based billing (ReloCoins via Stripe) instead of per-transaction payments</div>
+        <div class="decision-why">Reduced payment friction</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-text">Multi-tenant company scoping for data isolation</div>
+        <div class="decision-why">Enterprise data security</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-text">3 distinct visa workflow types with step-by-step progression tracking</div>
+        <div class="decision-why">Domain-driven workflow engine</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-text">Soft-delete audit trail for compliance documentation</div>
+        <div class="decision-why">Regulatory compliance</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-text">Event-driven notifications for workflow state transitions</div>
+        <div class="decision-why">Workflow automation</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLATFORM METRICS -->
+  <div class="metrics-bar animate-in delay-2">
+    <div class="metric-cell">
+      <div class="metric-number gold">25</div>
+      <div class="metric-label">Modules</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-number blue">14</div>
+      <div class="metric-label">Models</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-number purple">3</div>
+      <div class="metric-label">Workflow<br>Types</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-number orange">46</div>
+      <div class="metric-label">Pages</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-number green">92</div>
+      <div class="metric-label">Components</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-number gold">44</div>
+      <div class="metric-label">Shared<br>Components</div>
+    </div>
+  </div>
+
+  <!-- MY ROLE -->
+  <div class="role-section animate-in delay-2">
+    <div class="layer-header">
+      <div class="layer-title">My Role</div>
+      <div class="layer-line"></div>
+    </div>
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="role-dot" style="background: var(--gold);"></div>
+        <div class="role-text">System architecture</div>
+      </div>
+      <div class="role-card">
+        <div class="role-dot" style="background: var(--blue);"></div>
+        <div class="role-text">Dual-database strategy</div>
+      </div>
+      <div class="role-card">
+        <div class="role-dot" style="background: var(--purple);"></div>
+        <div class="role-text">Auth0 integration</div>
+      </div>
+      <div class="role-card">
+        <div class="role-dot" style="background: var(--green);"></div>
+        <div class="role-text">Workflow engine design</div>
+      </div>
+    </div>
+  </div>
 
   <!-- STATS BAR -->
   <div class="stats-bar animate-in delay-1">
@@ -1738,6 +2261,47 @@ body::after {
         <div class="ws-event">admin.relokatehr.quantalynk.com:3002</div>
       </div>
     </div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="nav-section animate-in">
+    <div class="layer-header">
+      <div class="layer-title">Explore Other Systems</div>
+      <div class="layer-line"></div>
+    </div>
+    <div class="nav-grid">
+      <a class="nav-card" href="platypus.html">
+        <div class="nav-card-arrow">&rarr;</div>
+        <div class="nav-card-name">Platypus</div>
+        <div class="nav-card-desc">Real-Time Dog Walking Marketplace</div>
+      </a>
+      <a class="nav-card" href="q-invoice.html">
+        <div class="nav-card-arrow">&rarr;</div>
+        <div class="nav-card-name">Q-Invoice</div>
+        <div class="nav-card-desc">Multi-Tenant Financial Billing Platform</div>
+      </a>
+      <a class="nav-card" href="billingzero.html">
+        <div class="nav-card-arrow">&rarr;</div>
+        <div class="nav-card-name">BillingZero</div>
+        <div class="nav-card-desc">Multi-Vendor Contract Billing Platform</div>
+      </a>
+      <a class="nav-card" href="satshrut.html">
+        <div class="nav-card-arrow">&rarr;</div>
+        <div class="nav-card-name">Satshrut</div>
+        <div class="nav-card-desc">Distributed Content &amp; Live Streaming Platform</div>
+      </a>
+      <a class="nav-card" href="q-studio.html">
+        <div class="nav-card-arrow">&rarr;</div>
+        <div class="nav-card-name">Q-Studio</div>
+        <div class="nav-card-desc">Coworking Space SaaS Platform</div>
+      </a>
+      <a class="nav-card" href="numerology.html">
+        <div class="nav-card-arrow">&rarr;</div>
+        <div class="nav-card-name">Numerology CMS</div>
+        <div class="nav-card-desc">AI-Enhanced Knowledge Platform</div>
+      </a>
+    </div>
+    <a class="nav-back" href="../index.html">&larr; Back to Portfolio</a>
   </div>
 
   <!-- FOOTER -->

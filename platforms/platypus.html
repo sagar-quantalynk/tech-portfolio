@@ -796,6 +796,422 @@ body::after {
 
 .footer-link:hover { color: var(--gold); }
 
+/* ─── SYSTEM SNAPSHOT (HERO) ─── */
+.system-snapshot {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px 48px 40px;
+  margin-bottom: 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.system-snapshot::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--blue), transparent);
+}
+
+.system-snapshot::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  right: -20%;
+  width: 60%;
+  height: 120%;
+  background: radial-gradient(ellipse, rgba(91, 160, 224, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.snapshot-category {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--blue);
+  margin-bottom: 12px;
+}
+
+.snapshot-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 42px;
+  font-weight: 400;
+  color: var(--cream);
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+  line-height: 1.1;
+}
+
+.snapshot-purpose {
+  font-size: 16px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 800px;
+  margin-bottom: 28px;
+}
+
+.snapshot-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.snapshot-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  letter-spacing: 0.3px;
+}
+
+.snapshot-outcome {
+  background: rgba(94, 189, 115, 0.06);
+  border: 1px solid rgba(94, 189, 115, 0.15);
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.snapshot-outcome-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(94, 189, 115, 0.4);
+}
+
+.snapshot-outcome-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--green);
+  letter-spacing: 0.3px;
+}
+
+/* ─── PROBLEM → SOLUTION → OUTCOME ─── */
+.pso-section {
+  margin-bottom: 48px;
+}
+
+.pso-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.pso-card {
+  background: var(--surface-1);
+  padding: 32px 28px;
+  transition: background 0.3s;
+}
+
+.pso-card:hover {
+  background: var(--surface-2);
+}
+
+.pso-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pso-label .pso-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.pso-card:nth-child(1) .pso-label { color: var(--red); }
+.pso-card:nth-child(1) .pso-num { background: rgba(224, 91, 91, 0.12); color: var(--red); }
+.pso-card:nth-child(2) .pso-label { color: var(--blue); }
+.pso-card:nth-child(2) .pso-num { background: rgba(91, 160, 224, 0.12); color: var(--blue); }
+.pso-card:nth-child(3) .pso-label { color: var(--green); }
+.pso-card:nth-child(3) .pso-num { background: rgba(94, 189, 115, 0.12); color: var(--green); }
+
+.pso-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+/* ─── KEY ENGINEERING DECISIONS ─── */
+.decisions-section {
+  margin-bottom: 48px;
+}
+
+.decisions-section .layer-header {
+  margin-bottom: 20px;
+}
+
+.decisions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.decision-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 18px;
+  border-left: 2px solid var(--blue-dim);
+  transition: all 0.3s;
+}
+
+.decision-card:hover {
+  border-color: var(--border-hover);
+  border-left-color: var(--blue);
+  background: var(--surface-2);
+  transform: translateY(-2px);
+}
+
+.decision-card .decision-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.decision-card .decision-why {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+/* ─── PLATFORM METRICS ─── */
+.metrics-bar {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+
+.metric-cell {
+  background: var(--surface-1);
+  padding: 28px 16px;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.metric-cell:hover {
+  background: var(--surface-2);
+}
+
+.metric-number {
+  font-family: 'Instrument Serif', serif;
+  font-size: 40px;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.metric-number.gold { color: var(--gold); }
+.metric-number.blue { color: var(--blue); }
+.metric-number.green { color: var(--green); }
+.metric-number.purple { color: var(--purple); }
+.metric-number.orange { color: var(--orange); }
+
+.metric-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* ─── MY ROLE ─── */
+.role-section {
+  margin-bottom: 56px;
+}
+
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.role-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: all 0.3s;
+}
+
+.role-card:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-2);
+}
+
+.role-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.role-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ─── NAVIGATION ─── */
+.nav-section {
+  margin-top: 56px;
+  margin-bottom: 0;
+}
+
+.nav-section .layer-header {
+  margin-bottom: 20px;
+}
+
+.nav-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.nav-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 22px;
+  text-decoration: none;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  display: block;
+  position: relative;
+}
+
+.nav-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: transparent;
+  transition: background 0.35s;
+}
+
+.nav-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.nav-card:hover::before {
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+.nav-card-arrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--gold-dim);
+  margin-bottom: 10px;
+  transition: transform 0.3s, color 0.3s;
+}
+
+.nav-card:hover .nav-card-arrow {
+  transform: translateX(4px);
+  color: var(--gold);
+}
+
+.nav-card-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.nav-card-desc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+}
+
+.nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  padding: 10px 18px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  transition: all 0.3s;
+}
+
+.nav-back:hover {
+  color: var(--gold);
+  border-color: var(--gold-dim);
+  background: rgba(232, 185, 49, 0.05);
+}
+
+/* ─── RESPONSIVE (new sections) ─── */
+@media (max-width: 1200px) {
+  .decisions-grid { grid-template-columns: repeat(2, 1fr); }
+  .pso-grid { grid-template-columns: 1fr; }
+  .metrics-bar { grid-template-columns: repeat(3, 1fr); }
+  .role-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .system-snapshot { padding: 32px 24px; }
+  .snapshot-title { font-size: 28px; }
+  .decisions-grid { grid-template-columns: 1fr; }
+  .metrics-bar { grid-template-columns: repeat(2, 1fr); }
+  .role-grid { grid-template-columns: 1fr; }
+  .nav-grid { grid-template-columns: 1fr; }
+}
+
 /* ─── ANIMATIONS ─── */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(16px); }
@@ -930,6 +1346,154 @@ body::after {
       </div>
     </div>
   </header>
+
+  <!-- SYSTEM SNAPSHOT (HERO) -->
+  <div class="system-snapshot animate-in delay-1">
+    <div class="snapshot-category">Real-Time Geospatial Marketplace</div>
+    <div class="snapshot-title">Platypus Platform</div>
+    <div class="snapshot-purpose">On-demand dog walking marketplace with live GPS tracking, intelligent guardian assignment, and multi-pet support for urban India (Mumbai)</div>
+    <div class="snapshot-meta-row">
+      <span class="snapshot-chip">Flutter</span>
+      <span class="snapshot-chip">NestJS</span>
+      <span class="snapshot-chip">PostgreSQL + PostGIS</span>
+      <span class="snapshot-chip">Redis</span>
+      <span class="snapshot-chip">Socket.io</span>
+      <span class="snapshot-chip">Firebase</span>
+      <span class="snapshot-chip">Razorpay</span>
+    </div>
+    <div class="snapshot-meta-row">
+      <span class="snapshot-chip">Real-time WebSocket Infrastructure</span>
+      <span class="snapshot-chip">45 Database Models</span>
+      <span class="snapshot-chip">30 API Modules</span>
+      <span class="snapshot-chip">90 Screens across 4 Client Apps</span>
+    </div>
+    <div class="snapshot-outcome">
+      <div class="snapshot-outcome-dot"></div>
+      <div class="snapshot-outcome-text">Sub-200ms real-time GPS updates with geospatial matching across 43 Mumbai neighborhoods</div>
+    </div>
+  </div>
+
+  <!-- PROBLEM → SOLUTION → OUTCOME -->
+  <div class="pso-section animate-in delay-2">
+    <div class="pso-grid">
+      <div class="pso-card">
+        <div class="pso-label"><span class="pso-num">1</span>Problem</div>
+        <div class="pso-text">Dog walking in Indian cities lacks trust, visibility, and safety. Pet parents need real-time tracking, verified walkers, and platform-mediated communication &mdash; Uber-style reliability for dog walks.</div>
+      </div>
+      <div class="pso-card">
+        <div class="pso-label"><span class="pso-num">2</span>Solution</div>
+        <div class="pso-text">Built a full-stack marketplace with Flutter mobile apps (Parent + Guardian), NestJS API with 30 modules, real-time GPS tracking via WebSocket/Socket.io, PostGIS geospatial hub matching, intelligent auto-assignment, dynamic surge pricing, and gamification to drive engagement.</div>
+      </div>
+      <div class="pso-card">
+        <div class="pso-label"><span class="pso-num">3</span>Outcome</div>
+        <div class="pso-text">Production-ready platform with 4 client apps, Apple Watch + Wear OS companions, 45 database models, real-time walk monitoring dashboard, and comprehensive admin panel with 29 pages.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY ENGINEERING DECISIONS -->
+  <div class="decisions-section animate-in delay-2">
+    <div class="layer-header">
+      <div class="layer-title">Key Engineering Decisions</div>
+      <div class="layer-line"></div>
+    </div>
+    <div class="decisions-grid">
+      <div class="decision-card">
+        <div class="decision-text">PostGIS for geospatial hub radius matching instead of application-level distance calculation</div>
+        <div class="decision-why">Database-level spatial indexing</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-text">Socket.io WebSocket gateway for sub-200ms real-time GPS streaming</div>
+        <div class="decision-why">Live location infrastructure</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-text">Prisma $transaction for wallet race condition mitigation on concurrent bookings</div>
+        <div class="decision-why">Financial data integrity</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-text">IST timezone handling with todayIST() to prevent @db.Date off-by-one scheduling bugs</div>
+        <div class="decision-why">India-specific date safety</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-text">Firebase Phone Auth + JWT dual strategy for 7-day access / 90-day refresh</div>
+        <div class="decision-why">Auth resilience</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-text">Platform-mediated messaging to prevent disintermediation (no direct phone exposure)</div>
+        <div class="decision-why">Business model protection</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-text">Provider pattern in Flutter for lightweight state management across 90 screens</div>
+        <div class="decision-why">Scalable mobile architecture</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-text">Redis for OTP storage, weather cache, token blacklisting, and rate limiting</div>
+        <div class="decision-why">Multi-purpose in-memory layer</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLATFORM METRICS -->
+  <div class="metrics-bar animate-in delay-2">
+    <div class="metric-cell">
+      <div class="metric-number gold">4</div>
+      <div class="metric-label">Client<br>Applications</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-number blue">30</div>
+      <div class="metric-label">API Modules<br>Across 5 Categories</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-number purple">45</div>
+      <div class="metric-label">Database Models<br>17 Enums</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-number orange">90</div>
+      <div class="metric-label">Total Screens<br>38 + 23 + 29</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-number green">43</div>
+      <div class="metric-label">Mumbai<br>Neighborhoods</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-number gold">7</div>
+      <div class="metric-label">External Service<br>Integrations</div>
+    </div>
+  </div>
+
+  <!-- MY ROLE -->
+  <div class="role-section animate-in delay-2">
+    <div class="layer-header">
+      <div class="layer-title">My Role</div>
+      <div class="layer-line"></div>
+    </div>
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="role-dot" style="background: var(--gold);"></div>
+        <div class="role-text">System architecture &amp; technical strategy</div>
+      </div>
+      <div class="role-card">
+        <div class="role-dot" style="background: var(--blue);"></div>
+        <div class="role-text">Database schema design (45 models with PostGIS)</div>
+      </div>
+      <div class="role-card">
+        <div class="role-dot" style="background: var(--purple);"></div>
+        <div class="role-text">API architecture (30 NestJS modules)</div>
+      </div>
+      <div class="role-card">
+        <div class="role-dot" style="background: var(--green);"></div>
+        <div class="role-text">Mobile app architecture (Flutter, Provider pattern)</div>
+      </div>
+      <div class="role-card">
+        <div class="role-dot" style="background: var(--orange);"></div>
+        <div class="role-text">Real-time infrastructure (WebSocket, Redis)</div>
+      </div>
+      <div class="role-card">
+        <div class="role-dot" style="background: var(--red);"></div>
+        <div class="role-text">DevOps &amp; deployment pipeline (Docker, CI/CD, staging)</div>
+      </div>
+    </div>
+  </div>
 
   <!-- STATS BAR -->
   <div class="stats-bar animate-in delay-1">
@@ -1489,6 +2053,47 @@ body::after {
         <div class="infra-tech">v2-*.theplatypus.in</div>
       </div>
     </div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="nav-section animate-in">
+    <div class="layer-header">
+      <div class="layer-title">Explore Other Systems</div>
+      <div class="layer-line"></div>
+    </div>
+    <div class="nav-grid">
+      <a class="nav-card" href="q-invoice.html">
+        <div class="nav-card-arrow">&rarr;</div>
+        <div class="nav-card-name">Q-Invoice</div>
+        <div class="nav-card-desc">Multi-Tenant Financial Billing Platform</div>
+      </a>
+      <a class="nav-card" href="billingzero.html">
+        <div class="nav-card-arrow">&rarr;</div>
+        <div class="nav-card-name">BillingZero</div>
+        <div class="nav-card-desc">Multi-Vendor Contract Billing Platform</div>
+      </a>
+      <a class="nav-card" href="satshrut.html">
+        <div class="nav-card-arrow">&rarr;</div>
+        <div class="nav-card-name">Satshrut</div>
+        <div class="nav-card-desc">Distributed Content &amp; Live Streaming Platform</div>
+      </a>
+      <a class="nav-card" href="relokate.html">
+        <div class="nav-card-arrow">&rarr;</div>
+        <div class="nav-card-name">Relokate HR</div>
+        <div class="nav-card-desc">Immigration Workflow Management Platform</div>
+      </a>
+      <a class="nav-card" href="q-studio.html">
+        <div class="nav-card-arrow">&rarr;</div>
+        <div class="nav-card-name">Q-Studio</div>
+        <div class="nav-card-desc">Coworking Space SaaS Platform</div>
+      </a>
+      <a class="nav-card" href="numerology.html">
+        <div class="nav-card-arrow">&rarr;</div>
+        <div class="nav-card-name">Numerology CMS</div>
+        <div class="nav-card-desc">AI-Enhanced Knowledge Platform</div>
+      </a>
+    </div>
+    <a class="nav-back" href="../index.html">&larr; Back to Portfolio</a>
   </div>
 
   <!-- FOOTER -->
