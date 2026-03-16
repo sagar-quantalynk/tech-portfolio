@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Platypus Platform — System Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --gold: #E8B931;
+  --gold-dim: #C49A1C;
+  --gold-glow: rgba(232, 185, 49, 0.15);
+  --blue: #5BA0E0;
+  --blue-dim: #3A7BBF;
+  --blue-glow: rgba(91, 160, 224, 0.12);
+  --cream: #F5E6C8;
+  --cream-dim: rgba(245, 230, 200, 0.06);
+  --surface-0: #0B0E14;
+  --surface-1: #111621;
+  --surface-2: #171D2A;
+  --surface-3: #1E2636;
+  --border: rgba(245, 230, 200, 0.08);
+  --border-hover: rgba(245, 230, 200, 0.18);
+  --text-primary: #E8E2D6;
+  --text-secondary: rgba(232, 226, 214, 0.55);
+  --text-tertiary: rgba(232, 226, 214, 0.3);
+  --green: #5EBD73;
+  --red: #E05B5B;
+  --purple: #9B7EDC;
+  --orange: #E8963A;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--surface-0);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Background grid */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245, 230, 200, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 230, 200, 0.018) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: -40%;
+  right: -20%;
+  width: 80vw;
+  height: 80vw;
+  background: radial-gradient(ellipse, rgba(232, 185, 49, 0.03) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+/* ─── HEADER ─── */
+.header {
+  padding: 64px 0 48px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 56px;
+}
+
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--surface-0);
+  box-shadow: 0 4px 24px rgba(232, 185, 49, 0.2);
+}
+
+.logo-text h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--cream);
+  letter-spacing: -0.5px;
+}
+
+.logo-text p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 2px;
+}
+
+.header-meta {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.meta-block {
+  text-align: right;
+}
+
+.meta-block .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+}
+
+.meta-block .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ─── STATS BAR ─── */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 56px;
+}
+
+.stat-cell {
+  background: var(--surface-1);
+  padding: 24px 20px;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.stat-cell:hover {
+  background: var(--surface-2);
+}
+
+.stat-number {
+  font-family: 'Instrument Serif', serif;
+  font-size: 36px;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* ─── LAYER SECTIONS ─── */
+.layer {
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.layer-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-left: 4px;
+}
+
+.layer-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gold-dim);
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--gold-dim);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.layer-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--text-secondary);
+}
+
+.layer-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── CONNECTION FLOW ─── */
+.flow-connector {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
+  position: relative;
+}
+
+.flow-line {
+  width: 2px;
+  height: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.flow-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, var(--gold-dim), transparent);
+  opacity: 0.3;
+}
+
+.flow-line::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -3px;
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: flowPulse 2.5s ease-in-out infinite;
+  box-shadow: 0 0 12px rgba(232, 185, 49, 0.4);
+}
+
+@keyframes flowPulse {
+  0% { top: -8px; opacity: 1; }
+  80% { top: 40px; opacity: 0.3; }
+  100% { top: 40px; opacity: 0; }
+}
+
+.flow-labels {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 40px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+  letter-spacing: 1px;
+}
+
+.flow-labels.left { right: calc(50% + 24px); }
+.flow-labels.right { left: calc(50% + 24px); }
+
+/* ─── CARDS ─── */
+.card-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: transparent;
+  transition: background 0.35s;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.card:hover::before {
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+.card.expanded {
+  border-color: rgba(232, 185, 49, 0.2);
+  box-shadow: 0 4px 24px var(--gold-glow);
+}
+
+.card-head {
+  padding: 20px 20px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+  position: relative;
+}
+
+.card-icon.gold { background: rgba(232, 185, 49, 0.1); color: var(--gold); }
+.card-icon.blue { background: rgba(91, 160, 224, 0.1); color: var(--blue); }
+.card-icon.green { background: rgba(94, 189, 115, 0.1); color: var(--green); }
+.card-icon.purple { background: rgba(155, 126, 220, 0.1); color: var(--purple); }
+.card-icon.orange { background: rgba(232, 150, 58, 0.1); color: var(--orange); }
+.card-icon.red { background: rgba(224, 91, 91, 0.1); color: var(--red); }
+
+.card-info { flex: 1; min-width: 0; }
+
+.card-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+
+.card-tech {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.5px;
+}
+
+.card-expand-icon {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--text-tertiary);
+  transition: transform 0.3s;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.card.expanded .card-expand-icon {
+  transform: rotate(45deg);
+  color: var(--gold);
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 20px 16px;
+}
+
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.tag.gold { background: rgba(232, 185, 49, 0.08); color: var(--gold-dim); }
+.tag.blue { background: rgba(91, 160, 224, 0.08); color: var(--blue-dim); }
+.tag.green { background: rgba(94, 189, 115, 0.08); color: var(--green); }
+.tag.purple { background: rgba(155, 126, 220, 0.08); color: var(--purple); }
+.tag.orange { background: rgba(232, 150, 58, 0.08); color: var(--orange); }
+.tag.dim { background: var(--cream-dim); color: var(--text-secondary); }
+
+/* ─── EXPANDABLE DETAIL ─── */
+.card-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  border-top: 1px solid transparent;
+}
+
+.card.expanded .card-detail {
+  max-height: 600px;
+  border-top-color: var(--border);
+}
+
+.card-detail-inner {
+  padding: 16px 20px 20px;
+}
+
+.detail-section {
+  margin-bottom: 14px;
+}
+
+.detail-section:last-child { margin-bottom: 0; }
+
+.detail-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.detail-list {
+  list-style: none;
+}
+
+.detail-list li {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.detail-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 6px;
+  height: 1px;
+  background: var(--gold-dim);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 16px;
+}
+
+.detail-grid .dg-item {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dg-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dg-dot.gold { background: var(--gold); }
+.dg-dot.blue { background: var(--blue); }
+.dg-dot.green { background: var(--green); }
+.dg-dot.purple { background: var(--purple); }
+.dg-dot.orange { background: var(--orange); }
+
+/* ─── API MODULE GRID ─── */
+.api-section {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.api-header {
+  padding: 24px 24px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.api-header:hover { background: var(--surface-2); }
+
+.api-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.api-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(91, 160, 224, 0.1);
+  color: var(--blue);
+  letter-spacing: 0.5px;
+}
+
+.api-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.api-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.api-modules-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-top: 1px solid var(--border);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.api-section.expanded .api-modules-grid {
+  max-height: 800px;
+}
+
+.api-module {
+  background: var(--surface-1);
+  padding: 16px;
+  transition: background 0.2s;
+}
+
+.api-module:hover {
+  background: var(--surface-2);
+}
+
+.api-module-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.api-module-desc {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+.api-module-cat {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-bottom: 6px;
+}
+
+.cat-core { background: rgba(232, 185, 49, 0.1); color: var(--gold-dim); }
+.cat-comm { background: rgba(91, 160, 224, 0.1); color: var(--blue-dim); }
+.cat-intel { background: rgba(155, 126, 220, 0.1); color: var(--purple); }
+.cat-engage { background: rgba(94, 189, 115, 0.1); color: var(--green); }
+.cat-admin { background: rgba(232, 150, 58, 0.1); color: var(--orange); }
+.cat-infra { background: rgba(232, 226, 214, 0.06); color: var(--text-secondary); }
+
+/* ─── MIDDLEWARE BAR ─── */
+.middleware-bar {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.mw-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.mw-chip:hover {
+  border-color: var(--border-hover);
+  background: var(--cream-dim);
+}
+
+.mw-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+/* ─── EXTERNAL SERVICES ─── */
+.ext-sidebar {
+  margin-top: 24px;
+}
+
+.ext-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.ext-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.ext-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.ext-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.ext-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.ext-desc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* ─── PATTERNS SECTION ─── */
+.patterns-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.pattern-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  border-left: 2px solid var(--gold-dim);
+  transition: all 0.3s;
+}
+
+.pattern-card:hover {
+  border-color: var(--border-hover);
+  border-left-color: var(--gold);
+  background: var(--surface-2);
+}
+
+.pattern-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+}
+
+.pattern-desc {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+/* ─── INFRA SECTION ─── */
+.infra-bar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.infra-cell {
+  background: var(--surface-1);
+  padding: 20px 16px;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.infra-cell:hover { background: var(--surface-2); }
+
+.infra-icon {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.infra-name {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.infra-tech {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.5px;
+}
+
+.footer-right {
+  display: flex;
+  gap: 24px;
+}
+
+.footer-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-link:hover { color: var(--gold); }
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  opacity: 0;
+  animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.24s; }
+.delay-4 { animation-delay: 0.32s; }
+.delay-5 { animation-delay: 0.4s; }
+.delay-6 { animation-delay: 0.48s; }
+
+/* ─── WS EVENTS TICKER ─── */
+.ws-bar {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 20px;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ws-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--blue);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ws-pulse {
+  width: 7px;
+  height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: wsPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes wsPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(94, 189, 115, 0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(94, 189, 115, 0); }
+}
+
+.ws-events {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  flex: 1;
+}
+
+.ws-event {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  border: 1px solid var(--border);
+}
+
+/* ─── SECTION SPAN ─── */
+.span-card {
+  grid-column: span 2;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1200px) {
+  .card-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+  .api-modules-grid { grid-template-columns: repeat(3, 1fr); }
+  .patterns-grid { grid-template-columns: repeat(2, 1fr); }
+  .ext-grid { grid-template-columns: repeat(3, 1fr); }
+  .stats-bar { grid-template-columns: repeat(3, 1fr); }
+  .infra-bar { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .container { padding: 0 20px; }
+  .card-grid.cols-4,
+  .card-grid.cols-3,
+  .card-grid.cols-2 { grid-template-columns: 1fr; }
+  .span-card { grid-column: span 1; }
+  .api-modules-grid { grid-template-columns: repeat(2, 1fr); }
+  .patterns-grid { grid-template-columns: 1fr; }
+  .ext-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .infra-bar { grid-template-columns: repeat(2, 1fr); }
+  .header-top { flex-direction: column; }
+  .header-meta { justify-content: flex-start; }
+  .meta-block { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header animate-in">
+    <div class="header-top">
+      <div class="logo-area">
+        <div class="logo-icon">P</div>
+        <div class="logo-text">
+          <h1>Platypus Platform</h1>
+          <p>System Architecture v2.0</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-block">
+          <div class="label">Domain</div>
+          <div class="value">On-Demand Dog Walking</div>
+        </div>
+        <div class="meta-block">
+          <div class="label">Market</div>
+          <div class="value">Mumbai, India</div>
+        </div>
+        <div class="meta-block">
+          <div class="label">Last Updated</div>
+          <div class="value">March 2026</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar animate-in delay-1">
+    <div class="stat-cell">
+      <div class="stat-number">4</div>
+      <div class="stat-label">Client Apps</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">30</div>
+      <div class="stat-label">API Modules</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">45</div>
+      <div class="stat-label">DB Models</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">90</div>
+      <div class="stat-label">Total Screens</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">7</div>
+      <div class="stat-label">Integrations</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number" style="color: var(--green);">Live</div>
+      <div class="stat-label">GPS Tracking</div>
+    </div>
+  </div>
+
+  <!-- LAYER 1: CLIENT APPS -->
+  <div class="layer animate-in delay-2">
+    <div class="layer-header">
+      <div class="layer-number">01</div>
+      <div class="layer-title">Client Applications</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="card-grid cols-4">
+      <!-- Parent App -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon gold">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Parent App</div>
+            <div class="card-tech">Flutter 3.10.3 / Dart</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag gold">38 Screens</span>
+          <span class="tag dim">Provider</span>
+          <span class="tag dim">go_router</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Key Flows</div>
+              <ul class="detail-list">
+                <li>Book Walk — pet select, slot picker, guardian browse, payment</li>
+                <li>Live Tracking — real-time GPS breadcrumb, status bar, walk events</li>
+                <li>Self Walk — parent-initiated GPS walk with auto-pause</li>
+                <li>Pet Health — vaccinations, medications, reminders, vet contact</li>
+                <li>Chat — platform-mediated guardian messaging</li>
+                <li>Gamification — badges, streaks, weekly digest, achievements</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Services</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>API Service</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Socket Service</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Weather Service</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Notification Service</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Watch Service</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>Widget Service</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guardian App -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Guardian App</div>
+            <div class="card-tech">Flutter 3.10.3 / Dart</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag blue">23 Screens</span>
+          <span class="tag dim">Provider</span>
+          <span class="tag dim">Training</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Key Flows</div>
+              <ul class="detail-list">
+                <li>Active Walk — OTP verify, GPS streaming, poop/mood tracking, photos</li>
+                <li>Assignments — accept/decline bookings, schedule management</li>
+                <li>Training — 6 modules, 18 lessons, progress tracking, nudges</li>
+                <li>KYC — Aadhaar, PAN, selfie, police verification upload</li>
+                <li>Earnings — payout history, tips, monthly breakdown</li>
+                <li>Fitness — personal km/pace/calories from walk GPS data</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Unique Services</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot green"></span>Location Service</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Speech Service</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>TTS Service</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Training Provider</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Dashboard -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Admin Dashboard</div>
+            <div class="card-tech">Next.js 14 / React 18</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag purple">29 Pages</span>
+          <span class="tag dim">Shadcn UI</span>
+          <span class="tag dim">Recharts</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Page Groups</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>Dashboard & Analytics</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Walk Monitoring</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Guardian Management</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Parent & Pet Registry</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Bookings & Payments</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>Incidents & SOS</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>KYC Verification</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Gamification & Badges</div>
+              </div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Stack</div>
+              <ul class="detail-list">
+                <li>React Query for data fetching & caching</li>
+                <li>Radix UI + CVA for component primitives</li>
+                <li>Leaflet for GPS walk playback on maps</li>
+                <li>Socket.io-client for real-time updates</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wearables -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="4"/><path d="M12 18h.01"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Wearable Apps</div>
+            <div class="card-tech">watchOS + Wear OS</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag green">SwiftUI</span>
+          <span class="tag dim">Compose</span>
+          <span class="tag dim">MethodChannel</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Apple Watch</div>
+              <ul class="detail-list">
+                <li>Walk status, weather, quick start, SOS (Parent)</li>
+                <li>Active walk, assignments, SOS (Guardian)</li>
+                <li>WatchSessionManager.swift + Flutter bridge</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Wear OS</div>
+              <ul class="detail-list">
+                <li>Jetpack Compose UI modules for both apps</li>
+                <li>WearDataService.kt + Data Layer API</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW 1→2 -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">REST / JWT</div>
+    <div class="flow-labels right">WebSocket / Socket.io</div>
+  </div>
+
+  <!-- LAYER 2: API & SERVICES -->
+  <div class="layer animate-in delay-3">
+    <div class="layer-header">
+      <div class="layer-number">02</div>
+      <div class="layer-title">API & Services</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="api-section" id="apiSection">
+      <div class="api-header" onclick="toggleApi()">
+        <div class="api-header-left">
+          <div class="api-badge">NestJS 10</div>
+          <div>
+            <div class="api-title">Platypus API</div>
+            <div class="api-subtitle">Port 3000 &middot; /api/v1 &middot; 30 Modules &middot; TypeScript</div>
+          </div>
+        </div>
+        <div class="card-expand-icon" id="apiExpandIcon">+</div>
+      </div>
+
+      <div class="api-modules-grid" id="apiGrid">
+        <!-- Core -->
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Auth</div><div class="api-module-desc">Firebase Phone Auth, JWT, register, refresh</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Booking</div><div class="api-module-desc">Create, cancel, reschedule, refund flows</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Walk</div><div class="api-module-desc">State machine, GPS, OTP, completion</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Payment</div><div class="api-module-desc">Razorpay orders, webhooks, wallet, tips</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Guardian</div><div class="api-module-desc">Profile, KYC, availability, browse</div></div>
+
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Parent</div><div class="api-module-desc">Profile, wallet, address management</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Pet</div><div class="api-module-desc">CRUD, health records, vaccinations</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Hub</div><div class="api-module-desc">Service areas, PostGIS radius queries</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Self Walk</div><div class="api-module-desc">Start, GPS, pause/resume, complete</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Subscription</div><div class="api-module-desc">Plans, quotas, auto-renewal, pause</div></div>
+
+        <!-- Communication -->
+        <div class="api-module"><div class="api-module-cat cat-comm">Comm</div><div class="api-module-name">Chat</div><div class="api-module-desc">Conversations, messages, typing, archive</div></div>
+        <div class="api-module"><div class="api-module-cat cat-comm">Comm</div><div class="api-module-name">Notification</div><div class="api-module-desc">Firebase FCM push, in-app, device tokens</div></div>
+        <div class="api-module"><div class="api-module-cat cat-comm">Comm</div><div class="api-module-name">SOS</div><div class="api-module-desc">Emergency alerts, GPS, admin broadcast</div></div>
+        <div class="api-module"><div class="api-module-cat cat-comm">Comm</div><div class="api-module-name">Support</div><div class="api-module-desc">Tickets, categories, resolution flow</div></div>
+        <div class="api-module"><div class="api-module-cat cat-comm">Comm</div><div class="api-module-name">Email</div><div class="api-module-desc">Transactional emails via Brevo</div></div>
+
+        <!-- Intelligence -->
+        <div class="api-module"><div class="api-module-cat cat-intel">Intel</div><div class="api-module-name">Weather</div><div class="api-module-desc">Open-Meteo, walk safety, paw burn risk</div></div>
+        <div class="api-module"><div class="api-module-cat cat-intel">Intel</div><div class="api-module-name">Breed Intel</div><div class="api-module-desc">Breed-specific walk guidance & care</div></div>
+        <div class="api-module"><div class="api-module-cat cat-intel">Intel</div><div class="api-module-name">Pricing</div><div class="api-module-desc">Surge, multi-pet discount, dynamic pricing</div></div>
+        <div class="api-module"><div class="api-module-cat cat-intel">Intel</div><div class="api-module-name">Assignment</div><div class="api-module-desc">Auto-assign guardians by hub/availability</div></div>
+        <div class="api-module"><div class="api-module-cat cat-intel">Intel</div><div class="api-module-name">Geocoding</div><div class="api-module-desc">Google Maps reverse geocode & autocomplete</div></div>
+
+        <!-- Engagement -->
+        <div class="api-module"><div class="api-module-cat cat-engage">Engage</div><div class="api-module-name">Gamification</div><div class="api-module-desc">Badges, streaks, leaderboards, tiers</div></div>
+        <div class="api-module"><div class="api-module-cat cat-engage">Engage</div><div class="api-module-name">Referral</div><div class="api-module-desc">Codes, wallet rewards, tracking</div></div>
+        <div class="api-module"><div class="api-module-cat cat-engage">Engage</div><div class="api-module-name">Promo</div><div class="api-module-desc">Discount codes, validation, usage limits</div></div>
+        <div class="api-module"><div class="api-module-cat cat-engage">Engage</div><div class="api-module-name">Digest</div><div class="api-module-desc">Weekly/monthly activity summaries</div></div>
+        <div class="api-module"><div class="api-module-cat cat-engage">Engage</div><div class="api-module-name">Meet & Greet</div><div class="api-module-desc">Guardian-parent introductions</div></div>
+
+        <!-- Admin & Infra -->
+        <div class="api-module"><div class="api-module-cat cat-admin">Admin</div><div class="api-module-name">Admin</div><div class="api-module-desc">Dashboard, stats, KYC review, reports</div></div>
+        <div class="api-module"><div class="api-module-cat cat-admin">Admin</div><div class="api-module-name">Analytics</div><div class="api-module-desc">Revenue, retention, hub performance</div></div>
+        <div class="api-module"><div class="api-module-cat cat-infra">Infra</div><div class="api-module-name">Health</div><div class="api-module-desc">Service health check endpoint</div></div>
+        <div class="api-module"><div class="api-module-cat cat-infra">Infra</div><div class="api-module-name">Upload</div><div class="api-module-desc">File storage abstraction (S3/MinIO)</div></div>
+        <div class="api-module"><div class="api-module-cat cat-infra">Infra</div><div class="api-module-name">Cron</div><div class="api-module-desc">Scheduled jobs, reminders, cleanup</div></div>
+      </div>
+
+      <!-- Middleware -->
+      <div class="middleware-bar">
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--gold);"></span>JWT Auth Guard</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--blue);"></span>Role-Based Access</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--green);"></span>Rate Limiting 3/1s</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--purple);"></span>Validation Pipe</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--orange);"></span>Helmet</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--red);"></span>Exception Filter</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--cream);"></span>Transform Interceptor</div>
+      </div>
+    </div>
+
+    <!-- WebSocket Bar -->
+    <div class="ws-bar">
+      <div class="ws-label"><div class="ws-pulse"></div>WebSocket Gateway</div>
+      <div class="ws-events">
+        <div class="ws-event">gps:update</div>
+        <div class="ws-event">walk:status</div>
+        <div class="ws-event">walk:gps</div>
+        <div class="ws-event">walk:completed</div>
+        <div class="ws-event">message:send</div>
+        <div class="ws-event">typing:start</div>
+        <div class="ws-event">admin:join-all</div>
+        <div class="ws-event">join:walk</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW 2→3 -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">Prisma ORM</div>
+    <div class="flow-labels right">ioredis / S3 SDK</div>
+  </div>
+
+  <!-- LAYER 3: EXTERNAL SERVICES (side) + DATA -->
+  <div class="layer animate-in delay-4">
+    <div class="layer-header">
+      <div class="layer-number">03</div>
+      <div class="layer-title">Data Layer & External Services</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="card-grid cols-3">
+      <!-- PostgreSQL -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">PostgreSQL 15 + PostGIS</div>
+            <div class="card-tech">45 Models &middot; 17 Enums &middot; Prisma 5.22</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag blue">Geospatial</span>
+          <span class="tag dim">$transaction</span>
+          <span class="tag dim">Composite Indexes</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Core Tables</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>User (4 roles)</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>Parent + Pet</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Guardian + Hub</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>GuardianDocument</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Booking</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Walk + GpsPoint</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Transaction</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Subscription</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>ChatConversation</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Badge + Streak</div>
+              </div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">PostGIS Features</div>
+              <ul class="detail-list">
+                <li>Hub center point + radius matching</li>
+                <li>Walk GPS trail storage & playback</li>
+                <li>Guardian current location tracking</li>
+                <li>Address geocoding with geography type</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Redis -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon red">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Redis 7</div>
+            <div class="card-tech">Cache &middot; State &middot; Real-time</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag orange">128MB Max</span>
+          <span class="tag dim">allkeys-lru</span>
+          <span class="tag dim">AOF</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Use Cases</div>
+              <ul class="detail-list">
+                <li>OTP storage with TTL expiry</li>
+                <li>Weather API response cache (30min)</li>
+                <li>Token blacklisting on logout</li>
+                <li>Rate limiting counters</li>
+                <li>Real-time walk state</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MinIO / S3 -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon orange">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">MinIO / AWS S3</div>
+            <div class="card-tech">Object Storage</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag dim">Pet Photos</span>
+          <span class="tag dim">KYC Docs</span>
+          <span class="tag dim">Walk Photos</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Storage Buckets</div>
+              <ul class="detail-list">
+                <li>Pet profile photos</li>
+                <li>Guardian KYC documents (Aadhaar, PAN, selfie)</li>
+                <li>Walk photos (start, poop, completion)</li>
+                <li>Incident evidence (photos, audio)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- External Services -->
+    <div class="ext-sidebar">
+      <div class="ext-grid">
+        <div class="ext-card">
+          <div class="ext-icon">&#x1F525;</div>
+          <div class="ext-name">Firebase</div>
+          <div class="ext-desc">Phone Auth<br>FCM Push Notifications</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon">&#x1F4B3;</div>
+          <div class="ext-name">Razorpay</div>
+          <div class="ext-desc">INR Payments<br>Subscriptions &middot; Refunds</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon">&#x1F5FA;</div>
+          <div class="ext-name">Google Maps</div>
+          <div class="ext-desc">Geocoding<br>Address Autocomplete</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon">&#x26C5;</div>
+          <div class="ext-name">Open-Meteo</div>
+          <div class="ext-desc">Weather Data<br>Walk Safety Scoring</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon">&#x1F6E1;</div>
+          <div class="ext-name">Sentry</div>
+          <div class="ext-desc">Error Tracking<br>Performance Monitoring</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW 3→4 -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+  </div>
+
+  <!-- LAYER 4: ARCHITECTURE PATTERNS -->
+  <div class="layer animate-in delay-5">
+    <div class="layer-header">
+      <div class="layer-number">04</div>
+      <div class="layer-title">Architecture Patterns</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="patterns-grid">
+      <div class="pattern-card">
+        <div class="pattern-title">Controller &rarr; Service &rarr; Prisma</div>
+        <div class="pattern-desc">Strict 3-layer separation. Controllers dispatch, services orchestrate, Prisma handles data access.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Provider Pattern</div>
+        <div class="pattern-desc">Flutter state management via ChangeNotifier. Auth, ActiveWalk, Chat, and Training providers.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">$transaction Guards</div>
+        <div class="pattern-desc">Prisma interactive transactions for wallet debits, refunds, and concurrent booking race conditions.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">IST Timezone Safety</div>
+        <div class="pattern-desc">todayIST() + midnight UTC for @db.Date queries. Prevents off-by-one scheduling bugs.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">PostGIS Geospatial</div>
+        <div class="pattern-desc">Hub radius matching, guardian proximity, address location with geography(Point, 4326) type.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Dual Auth Strategy</div>
+        <div class="pattern-desc">Firebase Phone Auth for mobile + JWT bearer tokens. 7-day access, 90-day refresh lifetime.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Platform-Mediated Contact</div>
+        <div class="pattern-desc">No direct Parent-Guardian phone exposure. All communication via in-app chat to prevent disintermediation.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Safe Decimal Parsing</div>
+        <div class="pattern-desc">Prisma Decimal fields serialize as strings. All API values pass through safe parse helpers.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW 4→5 -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+  </div>
+
+  <!-- LAYER 5: INFRASTRUCTURE -->
+  <div class="layer animate-in delay-6">
+    <div class="layer-header">
+      <div class="layer-number">05</div>
+      <div class="layer-title">Infrastructure & Deployment</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="infra-bar">
+      <div class="infra-cell">
+        <div class="infra-icon">&#x1F4E6;</div>
+        <div class="infra-name">Turborepo</div>
+        <div class="infra-tech">Monorepo &middot; pnpm 8.15</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">&#x1F433;</div>
+        <div class="infra-name">Docker Compose</div>
+        <div class="infra-tech">postgres &middot; redis &middot; minio</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">&#x2699;</div>
+        <div class="infra-name">GitHub Actions</div>
+        <div class="infra-tech">CI/CD &middot; Test &middot; Deploy</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">&#x1F310;</div>
+        <div class="infra-name">Nginx Proxy</div>
+        <div class="infra-tech">Let's Encrypt SSL</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">&#x1F680;</div>
+        <div class="infra-name">Staging</div>
+        <div class="infra-tech">v2-*.theplatypus.in</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-left">Platypus Platform &middot; Engineered in Mumbai &middot; 2026</div>
+    <div class="footer-right">
+      <span class="footer-link">API: v2-api-staging.theplatypus.in</span>
+      <span class="footer-link">Admin: v2-admin-staging.theplatypus.in</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+function toggleCard(el) {
+  el.classList.toggle('expanded');
+}
+
+function toggleApi() {
+  const section = document.getElementById('apiSection');
+  const icon = document.getElementById('apiExpandIcon');
+  section.classList.toggle('expanded');
+  if (section.classList.contains('expanded')) {
+    icon.style.transform = 'rotate(45deg)';
+    icon.style.color = 'var(--gold)';
+  } else {
+    icon.style.transform = 'rotate(0)';
+    icon.style.color = 'var(--text-tertiary)';
+  }
+}
+
+// Intersection Observer for scroll-triggered animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.animationPlayState = 'running';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.animate-in').forEach(el => {
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>

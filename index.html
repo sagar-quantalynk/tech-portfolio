@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sagar Sutaria — Engineering Portfolio</title>
+<meta name="description" content="Architecture blueprints for platforms designed and built by Sagar Sutaria">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --gold: #E8B931;
+  --gold-dim: #C49A1C;
+  --gold-glow: rgba(232, 185, 49, 0.15);
+  --blue: #5BA0E0;
+  --blue-dim: #3A7BBF;
+  --blue-glow: rgba(91, 160, 224, 0.12);
+  --cream: #F5E6C8;
+  --cream-dim: rgba(245, 230, 200, 0.06);
+  --surface-0: #0B0E14;
+  --surface-1: #111621;
+  --surface-2: #171D2A;
+  --surface-3: #1E2636;
+  --border: rgba(245, 230, 200, 0.08);
+  --border-hover: rgba(245, 230, 200, 0.18);
+  --text-primary: #E8E2D6;
+  --text-secondary: rgba(232, 226, 214, 0.55);
+  --text-tertiary: rgba(232, 226, 214, 0.3);
+  --green: #5EBD73;
+  --red: #E05B5B;
+  --purple: #9B7EDC;
+  --orange: #E8963A;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--surface-0);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Blueprint grid background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245, 230, 200, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 230, 200, 0.018) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Ambient glow orbs */
+.glow-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+.glow-orb-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(232, 185, 49, 0.08), transparent 70%);
+  top: -200px; right: -100px;
+  animation: drift1 20s ease-in-out infinite;
+}
+
+.glow-orb-2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(91, 160, 224, 0.06), transparent 70%);
+  bottom: -100px; left: -150px;
+  animation: drift2 25s ease-in-out infinite;
+}
+
+.glow-orb-3 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(155, 126, 220, 0.05), transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: drift3 18s ease-in-out infinite;
+}
+
+@keyframes drift1 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-60px, 40px); }
+}
+@keyframes drift2 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(40px, -50px); }
+}
+@keyframes drift3 {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.15); }
+}
+
+/* Content wrapper */
+.content {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ── Hero Section ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 80px 0 60px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.2s;
+}
+
+.hero-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(94, 189, 115, 0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(94, 189, 115, 0); }
+}
+
+.hero-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--cream);
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.4s;
+}
+
+.hero-title .accent {
+  color: var(--gold);
+  font-style: italic;
+}
+
+.hero-subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 300;
+  color: var(--text-secondary);
+  max-width: 600px;
+  line-height: 1.6;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.6s;
+}
+
+.hero-scroll-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.8s;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--gold-dim), transparent);
+  animation: scroll-pulse 2s ease-in-out infinite;
+}
+
+@keyframes scroll-pulse {
+  0%, 100% { opacity: 0.3; height: 40px; }
+  50% { opacity: 1; height: 55px; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Section Headers ── */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.section-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+}
+
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--border-hover), transparent);
+}
+
+.section-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 400;
+  color: var(--cream);
+}
+
+/* ── Platform Cards Grid ── */
+.platforms-section {
+  padding: 80px 0 120px;
+}
+
+.platforms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+.platform-card {
+  position: relative;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.platform-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+}
+
+.platform-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(245, 230, 200, 0.03), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.platform-card:hover::before {
+  opacity: 1;
+}
+
+.platform-card:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-2);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(245, 230, 200, 0.06);
+  transform: translateY(-4px);
+}
+
+.platform-card.featured {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+.platform-card.featured .card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.card-icon.gold { background: rgba(232, 185, 49, 0.12); border: 1px solid rgba(232, 185, 49, 0.2); }
+.card-icon.blue { background: rgba(91, 160, 224, 0.12); border: 1px solid rgba(91, 160, 224, 0.2); }
+.card-icon.purple { background: rgba(155, 126, 220, 0.12); border: 1px solid rgba(155, 126, 220, 0.2); }
+.card-icon.green { background: rgba(94, 189, 115, 0.12); border: 1px solid rgba(94, 189, 115, 0.2); }
+.card-icon.orange { background: rgba(232, 150, 58, 0.12); border: 1px solid rgba(232, 150, 58, 0.2); }
+.card-icon.red { background: rgba(224, 91, 91, 0.12); border: 1px solid rgba(224, 91, 91, 0.2); }
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.card-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 24px;
+  color: var(--cream);
+}
+
+.card-status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+
+.card-status.live {
+  color: var(--green);
+  background: rgba(94, 189, 115, 0.1);
+  border: 1px solid rgba(94, 189, 115, 0.2);
+}
+
+.card-status.blueprint {
+  color: var(--blue);
+  background: rgba(91, 160, 224, 0.1);
+  border: 1px solid rgba(91, 160, 224, 0.2);
+}
+
+.card-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.card-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tech-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: var(--surface-3);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.card-arrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--gold-dim);
+  margin-top: auto;
+  transition: color 0.3s ease, gap 0.3s ease;
+}
+
+.platform-card:hover .card-arrow {
+  color: var(--gold);
+  gap: 12px;
+}
+
+.card-arrow svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease;
+}
+
+.platform-card:hover .card-arrow svg {
+  transform: translateX(4px);
+}
+
+/* Featured card diagram preview */
+.diagram-preview {
+  background: var(--surface-0);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.diagram-preview .preview-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245, 230, 200, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 230, 200, 0.025) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+.preview-nodes {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.preview-node {
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  border: 1px solid;
+  animation: node-pulse 3s ease-in-out infinite;
+}
+
+.preview-node:nth-child(1) {
+  color: var(--gold); border-color: rgba(232, 185, 49, 0.3);
+  background: rgba(232, 185, 49, 0.06);
+  animation-delay: 0s;
+}
+.preview-node:nth-child(2) {
+  color: var(--blue); border-color: rgba(91, 160, 224, 0.3);
+  background: rgba(91, 160, 224, 0.06);
+  animation-delay: 0.5s;
+}
+.preview-node:nth-child(3) {
+  color: var(--green); border-color: rgba(94, 189, 115, 0.3);
+  background: rgba(94, 189, 115, 0.06);
+  animation-delay: 1s;
+}
+.preview-node:nth-child(4) {
+  color: var(--purple); border-color: rgba(155, 126, 220, 0.3);
+  background: rgba(155, 126, 220, 0.06);
+  animation-delay: 1.5s;
+}
+
+.preview-connector {
+  width: 1px;
+  height: 12px;
+  background: linear-gradient(to bottom, var(--border-hover), var(--border));
+}
+
+@keyframes node-pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* ── Bio Section ── */
+.bio-section {
+  padding: 80px 0 100px;
+  border-top: 1px solid var(--border);
+}
+
+.bio-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.bio-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.bio-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(28px, 3.5vw, 40px);
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+
+.bio-role {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.bio-stats {
+  display: flex;
+  gap: 32px;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-number {
+  font-family: 'Instrument Serif', serif;
+  font-size: 36px;
+  color: var(--gold);
+}
+
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.bio-text {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.bio-text p + p {
+  margin-top: 16px;
+}
+
+.bio-values {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.value-card {
+  padding: 20px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.value-card .value-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 6px;
+}
+
+.value-card .value-desc {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+/* ── Footer ── */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.footer-links {
+  display: flex;
+  gap: 24px;
+}
+
+.footer-links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer-links a:hover {
+  color: var(--gold);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .content { padding: 0 20px; }
+  .platforms-grid { grid-template-columns: 1fr; }
+  .platform-card.featured { grid-template-columns: 1fr; }
+  .diagram-preview { display: none; }
+  .bio-grid { grid-template-columns: 1fr; gap: 40px; }
+  .bio-values { grid-template-columns: 1fr; }
+  .footer { flex-direction: column; gap: 16px; text-align: center; }
+  .bio-stats { justify-content: flex-start; }
+}
+
+/* ── Page transition ── */
+.page-loader {
+  position: fixed;
+  inset: 0;
+  background: var(--surface-0);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.page-loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loader-mark {
+  font-family: 'Instrument Serif', serif;
+  font-size: 32px;
+  color: var(--gold);
+  animation: loader-fade 1s ease-in-out infinite alternate;
+}
+
+@keyframes loader-fade {
+  from { opacity: 0.3; }
+  to { opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- Page loader -->
+<div class="page-loader" id="pageLoader">
+  <div class="loader-mark">SS</div>
+</div>
+
+<!-- Ambient glow -->
+<div class="glow-orb glow-orb-1"></div>
+<div class="glow-orb glow-orb-2"></div>
+<div class="glow-orb glow-orb-3"></div>
+
+<div class="content">
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Available for architecture consulting
+    </div>
+    <h1 class="hero-title">
+      Sagar <span class="accent">Sutaria</span>
+    </h1>
+    <p class="hero-subtitle">
+      Architecture blueprints for platforms I've designed and built — from real-time marketplaces to AI-powered SaaS.
+    </p>
+    <div class="hero-scroll-hint">
+      <span>Explore work</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ── Platforms ── -->
+  <section class="platforms-section" id="work">
+    <div class="section-header">
+      <span class="section-number">01</span>
+      <span class="section-title">Platforms</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="platforms-grid">
+
+      <!-- Platypus — Featured -->
+      <a href="platforms/platypus.html" class="platform-card featured" data-delay="0">
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-icon gold">🐾</div>
+            <div>
+              <div class="card-name">Platypus Platform</div>
+              <span class="card-status live">Live</span>
+            </div>
+          </div>
+          <p class="card-description">
+            On-demand dog walking marketplace for urban India. Real-time GPS tracking,
+            intelligent guardian assignment, dynamic pricing, and multi-pet support.
+            Full-stack system handling bookings, payments, and live walk monitoring.
+          </p>
+          <div class="card-tech">
+            <span class="tech-tag">Flutter</span>
+            <span class="tech-tag">NestJS</span>
+            <span class="tech-tag">PostgreSQL</span>
+            <span class="tech-tag">PostGIS</span>
+            <span class="tech-tag">Redis</span>
+            <span class="tech-tag">Socket.io</span>
+            <span class="tech-tag">Prisma</span>
+          </div>
+          <div class="card-arrow">
+            View architecture
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+        <div class="diagram-preview">
+          <div class="preview-grid"></div>
+          <div class="preview-nodes">
+            <div class="preview-node">FLUTTER APPS</div>
+            <div class="preview-connector"></div>
+            <div class="preview-node">NESTJS API GATEWAY</div>
+            <div class="preview-connector"></div>
+            <div class="preview-node">POSTGRESQL + POSTGIS</div>
+            <div class="preview-connector"></div>
+            <div class="preview-node">REDIS + SOCKET.IO</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- Numerology -->
+      <a href="platforms/numerology.html" class="platform-card" data-delay="100">
+        <div class="card-header">
+          <div class="card-icon purple">🔮</div>
+          <div>
+            <div class="card-name">Numerology</div>
+            <span class="card-status blueprint">Blueprint</span>
+          </div>
+        </div>
+        <p class="card-description">
+          AI-powered numerology platform delivering personalized life-path readings, compatibility analysis, and daily forecasts through advanced number science algorithms.
+        </p>
+        <div class="card-tech">
+          <span class="tech-tag">Next.js</span>
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">OpenAI</span>
+          <span class="tech-tag">MongoDB</span>
+        </div>
+        <div class="card-arrow">
+          Coming soon
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Q-Invoice -->
+      <a href="platforms/q-invoice.html" class="platform-card" data-delay="200">
+        <div class="card-header">
+          <div class="card-icon blue">📄</div>
+          <div>
+            <div class="card-name">Q-Invoice</div>
+            <span class="card-status blueprint">Blueprint</span>
+          </div>
+        </div>
+        <p class="card-description">
+          GST-compliant invoicing and billing platform for Indian SMEs. Automated tax calculations, e-invoicing integration, and multi-format export with real-time compliance checks.
+        </p>
+        <div class="card-tech">
+          <span class="tech-tag">React</span>
+          <span class="tech-tag">Node.js</span>
+          <span class="tech-tag">PostgreSQL</span>
+          <span class="tech-tag">PDF Gen</span>
+        </div>
+        <div class="card-arrow">
+          Coming soon
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Q-Studio -->
+      <a href="platforms/q-studio.html" class="platform-card" data-delay="300">
+        <div class="card-header">
+          <div class="card-icon orange">🎨</div>
+          <div>
+            <div class="card-name">Q-Studio</div>
+            <span class="card-status blueprint">Blueprint</span>
+          </div>
+        </div>
+        <p class="card-description">
+          Creative studio management platform. Project pipelines, client portals, asset libraries, and collaborative design workflows for agencies and freelancers.
+        </p>
+        <div class="card-tech">
+          <span class="tech-tag">Next.js</span>
+          <span class="tech-tag">tRPC</span>
+          <span class="tech-tag">Prisma</span>
+          <span class="tech-tag">S3</span>
+        </div>
+        <div class="card-arrow">
+          Coming soon
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Satshrut -->
+      <a href="platforms/satshrut.html" class="platform-card" data-delay="400">
+        <div class="card-header">
+          <div class="card-icon green">📚</div>
+          <div>
+            <div class="card-name">Satshrut</div>
+            <span class="card-status blueprint">Blueprint</span>
+          </div>
+        </div>
+        <p class="card-description">
+          Spiritual knowledge and discourse platform. Curated content library, guided learning paths, and community features for seekers and scholars.
+        </p>
+        <div class="card-tech">
+          <span class="tech-tag">Flutter</span>
+          <span class="tech-tag">Firebase</span>
+          <span class="tech-tag">Algolia</span>
+          <span class="tech-tag">CDN</span>
+        </div>
+        <div class="card-arrow">
+          Coming soon
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- BillingZero -->
+      <a href="platforms/billingzero.html" class="platform-card" data-delay="500">
+        <div class="card-header">
+          <div class="card-icon red">⚡</div>
+          <div>
+            <div class="card-name">BillingZero</div>
+            <span class="card-status blueprint">Blueprint</span>
+          </div>
+        </div>
+        <p class="card-description">
+          Zero-friction subscription billing engine. Usage metering, tiered pricing models, dunning management, and revenue analytics for SaaS businesses.
+        </p>
+        <div class="card-tech">
+          <span class="tech-tag">Go</span>
+          <span class="tech-tag">gRPC</span>
+          <span class="tech-tag">PostgreSQL</span>
+          <span class="tech-tag">Stripe</span>
+        </div>
+        <div class="card-arrow">
+          Coming soon
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Relokate HR -->
+      <a href="platforms/relokate-hr.html" class="platform-card" data-delay="600">
+        <div class="card-header">
+          <div class="card-icon blue">🌍</div>
+          <div>
+            <div class="card-name">Relokate HR</div>
+            <span class="card-status blueprint">Blueprint</span>
+          </div>
+        </div>
+        <p class="card-description">
+          Global employee relocation management system. Visa tracking, housing coordination, cost estimation, and compliance automation across 50+ countries.
+        </p>
+        <div class="card-tech">
+          <span class="tech-tag">React</span>
+          <span class="tech-tag">NestJS</span>
+          <span class="tech-tag">PostgreSQL</span>
+          <span class="tech-tag">AWS</span>
+        </div>
+        <div class="card-arrow">
+          Coming soon
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── Bio Section ── -->
+  <section class="bio-section" id="about">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <span class="section-title">About</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="bio-grid">
+      <div>
+        <div class="bio-label">Architect</div>
+        <h2 class="bio-name">Sagar Sutaria</h2>
+        <p class="bio-role">Full-Stack Engineer & System Architect</p>
+        <div class="bio-stats">
+          <div class="stat">
+            <div class="stat-number">7+</div>
+            <div class="stat-label">Platforms</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">5+</div>
+            <div class="stat-label">Years</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">E2E</div>
+            <div class="stat-label">Builder</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="bio-text">
+          <p>
+            I design and build production systems end-to-end — from database schemas and
+            API architectures to real-time mobile experiences. Every platform here was taken
+            from concept to deployment, with careful attention to scalability, developer experience,
+            and the details that make software feel inevitable rather than cobbled together.
+          </p>
+          <p>
+            My work spans marketplaces, fintech, SaaS, and mobile-first platforms. I gravitate
+            toward problems that need both deep backend thinking (distributed systems, real-time
+            data, payment flows) and polished user-facing craft.
+          </p>
+        </div>
+        <div class="bio-values">
+          <div class="value-card">
+            <div class="value-title">Systems Thinking</div>
+            <div class="value-desc">Architecture that anticipates scale, not just current needs</div>
+          </div>
+          <div class="value-card">
+            <div class="value-title">Craft over Code</div>
+            <div class="value-desc">Clean APIs, typed schemas, zero-surprise interfaces</div>
+          </div>
+          <div class="value-card">
+            <div class="value-title">Ship Real Things</div>
+            <div class="value-desc">Every platform here runs in production or is deploy-ready</div>
+          </div>
+          <div class="value-card">
+            <div class="value-title">Full Ownership</div>
+            <div class="value-desc">Infra, backend, frontend, mobile, DevOps — one person, whole stack</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <div class="footer-left">&copy; 2026 Sagar Sutaria</div>
+    <div class="footer-links">
+      <a href="https://linkedin.com/in/sagarsutaria" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a href="mailto:sagar@quantalynk.com">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
+        Email
+      </a>
+      <a href="https://github.com/sagarsutaria" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+// Page loader
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('pageLoader').classList.add('hidden');
+  }, 400);
+});
+
+// Card mouse tracking for radial gradient
+document.querySelectorAll('.platform-card').forEach(card => {
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    card.style.setProperty('--mouse-x', x + '%');
+    card.style.setProperty('--mouse-y', y + '%');
+  });
+});
+
+// Intersection observer for card reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const delay = parseInt(entry.target.dataset.delay) || 0;
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, delay);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.platform-card').forEach(card => {
+  observer.observe(card);
+});
+
+// Smooth parallax on scroll for glow orbs
+let ticking = false;
+window.addEventListener('scroll', () => {
+  if (!ticking) {
+    requestAnimationFrame(() => {
+      const scrollY = window.scrollY;
+      const orbs = document.querySelectorAll('.glow-orb');
+      orbs.forEach((orb, i) => {
+        const speed = 0.03 + (i * 0.015);
+        orb.style.transform = `translateY(${scrollY * speed}px)`;
+      });
+      ticking = false;
+    });
+    ticking = true;
+  }
+});
+</script>
+
+</body>
+</html>
