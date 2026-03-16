@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Satshrut Jain Portals — System Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --gold: #E8B931;
+  --gold-dim: #C49A1C;
+  --gold-glow: rgba(232, 185, 49, 0.15);
+  --blue: #5BA0E0;
+  --blue-dim: #3A7BBF;
+  --blue-glow: rgba(91, 160, 224, 0.12);
+  --cream: #F5E6C8;
+  --cream-dim: rgba(245, 230, 200, 0.06);
+  --surface-0: #0B0E14;
+  --surface-1: #111621;
+  --surface-2: #171D2A;
+  --surface-3: #1E2636;
+  --border: rgba(245, 230, 200, 0.08);
+  --border-hover: rgba(245, 230, 200, 0.18);
+  --text-primary: #E8E2D6;
+  --text-secondary: rgba(232, 226, 214, 0.55);
+  --text-tertiary: rgba(232, 226, 214, 0.3);
+  --green: #5EBD73;
+  --red: #E05B5B;
+  --purple: #9B7EDC;
+  --orange: #E8963A;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--surface-0);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Background grid */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245, 230, 200, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 230, 200, 0.018) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: -40%;
+  right: -20%;
+  width: 80vw;
+  height: 80vw;
+  background: radial-gradient(ellipse, rgba(232, 185, 49, 0.03) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+/* HEADER */
+.header {
+  padding: 64px 0 48px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 56px;
+}
+
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--surface-0);
+  box-shadow: 0 4px 24px rgba(232, 185, 49, 0.2);
+}
+
+.logo-text h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--cream);
+  letter-spacing: -0.5px;
+}
+
+.logo-text p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 2px;
+}
+
+.header-meta {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.meta-block {
+  text-align: right;
+}
+
+.meta-block .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+}
+
+.meta-block .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* STATS BAR */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 56px;
+}
+
+.stat-cell {
+  background: var(--surface-1);
+  padding: 24px 20px;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.stat-cell:hover {
+  background: var(--surface-2);
+}
+
+.stat-number {
+  font-family: 'Instrument Serif', serif;
+  font-size: 36px;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* LAYER SECTIONS */
+.layer {
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.layer-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-left: 4px;
+}
+
+.layer-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gold-dim);
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--gold-dim);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.layer-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--text-secondary);
+}
+
+.layer-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* CONNECTION FLOW */
+.flow-connector {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
+  position: relative;
+}
+
+.flow-line {
+  width: 2px;
+  height: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.flow-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, var(--gold-dim), transparent);
+  opacity: 0.3;
+}
+
+.flow-line::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -3px;
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: flowPulse 2.5s ease-in-out infinite;
+  box-shadow: 0 0 12px rgba(232, 185, 49, 0.4);
+}
+
+@keyframes flowPulse {
+  0% { top: -8px; opacity: 1; }
+  80% { top: 40px; opacity: 0.3; }
+  100% { top: 40px; opacity: 0; }
+}
+
+.flow-labels {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 40px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+  letter-spacing: 1px;
+}
+
+.flow-labels.left { right: calc(50% + 24px); }
+.flow-labels.right { left: calc(50% + 24px); }
+
+/* CARDS */
+.card-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: transparent;
+  transition: background 0.35s;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.card:hover::before {
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+.card.expanded {
+  border-color: rgba(232, 185, 49, 0.2);
+  box-shadow: 0 4px 24px var(--gold-glow);
+}
+
+.card-head {
+  padding: 20px 20px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+  position: relative;
+}
+
+.card-icon.gold { background: rgba(232, 185, 49, 0.1); color: var(--gold); }
+.card-icon.blue { background: rgba(91, 160, 224, 0.1); color: var(--blue); }
+.card-icon.green { background: rgba(94, 189, 115, 0.1); color: var(--green); }
+.card-icon.purple { background: rgba(155, 126, 220, 0.1); color: var(--purple); }
+.card-icon.orange { background: rgba(232, 150, 58, 0.1); color: var(--orange); }
+.card-icon.red { background: rgba(224, 91, 91, 0.1); color: var(--red); }
+
+.card-info { flex: 1; min-width: 0; }
+
+.card-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+
+.card-tech {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.5px;
+}
+
+.card-expand-icon {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--text-tertiary);
+  transition: transform 0.3s;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.card.expanded .card-expand-icon {
+  transform: rotate(45deg);
+  color: var(--gold);
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 20px 16px;
+}
+
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.tag.gold { background: rgba(232, 185, 49, 0.08); color: var(--gold-dim); }
+.tag.blue { background: rgba(91, 160, 224, 0.08); color: var(--blue-dim); }
+.tag.green { background: rgba(94, 189, 115, 0.08); color: var(--green); }
+.tag.purple { background: rgba(155, 126, 220, 0.08); color: var(--purple); }
+.tag.orange { background: rgba(232, 150, 58, 0.08); color: var(--orange); }
+.tag.dim { background: var(--cream-dim); color: var(--text-secondary); }
+
+/* EXPANDABLE DETAIL */
+.card-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  border-top: 1px solid transparent;
+}
+
+.card.expanded .card-detail {
+  max-height: 600px;
+  border-top-color: var(--border);
+}
+
+.card-detail-inner {
+  padding: 16px 20px 20px;
+}
+
+.detail-section {
+  margin-bottom: 14px;
+}
+
+.detail-section:last-child { margin-bottom: 0; }
+
+.detail-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.detail-list {
+  list-style: none;
+}
+
+.detail-list li {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.detail-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 6px;
+  height: 1px;
+  background: var(--gold-dim);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 16px;
+}
+
+.detail-grid .dg-item {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dg-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dg-dot.gold { background: var(--gold); }
+.dg-dot.blue { background: var(--blue); }
+.dg-dot.green { background: var(--green); }
+.dg-dot.purple { background: var(--purple); }
+.dg-dot.orange { background: var(--orange); }
+
+/* API MODULE GRID */
+.api-section {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.api-header {
+  padding: 24px 24px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.api-header:hover { background: var(--surface-2); }
+
+.api-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.api-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(91, 160, 224, 0.1);
+  color: var(--blue);
+  letter-spacing: 0.5px;
+}
+
+.api-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.api-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.api-modules-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-top: 1px solid var(--border);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.api-section.expanded .api-modules-grid {
+  max-height: 800px;
+}
+
+.api-module {
+  background: var(--surface-1);
+  padding: 16px;
+  transition: background 0.2s;
+}
+
+.api-module:hover {
+  background: var(--surface-2);
+}
+
+.api-module-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.api-module-desc {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+.api-module-cat {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-bottom: 6px;
+}
+
+.cat-core { background: rgba(232, 185, 49, 0.1); color: var(--gold-dim); }
+.cat-content { background: rgba(91, 160, 224, 0.1); color: var(--blue-dim); }
+.cat-user { background: rgba(155, 126, 220, 0.1); color: var(--purple); }
+.cat-media { background: rgba(94, 189, 115, 0.1); color: var(--green); }
+.cat-admin { background: rgba(232, 150, 58, 0.1); color: var(--orange); }
+.cat-infra { background: rgba(232, 226, 214, 0.06); color: var(--text-secondary); }
+
+/* MIDDLEWARE BAR */
+.middleware-bar {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.mw-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.mw-chip:hover {
+  border-color: var(--border-hover);
+  background: var(--cream-dim);
+}
+
+.mw-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+/* EXTERNAL SERVICES */
+.ext-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.ext-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.ext-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.ext-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.ext-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.ext-desc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* PATTERNS SECTION */
+.patterns-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.pattern-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  border-left: 2px solid var(--gold-dim);
+  transition: all 0.3s;
+}
+
+.pattern-card:hover {
+  border-color: var(--border-hover);
+  border-left-color: var(--gold);
+  background: var(--surface-2);
+}
+
+.pattern-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+}
+
+.pattern-desc {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+/* INFRA SECTION */
+.infra-bar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.infra-cell {
+  background: var(--surface-1);
+  padding: 20px 16px;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.infra-cell:hover { background: var(--surface-2); }
+
+.infra-icon {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.infra-name {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.infra-tech {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+}
+
+/* FOOTER */
+.footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.5px;
+}
+
+.footer-right {
+  display: flex;
+  gap: 24px;
+}
+
+.footer-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-link:hover { color: var(--gold); }
+
+/* ANIMATIONS */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  opacity: 0;
+  animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.24s; }
+.delay-4 { animation-delay: 0.32s; }
+.delay-5 { animation-delay: 0.4s; }
+.delay-6 { animation-delay: 0.48s; }
+
+/* PORTAL SECTION */
+.portal-group {
+  margin-top: 16px;
+}
+
+.portal-group-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+  padding-left: 4px;
+}
+
+/* SPAN CARD */
+.span-card {
+  grid-column: span 2;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .card-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+  .api-modules-grid { grid-template-columns: repeat(3, 1fr); }
+  .patterns-grid { grid-template-columns: repeat(2, 1fr); }
+  .ext-grid { grid-template-columns: repeat(3, 1fr); }
+  .stats-bar { grid-template-columns: repeat(3, 1fr); }
+  .infra-bar { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .container { padding: 0 20px; }
+  .card-grid.cols-4,
+  .card-grid.cols-3,
+  .card-grid.cols-2 { grid-template-columns: 1fr; }
+  .span-card { grid-column: span 1; }
+  .api-modules-grid { grid-template-columns: repeat(2, 1fr); }
+  .patterns-grid { grid-template-columns: 1fr; }
+  .ext-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .infra-bar { grid-template-columns: repeat(2, 1fr); }
+  .header-top { flex-direction: column; }
+  .header-meta { justify-content: flex-start; }
+  .meta-block { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header animate-in">
+    <div class="header-top">
+      <div class="logo-area">
+        <div class="logo-icon">S</div>
+        <div class="logo-text">
+          <h1>Satshrut Jain Portals</h1>
+          <p>System Architecture v1.0</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-block">
+          <div class="label">Domain</div>
+          <div class="value">Jain Spiritual Content</div>
+        </div>
+        <div class="meta-block">
+          <div class="label">Org</div>
+          <div class="value">Sri Kund Kund Raj Kahan Trust</div>
+        </div>
+        <div class="meta-block">
+          <div class="label">Last Updated</div>
+          <div class="value">March 2026</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar animate-in delay-1">
+    <div class="stat-cell">
+      <div class="stat-number">3</div>
+      <div class="stat-label">Portal<br>Websites</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">3</div>
+      <div class="stat-label">Backend<br>APIs</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">15</div>
+      <div class="stat-label">DB Entities<br>/ Models</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">23</div>
+      <div class="stat-label">Mobile<br>Screens</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">78</div>
+      <div class="stat-label">Web<br>Pages</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">12</div>
+      <div class="stat-label">Shared<br>Packages</div>
+    </div>
+  </div>
+
+  <!-- LAYER 1: CLIENT APPLICATIONS -->
+  <div class="layer animate-in delay-2">
+    <div class="layer-header">
+      <div class="layer-number">01</div>
+      <div class="layer-title">Client Applications</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <!-- Primary: Satshrut -->
+    <div class="portal-group-title">Satshrut &mdash; Public Pravachan Library</div>
+    <div class="card-grid cols-3">
+      <!-- Satshrut Web -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon gold">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Satshrut Web</div>
+            <div class="card-tech">Next.js 15 / React 19 / Payload CMS</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag gold">40 Pages</span>
+          <span class="tag dim">Tailwind</span>
+          <span class="tag dim">Framer Motion</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Page Groups</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>Home (Hero, Pillars, Saints)</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Pravachans (list + detail)</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Video Pravachans + Playlists</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Shastras (PDF viewer)</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Magazines (multi-lang)</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>Speakers / Series</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Donations / Tithi / About</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Admin CRUD Panels</div>
+              </div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Key Components (64 TSX)</div>
+              <ul class="detail-list">
+                <li>AudioPlayer with queue, speed, volume, sleep timer, mini player</li>
+                <li>PdfViewer with embedded rendering via pdfjs-dist</li>
+                <li>CMS-driven pages via Payload blocks (Hero, FAQ, Newsletter, etc.)</li>
+                <li>SEO: JSON-LD structured data, SSR metadata</li>
+                <li>PWA install prompt, i18n support</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Satshrut Mobile -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Satshrut Mobile</div>
+            <div class="card-tech">Flutter 3.x / Dart / Riverpod</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag blue">23 Screens</span>
+          <span class="tag dim">116 Dart files</span>
+          <span class="tag dim">Clean Architecture</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Feature Modules</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>Auth (Login, OTP, Register)</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Pravachans (list + detail)</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Shastras / Magazines</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Audio Player (background)</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Playlists / Favorites</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>Downloads (offline)</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>History / Search</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Speakers / Series</div>
+              </div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Architecture</div>
+              <ul class="detail-list">
+                <li>Clean Architecture: data/domain/presentation per feature</li>
+                <li>Riverpod for state management (not Provider)</li>
+                <li>Dio HTTP client, Hive for local cache</li>
+                <li>just_audio + audio_service for background playback</li>
+                <li>Firebase Auth (Google Sign-In) + FCM push notifications</li>
+                <li>go_router for navigation, cached_network_image</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Satshrut API -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Satshrut API</div>
+            <div class="card-tech">NestJS 10 / TypeORM / 125 files</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag green">17 Modules</span>
+          <span class="tag dim">Swagger</span>
+          <span class="tag dim">Port 3001</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Modules</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>Pravachans</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>VideoPravachans</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Shastras</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Magazines</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Speakers</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Series</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Playlists</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Favorites</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>PlayHistory</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Languages</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>Locations</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>YouTubeSync</div>
+                <div class="dg-item"><span class="dg-dot green"></span>YouTubePlaylists</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Auth / Users</div>
+              </div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Key Features</div>
+              <ul class="detail-list">
+                <li>PDF thumbnail generation via poppler (pdftocairo)</li>
+                <li>YouTube sync for video pravachans</li>
+                <li>Firebase Auth guard with JWT bearer tokens</li>
+                <li>15 TypeORM entities with UUID primary keys</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Veervaani Portal -->
+    <div class="portal-group" style="margin-top: 24px;">
+      <div class="portal-group-title">Veervaani &mdash; Young Devotees Portal</div>
+      <div class="card-grid cols-3">
+        <div class="card" onclick="toggleCard(this)">
+          <div class="card-head">
+            <div class="card-icon purple">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <div class="card-info">
+              <div class="card-name">Veervaani Web</div>
+              <div class="card-tech">Next.js 14 / React 18 / Framer Motion</div>
+            </div>
+            <div class="card-expand-icon">+</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag purple">25 Pages</span>
+            <span class="tag dim">Radix UI</span>
+            <span class="tag dim">React Query</span>
+          </div>
+          <div class="card-detail">
+            <div class="card-detail-inner">
+              <div class="detail-section">
+                <div class="detail-label">Page Groups</div>
+                <div class="detail-grid">
+                  <div class="dg-item"><span class="dg-dot gold"></span>Pravachans (list + detail)</div>
+                  <div class="dg-item"><span class="dg-dot blue"></span>Shastras (list + detail)</div>
+                  <div class="dg-item"><span class="dg-dot green"></span>Bhakti / Children sections</div>
+                  <div class="dg-item"><span class="dg-dot purple"></span>Live streaming page</div>
+                  <div class="dg-item"><span class="dg-dot orange"></span>Events / Photos</div>
+                  <div class="dg-item"><span class="dg-dot gold"></span>Playlists / Favorites</div>
+                  <div class="dg-item"><span class="dg-dot blue"></span>Notes / History</div>
+                  <div class="dg-item"><span class="dg-dot green"></span>Admin panel (CRUD)</div>
+                </div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label">Unique Features</div>
+                <ul class="detail-list">
+                  <li>Docker Compose for local dev + production deployment</li>
+                  <li>Variant system for multi-tenant deployments</li>
+                  <li>70 TSX components across audio, layout, content</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" onclick="toggleCard(this)">
+          <div class="card-head">
+            <div class="card-icon purple">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+            </div>
+            <div class="card-info">
+              <div class="card-name">Veervaani API</div>
+              <div class="card-tech">NestJS 10 / Raw SQL / 94 files</div>
+            </div>
+            <div class="card-expand-icon">+</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag purple">15 Modules</span>
+            <span class="tag dim">Firebase Admin</span>
+            <span class="tag dim">Health Checks</span>
+          </div>
+          <div class="card-detail">
+            <div class="card-detail-inner">
+              <div class="detail-section">
+                <div class="detail-label">Modules</div>
+                <div class="detail-grid">
+                  <div class="dg-item"><span class="dg-dot gold"></span>Pravachans</div>
+                  <div class="dg-item"><span class="dg-dot blue"></span>Shastras</div>
+                  <div class="dg-item"><span class="dg-dot green"></span>Speakers</div>
+                  <div class="dg-item"><span class="dg-dot purple"></span>Playlists</div>
+                  <div class="dg-item"><span class="dg-dot orange"></span>Favorites</div>
+                  <div class="dg-item"><span class="dg-dot gold"></span>Quotes</div>
+                  <div class="dg-item"><span class="dg-dot blue"></span>Notes / History</div>
+                  <div class="dg-item"><span class="dg-dot green"></span>Tags / Locations</div>
+                </div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label">Architecture</div>
+                <ul class="detail-list">
+                  <li>Raw pg (no ORM) with custom repository pattern</li>
+                  <li>Role-based access: user, admin, super_admin guards</li>
+                  <li>Excel data import scripts for legacy migration</li>
+                  <li>@nestjs/terminus health checks</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Placeholder for alignment -->
+        <div></div>
+      </div>
+    </div>
+
+    <!-- Vitrag Satsang Portal -->
+    <div class="portal-group" style="margin-top: 24px;">
+      <div class="portal-group-title">Vitrag Satsang &mdash; Permission-Based Live Streaming</div>
+      <div class="card-grid cols-3">
+        <div class="card" onclick="toggleCard(this)">
+          <div class="card-head">
+            <div class="card-icon orange">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <div class="card-info">
+              <div class="card-name">Vitrag Satsang Web</div>
+              <div class="card-tech">Next.js 14 / React 18 / Socket.io</div>
+            </div>
+            <div class="card-expand-icon">+</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag orange">13 Pages</span>
+            <span class="tag dim">HLS.js</span>
+            <span class="tag dim">Zod</span>
+          </div>
+          <div class="card-detail">
+            <div class="card-detail-inner">
+              <div class="detail-section">
+                <div class="detail-label">Page Groups</div>
+                <div class="detail-grid">
+                  <div class="dg-item"><span class="dg-dot gold"></span>Live stream viewer + chat</div>
+                  <div class="dg-item"><span class="dg-dot blue"></span>Audio library</div>
+                  <div class="dg-item"><span class="dg-dot green"></span>Video library</div>
+                  <div class="dg-item"><span class="dg-dot purple"></span>Admin user management</div>
+                  <div class="dg-item"><span class="dg-dot orange"></span>Profile / Auth</div>
+                  <div class="dg-item"><span class="dg-dot gold"></span>Registration</div>
+                </div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label">Unique Features</div>
+                <ul class="detail-list">
+                  <li>Real-time chat via Socket.io during live streams</li>
+                  <li>HLS video streaming with adaptive quality</li>
+                  <li>React Hook Form + Zod for form validation</li>
+                  <li>Permission-based content access control</li>
+                  <li>Variant system + Playwright E2E tests</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" onclick="toggleCard(this)">
+          <div class="card-head">
+            <div class="card-icon orange">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+            </div>
+            <div class="card-info">
+              <div class="card-name">Vitrag Satsang API</div>
+              <div class="card-tech">NestJS 10 / Socket.io / AWS IVS</div>
+            </div>
+            <div class="card-expand-icon">+</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag orange">8 Modules</span>
+            <span class="tag dim">WebSockets</span>
+            <span class="tag dim">Email</span>
+          </div>
+          <div class="card-detail">
+            <div class="card-detail-inner">
+              <div class="detail-section">
+                <div class="detail-label">Modules</div>
+                <div class="detail-grid">
+                  <div class="dg-item"><span class="dg-dot gold"></span>Streaming (IVS)</div>
+                  <div class="dg-item"><span class="dg-dot blue"></span>Chat Gateway</div>
+                  <div class="dg-item"><span class="dg-dot green"></span>Video / Audio</div>
+                  <div class="dg-item"><span class="dg-dot purple"></span>Users / Auth</div>
+                  <div class="dg-item"><span class="dg-dot orange"></span>Notifications (email)</div>
+                  <div class="dg-item"><span class="dg-dot gold"></span>Health</div>
+                </div>
+              </div>
+              <div class="detail-section">
+                <div class="detail-label">Unique Architecture</div>
+                <ul class="detail-list">
+                  <li>AWS Interactive Video Service for live streaming</li>
+                  <li>WebSocket chat gateway (Socket.io)</li>
+                  <li>Nodemailer for email notifications</li>
+                  <li>Access logging middleware for audit trail</li>
+                  <li>Permission-based content gating per user</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Placeholder -->
+        <div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW 1 to 2 -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">REST / Firebase JWT</div>
+    <div class="flow-labels right">React Query / Dio HTTP</div>
+  </div>
+
+  <!-- LAYER 2: API MODULES DETAIL -->
+  <div class="layer animate-in delay-3">
+    <div class="layer-header">
+      <div class="layer-number">02</div>
+      <div class="layer-title">API Modules &mdash; Satshrut (Primary)</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="api-section" id="apiSection">
+      <div class="api-header" onclick="toggleApi()">
+        <div class="api-header-left">
+          <div class="api-badge">NestJS 10</div>
+          <div>
+            <div class="api-title">Satshrut API</div>
+            <div class="api-subtitle">Port 3001 &middot; /api/v1 &middot; 17 Modules &middot; TypeORM &middot; TypeScript</div>
+          </div>
+        </div>
+        <div class="card-expand-icon" id="apiExpandIcon">+</div>
+      </div>
+
+      <div class="api-modules-grid" id="apiGrid">
+        <!-- Content -->
+        <div class="api-module"><div class="api-module-cat cat-content">Content</div><div class="api-module-name">Pravachans</div><div class="api-module-desc">Audio discourses: list, filter, search, play count</div></div>
+        <div class="api-module"><div class="api-module-cat cat-content">Content</div><div class="api-module-name">VideoPravachans</div><div class="api-module-desc">YouTube-synced video discourses</div></div>
+        <div class="api-module"><div class="api-module-cat cat-content">Content</div><div class="api-module-name">Shastras</div><div class="api-module-desc">Sacred scriptures with PDF thumbnails</div></div>
+        <div class="api-module"><div class="api-module-cat cat-content">Content</div><div class="api-module-name">Magazines</div><div class="api-module-desc">Multi-language magazines with PDF viewer</div></div>
+        <div class="api-module"><div class="api-module-cat cat-content">Content</div><div class="api-module-name">Series</div><div class="api-module-desc">Discourse series grouping</div></div>
+
+        <div class="api-module"><div class="api-module-cat cat-content">Content</div><div class="api-module-name">Speakers</div><div class="api-module-desc">Guru profiles with linked content</div></div>
+        <div class="api-module"><div class="api-module-cat cat-content">Content</div><div class="api-module-name">Languages</div><div class="api-module-desc">Multi-language content support</div></div>
+        <div class="api-module"><div class="api-module-cat cat-content">Content</div><div class="api-module-name">Locations</div><div class="api-module-desc">Recording venue / city metadata</div></div>
+        <div class="api-module"><div class="api-module-cat cat-media">Media</div><div class="api-module-name">YouTubeSync</div><div class="api-module-desc">Auto-sync YouTube channel videos</div></div>
+        <div class="api-module"><div class="api-module-cat cat-media">Media</div><div class="api-module-name">YouTubePlaylists</div><div class="api-module-desc">Playlist import from YouTube API</div></div>
+
+        <!-- User -->
+        <div class="api-module"><div class="api-module-cat cat-user">User</div><div class="api-module-name">Auth</div><div class="api-module-desc">Firebase Auth guard, JWT validation</div></div>
+        <div class="api-module"><div class="api-module-cat cat-user">User</div><div class="api-module-name">Users</div><div class="api-module-desc">User CRUD, roles, profile management</div></div>
+        <div class="api-module"><div class="api-module-cat cat-user">User</div><div class="api-module-name">Playlists</div><div class="api-module-desc">User-created playlists with items</div></div>
+        <div class="api-module"><div class="api-module-cat cat-user">User</div><div class="api-module-name">Favorites</div><div class="api-module-desc">Bookmark pravachans for quick access</div></div>
+        <div class="api-module"><div class="api-module-cat cat-user">User</div><div class="api-module-name">PlayHistory</div><div class="api-module-desc">Track listening progress per user</div></div>
+      </div>
+
+      <!-- Middleware -->
+      <div class="middleware-bar">
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--gold);"></span>Firebase Auth Guard</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--blue);"></span>Validation Pipe</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--green);"></span>Transform Interceptor</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--purple);"></span>Exception Filter</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--orange);"></span>Helmet</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--cream);"></span>Swagger / OpenAPI</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW 2 to 3 -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">TypeORM / Raw SQL</div>
+    <div class="flow-labels right">Firebase Admin SDK</div>
+  </div>
+
+  <!-- LAYER 3: DATA LAYER -->
+  <div class="layer animate-in delay-4">
+    <div class="layer-header">
+      <div class="layer-number">03</div>
+      <div class="layer-title">Data Layer &amp; External Services</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="card-grid cols-3">
+      <!-- PostgreSQL -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">PostgreSQL 16</div>
+            <div class="card-tech">15 Entities &middot; TypeORM &middot; PgBouncer</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag blue">UUID PKs</span>
+          <span class="tag dim">JSONB metadata</span>
+          <span class="tag dim">Migration scripts</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Core Entities</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>Pravachan (audio)</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>Speaker</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Shastra (scripture)</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Magazine</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Series</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Language</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Location / Yatra</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>User</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Playlist / PlaylistItem</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Favorite</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>PlayHistory</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Contact / Slider</div>
+              </div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Database Features</div>
+              <ul class="detail-list">
+                <li>Shared PostgreSQL with per-portal schemas</li>
+                <li>PgBouncer connection pooling (transaction mode, 1000 max clients)</li>
+                <li>Legacy ID columns for CodeIgniter migration</li>
+                <li>Computed columns (year, month, day from recording_date)</li>
+                <li>pgAdmin on port 5050 for management</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payload CMS -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon gold">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Payload CMS 3</div>
+            <div class="card-tech">Headless CMS &middot; Lexical Editor</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag gold">9 Block Types</span>
+          <span class="tag dim">Postgres Adapter</span>
+          <span class="tag dim">Globals</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Collections</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>Pages (block layout)</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Media (image/PDF)</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Announcements</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Life Sketches</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Admins (auth)</div>
+              </div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Block Types</div>
+              <ul class="detail-list">
+                <li>Hero, Five Pillars, Saints, Quick Access</li>
+                <li>Testimonials, FAQ, Newsletter, Announcements</li>
+                <li>Rich Text (Lexical editor)</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Global: Site Settings</div>
+              <ul class="detail-list">
+                <li>Trust name, live stream URL, social links</li>
+                <li>Feature flags (donations, tithi, newsletter)</li>
+                <li>Donation bank details + UPI</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Firebase -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon orange">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Firebase</div>
+            <div class="card-tech">Auth &middot; FCM &middot; Admin SDK</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag orange">Phone Auth</span>
+          <span class="tag dim">Google Sign-In</span>
+          <span class="tag dim">Push Notifications</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Services Used</div>
+              <ul class="detail-list">
+                <li>Firebase Auth: phone + Google Sign-In on mobile</li>
+                <li>Firebase Auth: email/password on web portals</li>
+                <li>Firebase Admin SDK: token verification on all 3 APIs</li>
+                <li>FCM: push notifications to mobile app</li>
+                <li>Used across all 3 portals with shared project</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- External Services -->
+    <div style="margin-top: 24px;">
+      <div class="ext-grid">
+        <div class="ext-card">
+          <div class="ext-icon">&#9881;</div>
+          <div class="ext-name">AWS IVS</div>
+          <div class="ext-desc">Live streaming<br>Vitrag Satsang portal</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon">&#9993;</div>
+          <div class="ext-name">Nodemailer</div>
+          <div class="ext-desc">Transactional email<br>notifications</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon">&#8377;</div>
+          <div class="ext-name">Razorpay</div>
+          <div class="ext-desc">Donation payments<br>INR processing</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon">&#9654;</div>
+          <div class="ext-name">YouTube API</div>
+          <div class="ext-desc">Video sync &amp;<br>playlist import</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon">&#128196;</div>
+          <div class="ext-name">Poppler</div>
+          <div class="ext-desc">PDF thumbnail<br>generation (pdftocairo)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW 3 to 4 -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">Shared Types</div>
+    <div class="flow-labels right">Shared UI</div>
+  </div>
+
+  <!-- LAYER 4: SHARED PACKAGES -->
+  <div class="layer animate-in delay-5">
+    <div class="layer-header">
+      <div class="layer-number">04</div>
+      <div class="layer-title">Shared Packages &amp; Patterns</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="card-grid cols-3" style="margin-bottom: 24px;">
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">@satshrut-jain-portals/shared-types</div>
+            <div class="card-tech">TypeScript &middot; npm package</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag green">19 Files</span>
+          <span class="tag dim">GitLab npm registry</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Type Definitions</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>Pravachan</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>Speaker</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Shastra</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Magazine</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Series / Language</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Location / Playlist</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>User / LiveStream</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Pagination / Status</div>
+              </div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">API Types</div>
+              <ul class="detail-list">
+                <li>Request/Response DTOs shared across all portals</li>
+                <li>Pagination helpers with cursor + offset support</li>
+                <li>Portal enum (satshrut, veervaani, vitragsatsang)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">@satshrut-jain-portals/shared-ui</div>
+            <div class="card-tech">React / tsup / Vitest</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag purple">22 Files</span>
+          <span class="tag dim">Tailwind</span>
+          <span class="tag dim">ESM + CJS</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Components</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>Button</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Card</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Input</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Spinner</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>AudioPlayer</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>Header / Footer</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Navigation</div>
+              </div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Hooks</div>
+              <ul class="detail-list">
+                <li>useDebounce, useLocalStorage, useMediaQuery</li>
+                <li>Vitest + Testing Library test suite</li>
+                <li>Dual export: ESM (.mjs) + CJS (.js)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon gold">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">shared-config</div>
+            <div class="card-tech">ESLint / Prettier / TSConfig</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag gold">Linting</span>
+          <span class="tag dim">Formatting</span>
+          <span class="tag dim">Build Config</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Config Presets</div>
+              <ul class="detail-list">
+                <li>Shared ESLint config for all TypeScript projects</li>
+                <li>Shared Prettier config for consistent formatting</li>
+                <li>Shared TSConfig base for strict type checking</li>
+                <li>Used by all 3 web apps + 3 APIs</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Patterns -->
+    <div class="patterns-grid">
+      <div class="pattern-card">
+        <div class="pattern-title">Controller &rarr; Service &rarr; Repository</div>
+        <div class="pattern-desc">All NestJS APIs follow layered architecture with DI</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Clean Architecture (Mobile)</div>
+        <div class="pattern-desc">Feature-based: data/domain/presentation layers per module</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">CMS-Driven Pages</div>
+        <div class="pattern-desc">Payload blocks render dynamic layouts server-side</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Legacy Migration</div>
+        <div class="pattern-desc">CodeIgniter to NestJS with legacy_id columns preserved</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Multi-Portal Auth</div>
+        <div class="pattern-desc">Shared Firebase project with per-portal user roles</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Shared npm Packages</div>
+        <div class="pattern-desc">GitLab registry for types, UI, config across all repos</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">DTO Validation</div>
+        <div class="pattern-desc">class-validator decorators + whitelist pipe on all APIs</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">SSR + ISR</div>
+        <div class="pattern-desc">Next.js server components with incremental revalidation</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW 4 to 5 -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">GitLab CI/CD</div>
+    <div class="flow-labels right">Docker Deploy</div>
+  </div>
+
+  <!-- LAYER 5: INFRASTRUCTURE -->
+  <div class="layer animate-in delay-6">
+    <div class="layer-header">
+      <div class="layer-number">05</div>
+      <div class="layer-title">Infrastructure &amp; DevOps</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="infra-bar">
+      <div class="infra-cell">
+        <div class="infra-icon">&#128230;</div>
+        <div class="infra-name">Docker</div>
+        <div class="infra-tech">Multi-stage builds<br>Alpine images</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">&#128640;</div>
+        <div class="infra-name">GitLab CI/CD</div>
+        <div class="infra-tech">4 CI templates<br>NestJS, Next.js, Flutter, npm</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">&#128024;</div>
+        <div class="infra-name">PostgreSQL 16</div>
+        <div class="infra-tech">PgBouncer<br>pgAdmin 4</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">&#128202;</div>
+        <div class="infra-name">Testing</div>
+        <div class="infra-tech">Jest (147 tests)<br>Playwright E2E<br>Flutter tests (80)</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">&#128221;</div>
+        <div class="infra-name">Migration Infra</div>
+        <div class="infra-tech">SQL scripts, Python<br>TSV/Excel importers</div>
+      </div>
+    </div>
+
+    <!-- Repo overview -->
+    <div style="margin-top: 24px;">
+      <div class="ext-grid">
+        <div class="ext-card">
+          <div class="ext-icon" style="font-size: 16px; font-family: 'JetBrains Mono', monospace; color: var(--gold);">12</div>
+          <div class="ext-name">Git Repositories</div>
+          <div class="ext-desc">3 APIs, 3 webs, 1 mobile,<br>3 shared, infra, docs</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon" style="font-size: 16px; font-family: 'JetBrains Mono', monospace; color: var(--blue);">270+</div>
+          <div class="ext-name">API Source Files</div>
+          <div class="ext-desc">125 (satshrut) + 94 (veervaani)<br>+ 51 (vitragsatsang)</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon" style="font-size: 16px; font-family: 'JetBrains Mono', monospace; color: var(--green);">178</div>
+          <div class="ext-name">Web Components</div>
+          <div class="ext-desc">64 (satshrut) + 70 (veervaani)<br>+ 44 (vitragsatsang)</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon" style="font-size: 16px; font-family: 'JetBrains Mono', monospace; color: var(--purple);">116</div>
+          <div class="ext-name">Mobile Dart Files</div>
+          <div class="ext-desc">13 feature modules<br>Clean Architecture</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon" style="font-size: 16px; font-family: 'JetBrains Mono', monospace; color: var(--orange);">227+</div>
+          <div class="ext-name">Total Test Files</div>
+          <div class="ext-desc">18 API + 49 web + 80 mobile<br>+ E2E (Playwright)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-left">Satshrut Jain Portals &mdash; Architecture Diagram &mdash; Built by QuantaLynk</div>
+    <div class="footer-right">
+      <a class="footer-link" href="https://satshrut.org" target="_blank">satshrut.org</a>
+      <a class="footer-link" href="https://gitlab.quantalynk.com" target="_blank">GitLab</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+function toggleCard(el) {
+  el.classList.toggle('expanded');
+}
+
+function toggleApi() {
+  const section = document.getElementById('apiSection');
+  const icon = document.getElementById('apiExpandIcon');
+  section.classList.toggle('expanded');
+  if (section.classList.contains('expanded')) {
+    icon.style.transform = 'rotate(45deg)';
+    icon.style.color = 'var(--gold)';
+  } else {
+    icon.style.transform = 'rotate(0)';
+    icon.style.color = 'var(--text-tertiary)';
+  }
+}
+
+// Intersection observer for scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

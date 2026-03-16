@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q-Studio — System Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --gold: #E8B931;
+  --gold-dim: #C49A1C;
+  --gold-glow: rgba(232, 185, 49, 0.15);
+  --blue: #5BA0E0;
+  --blue-dim: #3A7BBF;
+  --blue-glow: rgba(91, 160, 224, 0.12);
+  --cream: #F5E6C8;
+  --cream-dim: rgba(245, 230, 200, 0.06);
+  --surface-0: #0B0E14;
+  --surface-1: #111621;
+  --surface-2: #171D2A;
+  --surface-3: #1E2636;
+  --border: rgba(245, 230, 200, 0.08);
+  --border-hover: rgba(245, 230, 200, 0.18);
+  --text-primary: #E8E2D6;
+  --text-secondary: rgba(232, 226, 214, 0.55);
+  --text-tertiary: rgba(232, 226, 214, 0.3);
+  --green: #5EBD73;
+  --red: #E05B5B;
+  --purple: #9B7EDC;
+  --orange: #E8963A;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--surface-0);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Background grid */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245, 230, 200, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 230, 200, 0.018) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: -40%;
+  right: -20%;
+  width: 80vw;
+  height: 80vw;
+  background: radial-gradient(ellipse, rgba(232, 185, 49, 0.03) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+/* ─── HEADER ─── */
+.header {
+  padding: 64px 0 48px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 56px;
+}
+
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--surface-0);
+  box-shadow: 0 4px 24px rgba(232, 185, 49, 0.2);
+}
+
+.logo-text h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--cream);
+  letter-spacing: -0.5px;
+}
+
+.logo-text p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 2px;
+}
+
+.header-meta {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.meta-block {
+  text-align: right;
+}
+
+.meta-block .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+}
+
+.meta-block .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ─── STATS BAR ─── */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 56px;
+}
+
+.stat-cell {
+  background: var(--surface-1);
+  padding: 24px 20px;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.stat-cell:hover {
+  background: var(--surface-2);
+}
+
+.stat-number {
+  font-family: 'Instrument Serif', serif;
+  font-size: 36px;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* ─── LAYER SECTIONS ─── */
+.layer {
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.layer-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-left: 4px;
+}
+
+.layer-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gold-dim);
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--gold-dim);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.layer-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--text-secondary);
+}
+
+.layer-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── CONNECTION FLOW ─── */
+.flow-connector {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
+  position: relative;
+}
+
+.flow-line {
+  width: 2px;
+  height: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.flow-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, var(--gold-dim), transparent);
+  opacity: 0.3;
+}
+
+.flow-line::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -3px;
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: flowPulse 2.5s ease-in-out infinite;
+  box-shadow: 0 0 12px rgba(232, 185, 49, 0.4);
+}
+
+@keyframes flowPulse {
+  0% { top: -8px; opacity: 1; }
+  80% { top: 40px; opacity: 0.3; }
+  100% { top: 40px; opacity: 0; }
+}
+
+.flow-labels {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 40px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+  letter-spacing: 1px;
+}
+
+.flow-labels.left { right: calc(50% + 24px); }
+.flow-labels.right { left: calc(50% + 24px); }
+
+/* ─── CARDS ─── */
+.card-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: transparent;
+  transition: background 0.35s;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.card:hover::before {
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+.card.expanded {
+  border-color: rgba(232, 185, 49, 0.2);
+  box-shadow: 0 4px 24px var(--gold-glow);
+}
+
+.card-head {
+  padding: 20px 20px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+  position: relative;
+}
+
+.card-icon.gold { background: rgba(232, 185, 49, 0.1); color: var(--gold); }
+.card-icon.blue { background: rgba(91, 160, 224, 0.1); color: var(--blue); }
+.card-icon.green { background: rgba(94, 189, 115, 0.1); color: var(--green); }
+.card-icon.purple { background: rgba(155, 126, 220, 0.1); color: var(--purple); }
+.card-icon.orange { background: rgba(232, 150, 58, 0.1); color: var(--orange); }
+.card-icon.red { background: rgba(224, 91, 91, 0.1); color: var(--red); }
+
+.card-info { flex: 1; min-width: 0; }
+
+.card-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+
+.card-tech {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.5px;
+}
+
+.card-expand-icon {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--text-tertiary);
+  transition: transform 0.3s;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.card.expanded .card-expand-icon {
+  transform: rotate(45deg);
+  color: var(--gold);
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 20px 16px;
+}
+
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.tag.gold { background: rgba(232, 185, 49, 0.08); color: var(--gold-dim); }
+.tag.blue { background: rgba(91, 160, 224, 0.08); color: var(--blue-dim); }
+.tag.green { background: rgba(94, 189, 115, 0.08); color: var(--green); }
+.tag.purple { background: rgba(155, 126, 220, 0.08); color: var(--purple); }
+.tag.orange { background: rgba(232, 150, 58, 0.08); color: var(--orange); }
+.tag.dim { background: var(--cream-dim); color: var(--text-secondary); }
+
+/* ─── EXPANDABLE DETAIL ─── */
+.card-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  border-top: 1px solid transparent;
+}
+
+.card.expanded .card-detail {
+  max-height: 600px;
+  border-top-color: var(--border);
+}
+
+.card-detail-inner {
+  padding: 16px 20px 20px;
+}
+
+.detail-section {
+  margin-bottom: 14px;
+}
+
+.detail-section:last-child { margin-bottom: 0; }
+
+.detail-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.detail-list {
+  list-style: none;
+}
+
+.detail-list li {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.detail-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 6px;
+  height: 1px;
+  background: var(--gold-dim);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 16px;
+}
+
+.detail-grid .dg-item {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dg-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dg-dot.gold { background: var(--gold); }
+.dg-dot.blue { background: var(--blue); }
+.dg-dot.green { background: var(--green); }
+.dg-dot.purple { background: var(--purple); }
+.dg-dot.orange { background: var(--orange); }
+
+/* ─── API MODULE GRID ─── */
+.api-section {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.api-header {
+  padding: 24px 24px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.api-header:hover { background: var(--surface-2); }
+
+.api-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.api-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(91, 160, 224, 0.1);
+  color: var(--blue);
+  letter-spacing: 0.5px;
+}
+
+.api-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.api-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.api-modules-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-top: 1px solid var(--border);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.api-section.expanded .api-modules-grid {
+  max-height: 800px;
+}
+
+.api-module {
+  background: var(--surface-1);
+  padding: 16px;
+  transition: background 0.2s;
+}
+
+.api-module:hover {
+  background: var(--surface-2);
+}
+
+.api-module-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.api-module-desc {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+.api-module-cat {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-bottom: 6px;
+}
+
+.cat-core { background: rgba(232, 185, 49, 0.1); color: var(--gold-dim); }
+.cat-comm { background: rgba(91, 160, 224, 0.1); color: var(--blue-dim); }
+.cat-intel { background: rgba(155, 126, 220, 0.1); color: var(--purple); }
+.cat-engage { background: rgba(94, 189, 115, 0.1); color: var(--green); }
+.cat-admin { background: rgba(232, 150, 58, 0.1); color: var(--orange); }
+.cat-infra { background: rgba(232, 226, 214, 0.06); color: var(--text-secondary); }
+
+/* ─── MIDDLEWARE BAR ─── */
+.middleware-bar {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.mw-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.mw-chip:hover {
+  border-color: var(--border-hover);
+  background: var(--cream-dim);
+}
+
+.mw-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+/* ─── CRON TICKER ─── */
+.ws-bar {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 20px;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ws-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--blue);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ws-pulse {
+  width: 7px;
+  height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: wsPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes wsPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(94, 189, 115, 0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(94, 189, 115, 0); }
+}
+
+.ws-events {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  flex: 1;
+}
+
+.ws-event {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  border: 1px solid var(--border);
+}
+
+/* ─── EXTERNAL SERVICES ─── */
+.ext-sidebar {
+  margin-top: 24px;
+}
+
+.ext-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.ext-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.ext-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.ext-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.ext-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.ext-desc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* ─── PATTERNS SECTION ─── */
+.patterns-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.pattern-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  border-left: 2px solid var(--gold-dim);
+  transition: all 0.3s;
+}
+
+.pattern-card:hover {
+  border-color: var(--border-hover);
+  border-left-color: var(--gold);
+  background: var(--surface-2);
+}
+
+.pattern-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+}
+
+.pattern-desc {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+/* ─── INFRA SECTION ─── */
+.infra-bar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.infra-cell {
+  background: var(--surface-1);
+  padding: 20px 16px;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.infra-cell:hover { background: var(--surface-2); }
+
+.infra-icon {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.infra-name {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.infra-tech {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.5px;
+}
+
+.footer-right {
+  display: flex;
+  gap: 24px;
+}
+
+.footer-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-link:hover { color: var(--gold); }
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  opacity: 0;
+  animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.24s; }
+.delay-4 { animation-delay: 0.32s; }
+.delay-5 { animation-delay: 0.4s; }
+.delay-6 { animation-delay: 0.48s; }
+
+/* ─── SPAN CARD ─── */
+.span-card {
+  grid-column: span 2;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1200px) {
+  .card-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+  .api-modules-grid { grid-template-columns: repeat(3, 1fr); }
+  .patterns-grid { grid-template-columns: repeat(2, 1fr); }
+  .ext-grid { grid-template-columns: repeat(3, 1fr); }
+  .stats-bar { grid-template-columns: repeat(3, 1fr); }
+  .infra-bar { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .container { padding: 0 20px; }
+  .card-grid.cols-4,
+  .card-grid.cols-3,
+  .card-grid.cols-2 { grid-template-columns: 1fr; }
+  .span-card { grid-column: span 1; }
+  .api-modules-grid { grid-template-columns: repeat(2, 1fr); }
+  .patterns-grid { grid-template-columns: 1fr; }
+  .ext-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .infra-bar { grid-template-columns: repeat(2, 1fr); }
+  .header-top { flex-direction: column; }
+  .header-meta { justify-content: flex-start; }
+  .meta-block { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header animate-in">
+    <div class="header-top">
+      <div class="logo-area">
+        <div class="logo-icon">Q</div>
+        <div class="logo-text">
+          <h1>Q-Studio</h1>
+          <p>System Architecture v1.0</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-block">
+          <div class="label">Domain</div>
+          <div class="value">Coworking Space SaaS</div>
+        </div>
+        <div class="meta-block">
+          <div class="label">Market</div>
+          <div class="value">Vadodara, India</div>
+        </div>
+        <div class="meta-block">
+          <div class="label">Last Updated</div>
+          <div class="value">March 2026</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar animate-in delay-1">
+    <div class="stat-cell">
+      <div class="stat-number">44</div>
+      <div class="stat-label">Pages / Routes</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">80</div>
+      <div class="stat-label">API Endpoints</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">32</div>
+      <div class="stat-label">DB Models</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">42</div>
+      <div class="stat-label">Components</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">97</div>
+      <div class="stat-label">Test Files</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number" style="color: var(--green);">24/7</div>
+      <div class="stat-label">Access Model</div>
+    </div>
+  </div>
+
+  <!-- LAYER 1: CLIENT LAYER -->
+  <div class="layer animate-in delay-2">
+    <div class="layer-header">
+      <div class="layer-number">01</div>
+      <div class="layer-title">Client Application</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="card-grid cols-4">
+      <!-- Landing / Marketing -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon gold">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Landing &amp; Marketing</div>
+            <div class="card-tech">Next.js 15 / MUI v5 / Framer Motion</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag gold">13 Sections</span>
+          <span class="tag dim">SEO</span>
+          <span class="tag dim">WhatsApp CTA</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">V2 Landing Sections</div>
+              <ul class="detail-list">
+                <li>Hero with dynamic campaign pricing</li>
+                <li>ProblemSolution, Amenities, Gallery</li>
+                <li>Pricing with day/night/full-access tiers</li>
+                <li>WhoItsFor (freelancers, startups, students)</li>
+                <li>Testimonials, FAQ, Location (Google Maps)</li>
+                <li>CTABanner, WhatsApp float button</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">SEO Pages</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>/for/freelancers</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>/for/startups</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>/for/students</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>/for/remote-workers</div>
+                <div class="dg-item"><span class="dg-dot green"></span>/coworking-space/[location]</div>
+                <div class="dg-item"><span class="dg-dot green"></span>/blog/[slug]</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Booking & Payments -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Booking &amp; Payments</div>
+            <div class="card-tech">Razorpay / react-hook-form / Zod</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag blue">10 Pages</span>
+          <span class="tag dim">Day/Night/Full</span>
+          <span class="tag dim">Monthly Pass</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Booking Flows</div>
+              <ul class="detail-list">
+                <li>Date selector + slot picker (day/night/full access)</li>
+                <li>Package selection with add-ons (printing, locker)</li>
+                <li>Promo &amp; referral code validation</li>
+                <li>Razorpay checkout with webhook verification</li>
+                <li>Monthly pass wizard (first-timer, 1-month, 3-month)</li>
+                <li>Booking confirmation with QR code generation</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Pages</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>/book</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>/booking-confirmation</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>/booking-success</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>/my-bookings</div>
+                <div class="dg-item"><span class="dg-dot green"></span>/my-passes</div>
+                <div class="dg-item"><span class="dg-dot green"></span>/plans</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>/payment-history</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>/invoices</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Member Dashboard -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Member Dashboard</div>
+            <div class="card-tech">Profile / Loyalty / Directory</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag purple">11 Pages</span>
+          <span class="tag dim">QR Checkin</span>
+          <span class="tag dim">Referrals</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Member Features</div>
+              <ul class="detail-list">
+                <li>Profile with skills, industries, networking flags</li>
+                <li>QR-based desk claim &amp; release</li>
+                <li>Member directory with connection requests</li>
+                <li>Loyalty tier progression &amp; rewards</li>
+                <li>Referral system with credit wallet</li>
+                <li>Transaction history &amp; invoice downloads</li>
+                <li>Push notification preferences</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Pages</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>/profile</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>/desk-map</div>
+                <div class="dg-item"><span class="dg-dot green"></span>/directory</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>/loyalty</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>/refer</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>/transactions</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>/claim-desk</div>
+                <div class="dg-item"><span class="dg-dot green"></span>/waitlist</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Dashboard -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon orange">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Admin Dashboard</div>
+            <div class="card-tech">MUI DataGrid / Analytics</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag orange">3 Pages</span>
+          <span class="tag dim">Stats</span>
+          <span class="tag dim">Events</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Admin Capabilities</div>
+              <ul class="detail-list">
+                <li>Booking management with confirm/cancel actions</li>
+                <li>User management with role promotion</li>
+                <li>Desk assignment &amp; status overview</li>
+                <li>Promo code CRUD with usage tracking</li>
+                <li>Pricing campaign management</li>
+                <li>Revenue &amp; conversion analytics</li>
+                <li>Event creation &amp; management</li>
+                <li>Transaction ledger view</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW 1 to 2 -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">REST API / JWT + Firebase</div>
+    <div class="flow-labels right">Razorpay SDK / Web Push</div>
+  </div>
+
+  <!-- LAYER 2: API & SERVICES -->
+  <div class="layer animate-in delay-3">
+    <div class="layer-header">
+      <div class="layer-number">02</div>
+      <div class="layer-title">API Routes &amp; Services</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="api-section" id="apiSection">
+      <div class="api-header" onclick="toggleApi()">
+        <div class="api-header-left">
+          <div class="api-badge">Next.js 15</div>
+          <div>
+            <div class="api-title">Q-Studio API</div>
+            <div class="api-subtitle">App Router &middot; /api/* &middot; 80 Route Handlers &middot; TypeScript</div>
+          </div>
+        </div>
+        <div class="card-expand-icon" id="apiExpandIcon">+</div>
+      </div>
+
+      <div class="api-modules-grid" id="apiGrid">
+        <!-- Core -->
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Auth</div><div class="api-module-desc">Firebase sync, email OTP, email verify, session (/me)</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Bookings</div><div class="api-module-desc">Create, get, cancel, reschedule, send confirmation</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Payment</div><div class="api-module-desc">Razorpay create-order, verify, webhook</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Availability</div><div class="api-module-desc">Slot availability per date, range queries</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Monthly Pass</div><div class="api-module-desc">Purchase, eligibility, pricing, QR verify</div></div>
+
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Desks</div><div class="api-module-desc">Claim, release, status map, my-assignment</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Validate</div><div class="api-module-desc">QR scan for check-in verification</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">User</div><div class="api-module-desc">Profile, bookings, credits, transactions, notif prefs</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Meeting Rooms</div><div class="api-module-desc">Room booking with time slots</div></div>
+        <div class="api-module"><div class="api-module-cat cat-core">Core</div><div class="api-module-name">Memberships</div><div class="api-module-desc">Subscription plans, quotas, benefits</div></div>
+
+        <!-- Commerce -->
+        <div class="api-module"><div class="api-module-cat cat-comm">Commerce</div><div class="api-module-name">Pricing</div><div class="api-module-desc">Campaign pricing, smart dynamic pricing</div></div>
+        <div class="api-module"><div class="api-module-cat cat-comm">Commerce</div><div class="api-module-name">Cart</div><div class="api-module-desc">Abandoned cart tracking &amp; recovery</div></div>
+        <div class="api-module"><div class="api-module-cat cat-comm">Commerce</div><div class="api-module-name">Invoices</div><div class="api-module-desc">GST-compliant invoice generation</div></div>
+        <div class="api-module"><div class="api-module-cat cat-comm">Commerce</div><div class="api-module-name">Upsells</div><div class="api-module-desc">Contextual add-on recommendations</div></div>
+        <div class="api-module"><div class="api-module-cat cat-comm">Commerce</div><div class="api-module-name">Corporate</div><div class="api-module-desc">Bulk corporate account management</div></div>
+
+        <!-- Engagement -->
+        <div class="api-module"><div class="api-module-cat cat-engage">Engage</div><div class="api-module-name">Referral</div><div class="api-module-desc">Code validation, credit rewards</div></div>
+        <div class="api-module"><div class="api-module-cat cat-engage">Engage</div><div class="api-module-name">Loyalty</div><div class="api-module-desc">Tier progression, points, rewards</div></div>
+        <div class="api-module"><div class="api-module-cat cat-engage">Engage</div><div class="api-module-name">Reviews</div><div class="api-module-desc">Post-visit review collection</div></div>
+        <div class="api-module"><div class="api-module-cat cat-engage">Engage</div><div class="api-module-name">Directory</div><div class="api-module-desc">Member profiles, networking connections</div></div>
+        <div class="api-module"><div class="api-module-cat cat-engage">Engage</div><div class="api-module-name">Events</div><div class="api-module-desc">Community events, registrations</div></div>
+
+        <!-- Admin -->
+        <div class="api-module"><div class="api-module-cat cat-admin">Admin</div><div class="api-module-name">Admin Bookings</div><div class="api-module-desc">List, confirm payment, cancel bookings</div></div>
+        <div class="api-module"><div class="api-module-cat cat-admin">Admin</div><div class="api-module-name">Admin Users</div><div class="api-module-desc">User list, detail, role management</div></div>
+        <div class="api-module"><div class="api-module-cat cat-admin">Admin</div><div class="api-module-name">Admin Stats</div><div class="api-module-desc">Revenue, occupancy, conversion metrics</div></div>
+        <div class="api-module"><div class="api-module-cat cat-admin">Admin</div><div class="api-module-name">Promo Codes</div><div class="api-module-desc">CRUD, usage limits, validity periods</div></div>
+        <div class="api-module"><div class="api-module-cat cat-admin">Admin</div><div class="api-module-name">Campaigns</div><div class="api-module-desc">Pricing campaign CRUD with scheduling</div></div>
+
+        <!-- Infra -->
+        <div class="api-module"><div class="api-module-cat cat-infra">Infra</div><div class="api-module-name">Health</div><div class="api-module-desc">Service health check endpoint</div></div>
+        <div class="api-module"><div class="api-module-cat cat-infra">Infra</div><div class="api-module-name">Analytics</div><div class="api-module-desc">Client-side event collection &amp; tracking</div></div>
+        <div class="api-module"><div class="api-module-cat cat-infra">Infra</div><div class="api-module-name">Notifications</div><div class="api-module-desc">Web push subscription management</div></div>
+        <div class="api-module"><div class="api-module-cat cat-infra">Infra</div><div class="api-module-name">Webhooks</div><div class="api-module-desc">Razorpay payment webhooks</div></div>
+        <div class="api-module"><div class="api-module-cat cat-infra">Infra</div><div class="api-module-name">Blog &amp; Jobs</div><div class="api-module-desc">CMS content, job board listings</div></div>
+      </div>
+
+      <!-- Middleware -->
+      <div class="middleware-bar">
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--gold);"></span>Firebase Admin Auth</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--blue);"></span>Role-Based Access</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--green);"></span>Upstash Rate Limiting</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--purple);"></span>Zod Validation</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--orange);"></span>CSP + HSTS</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--red);"></span>Sentry Error Tracking</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--cream);"></span>Input Sanitization</div>
+      </div>
+    </div>
+
+    <!-- Cron Jobs Bar -->
+    <div class="ws-bar">
+      <div class="ws-label"><div class="ws-pulse"></div>Vercel Cron Jobs (14)</div>
+      <div class="ws-events">
+        <div class="ws-event">complete-bookings</div>
+        <div class="ws-event">cleanup-pending</div>
+        <div class="ws-event">release-desks</div>
+        <div class="ws-event">send-reminders</div>
+        <div class="ws-event">re-engage</div>
+        <div class="ws-event">daily-summary</div>
+        <div class="ws-event">birthday-rewards</div>
+        <div class="ws-event">abandoned-cart</div>
+        <div class="ws-event">waitlist-cleanup</div>
+        <div class="ws-event">expire-monthly-passes</div>
+        <div class="ws-event">pass-expiry-reminders</div>
+        <div class="ws-event">checkin-deadline-alerts</div>
+        <div class="ws-event">same-day-reminders</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW 2 to 3 -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">Prisma ORM</div>
+    <div class="flow-labels right">Upstash Redis / Brevo API</div>
+  </div>
+
+  <!-- LAYER 3: DATA + EXTERNAL -->
+  <div class="layer animate-in delay-4">
+    <div class="layer-header">
+      <div class="layer-number">03</div>
+      <div class="layer-title">Data Layer &amp; External Services</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="card-grid cols-3">
+      <!-- MongoDB -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">MongoDB Atlas</div>
+            <div class="card-tech">32 Models &middot; Prisma 5.18 &middot; ObjectId</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag blue">Document DB</span>
+          <span class="tag dim">Compound Indexes</span>
+          <span class="tag dim">TTL Index</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Core Collections</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>User (roles, profiles, referrals)</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>Booking (day/night/full)</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>MonthlyPass + CheckIn</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Transaction (ledger)</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Desk + DeskAssignment</div>
+                <div class="dg-item"><span class="dg-dot green"></span>PromoCode + Redemption</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>PricingCampaign</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>MembershipPlan + Subscription</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>MeetingRoom + Booking</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Event + Registration</div>
+              </div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Additional Models</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>WifiSession</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Invoice</div>
+                <div class="dg-item"><span class="dg-dot green"></span>CorporateAccount + Member</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>ReferralCredit</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Waitlist + AbandonedCart</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>Review + LoyaltyTier</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>UserLoyalty + BlogPost</div>
+                <div class="dg-item"><span class="dg-dot green"></span>MemberConnection</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>UserSession + Analytics</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>PushSubscription + JobPost</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upstash Redis -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon red">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Upstash Redis</div>
+            <div class="card-tech">Rate Limiting &middot; Cache &middot; Serverless</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag orange">Serverless</span>
+          <span class="tag dim">@upstash/ratelimit</span>
+          <span class="tag dim">REST API</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Use Cases</div>
+              <ul class="detail-list">
+                <li>API rate limiting per IP/user</li>
+                <li>Pricing campaign cache</li>
+                <li>Session state management</li>
+                <li>Cron job deduplication</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lib Services -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Service Layer</div>
+            <div class="card-tech">56 Library Modules</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag green">lib/*</span>
+          <span class="tag dim">Prisma Client</span>
+          <span class="tag dim">Business Logic</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Key Services</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>pricing (smart + campaigns)</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>payment/razorpay</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>email/brevo (templates)</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>firebase/admin (auth)</div>
+                <div class="dg-item"><span class="dg-dot green"></span>desk/assignment</div>
+                <div class="dg-item"><span class="dg-dot green"></span>loyalty/service</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>invoice/generator</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>qr/generator</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>telegram/notify</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>analytics/tracker</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- External Services -->
+    <div class="ext-sidebar">
+      <div class="ext-grid">
+        <div class="ext-card">
+          <div class="ext-icon">&#x1F525;</div>
+          <div class="ext-name">Firebase</div>
+          <div class="ext-desc">Google/Phone Auth<br>Admin SDK &middot; reCAPTCHA</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon">&#x1F4B3;</div>
+          <div class="ext-name">Razorpay</div>
+          <div class="ext-desc">INR Payments<br>Orders &middot; Webhooks &middot; Refunds</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon">&#x2709;</div>
+          <div class="ext-name">Brevo</div>
+          <div class="ext-desc">Transactional Email<br>Confirmations &middot; Reminders</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon">&#x1F4E2;</div>
+          <div class="ext-name">Telegram</div>
+          <div class="ext-desc">Admin Notifications<br>Daily Summary &middot; Alerts</div>
+        </div>
+        <div class="ext-card">
+          <div class="ext-icon">&#x1F6E1;</div>
+          <div class="ext-name">Sentry</div>
+          <div class="ext-desc">Error Tracking<br>Source Maps &middot; Performance</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW 3 to 4 -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+  </div>
+
+  <!-- LAYER 4: ARCHITECTURE PATTERNS -->
+  <div class="layer animate-in delay-5">
+    <div class="layer-header">
+      <div class="layer-number">04</div>
+      <div class="layer-title">Architecture Patterns</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="patterns-grid">
+      <div class="pattern-card">
+        <div class="pattern-title">Next.js App Router API</div>
+        <div class="pattern-desc">Route handlers as serverless functions. Server components for SEO pages. Client components for interactive booking flows.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Firebase + JWT Dual Auth</div>
+        <div class="pattern-desc">Firebase Admin SDK verifies ID tokens server-side. Google Sign-In, phone auth, and email OTP login paths. AuthContext wraps the app.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Zod Schema Validation</div>
+        <div class="pattern-desc">All API inputs validated with Zod schemas. Shared between react-hook-form resolvers and server-side route handlers.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Paise Currency Model</div>
+        <div class="pattern-desc">All monetary values stored in paise (integer). Display conversion at UI layer only. Prevents floating-point rounding errors.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Campaign-Driven Pricing</div>
+        <div class="pattern-desc">PricingCampaign model with date ranges. Active campaigns override base prices. Priority field resolves overlapping campaigns.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">QR-Based Check-In</div>
+        <div class="pattern-desc">Unique qrToken per booking/pass. Physical desk QR codes for claim. Crypto-signed tokens prevent forgery.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Nonce-Based CSP</div>
+        <div class="pattern-desc">Middleware generates per-request nonce. Strict Content-Security-Policy with nonce and strict-dynamic in production.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Cron-Driven Lifecycle</div>
+        <div class="pattern-desc">14 Vercel cron jobs manage booking completion, desk release, pass expiry, reminders, abandoned cart recovery, and re-engagement.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW 4 to 5 -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+  </div>
+
+  <!-- LAYER 5: INFRASTRUCTURE -->
+  <div class="layer animate-in delay-6">
+    <div class="layer-header">
+      <div class="layer-number">05</div>
+      <div class="layer-title">Infrastructure &amp; Deployment</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="infra-bar">
+      <div class="infra-cell">
+        <div class="infra-icon">&#x25B2;</div>
+        <div class="infra-name">Vercel</div>
+        <div class="infra-tech">Next.js 15 &middot; Serverless</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">&#x1F433;</div>
+        <div class="infra-name">Docker</div>
+        <div class="infra-tech">Standalone &middot; node:20-alpine</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">&#x1F310;</div>
+        <div class="infra-name">Nginx Proxy</div>
+        <div class="infra-tech">Let's Encrypt SSL &middot; qstudiospace.in</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">&#x1F9EA;</div>
+        <div class="infra-name">Testing</div>
+        <div class="infra-tech">Vitest &middot; Playwright &middot; MSW</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">&#x1F4CA;</div>
+        <div class="infra-name">Observability</div>
+        <div class="infra-tech">Sentry &middot; GA4 &middot; Clarity</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-left">Q-Studio &middot; QuantaLynk &middot; Vadodara, Gujarat &middot; 2026</div>
+    <div class="footer-right">
+      <span class="footer-link">qstudiospace.in</span>
+      <span class="footer-link">hello@qstudiospace.in</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+function toggleCard(el) {
+  el.classList.toggle('expanded');
+}
+
+function toggleApi() {
+  const section = document.getElementById('apiSection');
+  const icon = document.getElementById('apiExpandIcon');
+  section.classList.toggle('expanded');
+  if (section.classList.contains('expanded')) {
+    icon.style.transform = 'rotate(45deg)';
+    icon.style.color = 'var(--gold)';
+  } else {
+    icon.style.transform = 'rotate(0)';
+    icon.style.color = 'var(--text-tertiary)';
+  }
+}
+
+// Intersection Observer for scroll-triggered animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.animationPlayState = 'running';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.animate-in').forEach(el => {
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>

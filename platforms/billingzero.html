@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BillingZero — System Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --gold: #E8B931;
+  --gold-dim: #C49A1C;
+  --gold-glow: rgba(232, 185, 49, 0.15);
+  --blue: #5BA0E0;
+  --blue-dim: #3A7BBF;
+  --blue-glow: rgba(91, 160, 224, 0.12);
+  --cream: #F5E6C8;
+  --cream-dim: rgba(245, 230, 200, 0.06);
+  --surface-0: #0B0E14;
+  --surface-1: #111621;
+  --surface-2: #171D2A;
+  --surface-3: #1E2636;
+  --border: rgba(245, 230, 200, 0.08);
+  --border-hover: rgba(245, 230, 200, 0.18);
+  --text-primary: #E8E2D6;
+  --text-secondary: rgba(232, 226, 214, 0.55);
+  --text-tertiary: rgba(232, 226, 214, 0.3);
+  --green: #5EBD73;
+  --red: #E05B5B;
+  --purple: #9B7EDC;
+  --orange: #E8963A;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--surface-0);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Background grid */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245, 230, 200, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 230, 200, 0.018) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: -40%;
+  right: -20%;
+  width: 80vw;
+  height: 80vw;
+  background: radial-gradient(ellipse, rgba(232, 185, 49, 0.03) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+/* HEADER */
+.header {
+  padding: 64px 0 48px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 56px;
+}
+
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--surface-0);
+  box-shadow: 0 4px 24px rgba(232, 185, 49, 0.2);
+}
+
+.logo-text h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--cream);
+  letter-spacing: -0.5px;
+}
+
+.logo-text p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 2px;
+}
+
+.header-meta {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.meta-block {
+  text-align: right;
+}
+
+.meta-block .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+}
+
+.meta-block .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* STATS BAR */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 56px;
+}
+
+.stat-cell {
+  background: var(--surface-1);
+  padding: 24px 20px;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.stat-cell:hover {
+  background: var(--surface-2);
+}
+
+.stat-number {
+  font-family: 'Instrument Serif', serif;
+  font-size: 36px;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* LAYER SECTIONS */
+.layer {
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.layer-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-left: 4px;
+}
+
+.layer-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gold-dim);
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--gold-dim);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.layer-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--text-secondary);
+}
+
+.layer-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* CONNECTION FLOW */
+.flow-connector {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
+  position: relative;
+}
+
+.flow-line {
+  width: 2px;
+  height: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.flow-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, var(--gold-dim), transparent);
+  opacity: 0.3;
+}
+
+.flow-line::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -3px;
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: flowPulse 2.5s ease-in-out infinite;
+  box-shadow: 0 0 12px rgba(232, 185, 49, 0.4);
+}
+
+@keyframes flowPulse {
+  0% { top: -8px; opacity: 1; }
+  80% { top: 40px; opacity: 0.3; }
+  100% { top: 40px; opacity: 0; }
+}
+
+.flow-labels {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 40px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+  letter-spacing: 1px;
+}
+
+.flow-labels.left { right: calc(50% + 24px); }
+.flow-labels.right { left: calc(50% + 24px); }
+
+/* CARDS */
+.card-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: transparent;
+  transition: background 0.35s;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.card:hover::before {
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+.card.expanded {
+  border-color: rgba(232, 185, 49, 0.2);
+  box-shadow: 0 4px 24px var(--gold-glow);
+}
+
+.card-head {
+  padding: 20px 20px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+  position: relative;
+}
+
+.card-icon.gold { background: rgba(232, 185, 49, 0.1); color: var(--gold); }
+.card-icon.blue { background: rgba(91, 160, 224, 0.1); color: var(--blue); }
+.card-icon.green { background: rgba(94, 189, 115, 0.1); color: var(--green); }
+.card-icon.purple { background: rgba(155, 126, 220, 0.1); color: var(--purple); }
+.card-icon.orange { background: rgba(232, 150, 58, 0.1); color: var(--orange); }
+.card-icon.red { background: rgba(224, 91, 91, 0.1); color: var(--red); }
+
+.card-info { flex: 1; min-width: 0; }
+
+.card-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+
+.card-tech {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.5px;
+}
+
+.card-expand-icon {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--text-tertiary);
+  transition: transform 0.3s;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.card.expanded .card-expand-icon {
+  transform: rotate(45deg);
+  color: var(--gold);
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 20px 16px;
+}
+
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.tag.gold { background: rgba(232, 185, 49, 0.08); color: var(--gold-dim); }
+.tag.blue { background: rgba(91, 160, 224, 0.08); color: var(--blue-dim); }
+.tag.green { background: rgba(94, 189, 115, 0.08); color: var(--green); }
+.tag.purple { background: rgba(155, 126, 220, 0.08); color: var(--purple); }
+.tag.orange { background: rgba(232, 150, 58, 0.08); color: var(--orange); }
+.tag.dim { background: var(--cream-dim); color: var(--text-secondary); }
+
+/* EXPANDABLE DETAIL */
+.card-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  border-top: 1px solid transparent;
+}
+
+.card.expanded .card-detail {
+  max-height: 600px;
+  border-top-color: var(--border);
+}
+
+.card-detail-inner {
+  padding: 16px 20px 20px;
+}
+
+.detail-section {
+  margin-bottom: 14px;
+}
+
+.detail-section:last-child { margin-bottom: 0; }
+
+.detail-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.detail-list {
+  list-style: none;
+}
+
+.detail-list li {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.detail-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 6px;
+  height: 1px;
+  background: var(--gold-dim);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 16px;
+}
+
+.detail-grid .dg-item {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dg-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dg-dot.gold { background: var(--gold); }
+.dg-dot.blue { background: var(--blue); }
+.dg-dot.green { background: var(--green); }
+.dg-dot.purple { background: var(--purple); }
+.dg-dot.orange { background: var(--orange); }
+
+/* API MODULE GRID */
+.api-section {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.api-header {
+  padding: 24px 24px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.api-header:hover { background: var(--surface-2); }
+
+.api-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.api-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(91, 160, 224, 0.1);
+  color: var(--blue);
+  letter-spacing: 0.5px;
+}
+
+.api-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.api-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.api-modules-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-top: 1px solid var(--border);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.api-section.expanded .api-modules-grid {
+  max-height: 800px;
+}
+
+.api-module {
+  background: var(--surface-1);
+  padding: 16px;
+  transition: background 0.2s;
+}
+
+.api-module:hover {
+  background: var(--surface-2);
+}
+
+.api-module-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.api-module-desc {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+.api-module-cat {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-bottom: 6px;
+}
+
+.cat-core { background: rgba(232, 185, 49, 0.1); color: var(--gold-dim); }
+.cat-pay { background: rgba(91, 160, 224, 0.1); color: var(--blue-dim); }
+.cat-doc { background: rgba(155, 126, 220, 0.1); color: var(--purple); }
+.cat-comm { background: rgba(94, 189, 115, 0.1); color: var(--green); }
+.cat-admin { background: rgba(232, 150, 58, 0.1); color: var(--orange); }
+.cat-infra { background: rgba(232, 226, 214, 0.06); color: var(--text-secondary); }
+
+/* MIDDLEWARE BAR */
+.middleware-bar {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.mw-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.mw-chip:hover {
+  border-color: var(--border-hover);
+  background: var(--cream-dim);
+}
+
+.mw-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+/* EXTERNAL SERVICES */
+.ext-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.ext-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.ext-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.ext-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.ext-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.ext-desc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* PATTERNS SECTION */
+.patterns-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.pattern-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  border-left: 2px solid var(--gold-dim);
+  transition: all 0.3s;
+}
+
+.pattern-card:hover {
+  border-color: var(--border-hover);
+  border-left-color: var(--gold);
+  background: var(--surface-2);
+}
+
+.pattern-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+}
+
+.pattern-desc {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+/* INFRA SECTION */
+.infra-bar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.infra-cell {
+  background: var(--surface-1);
+  padding: 20px 16px;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.infra-cell:hover { background: var(--surface-2); }
+
+.infra-icon {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.infra-name {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.infra-tech {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+}
+
+/* WEBHOOK EVENTS BAR */
+.ws-bar {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 20px;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ws-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--blue);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ws-pulse {
+  width: 7px;
+  height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: wsPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes wsPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(94, 189, 115, 0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(94, 189, 115, 0); }
+}
+
+.ws-events {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  flex: 1;
+}
+
+.ws-event {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  border: 1px solid var(--border);
+}
+
+/* SPAN CARD */
+.span-card {
+  grid-column: span 2;
+}
+
+/* FOOTER */
+.footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.5px;
+}
+
+.footer-right {
+  display: flex;
+  gap: 24px;
+}
+
+.footer-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-link:hover { color: var(--gold); }
+
+/* ANIMATIONS */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  opacity: 0;
+  animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.24s; }
+.delay-4 { animation-delay: 0.32s; }
+.delay-5 { animation-delay: 0.4s; }
+.delay-6 { animation-delay: 0.48s; }
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .card-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+  .api-modules-grid { grid-template-columns: repeat(3, 1fr); }
+  .patterns-grid { grid-template-columns: repeat(2, 1fr); }
+  .ext-grid { grid-template-columns: repeat(3, 1fr); }
+  .stats-bar { grid-template-columns: repeat(3, 1fr); }
+  .infra-bar { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .container { padding: 0 20px; }
+  .card-grid.cols-4,
+  .card-grid.cols-3,
+  .card-grid.cols-2 { grid-template-columns: 1fr; }
+  .span-card { grid-column: span 1; }
+  .api-modules-grid { grid-template-columns: repeat(2, 1fr); }
+  .patterns-grid { grid-template-columns: 1fr; }
+  .ext-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .infra-bar { grid-template-columns: repeat(2, 1fr); }
+  .header-top { flex-direction: column; }
+  .header-meta { justify-content: flex-start; }
+  .meta-block { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header animate-in">
+    <div class="header-top">
+      <div class="logo-area">
+        <div class="logo-icon">B</div>
+        <div class="logo-text">
+          <h1>BillingZero</h1>
+          <p>System Architecture v1.0</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-block">
+          <div class="label">Domain</div>
+          <div class="value">Contract Billing &amp; Invoicing</div>
+        </div>
+        <div class="meta-block">
+          <div class="label">Model</div>
+          <div class="value">SaaS / Multi-Vendor</div>
+        </div>
+        <div class="meta-block">
+          <div class="label">Last Updated</div>
+          <div class="value">March 2026</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar animate-in delay-1">
+    <div class="stat-cell">
+      <div class="stat-number">21</div>
+      <div class="stat-label">Controllers</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">52</div>
+      <div class="stat-label">Services</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">27</div>
+      <div class="stat-label">DB Models</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">38</div>
+      <div class="stat-label">Vue Pages</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">177</div>
+      <div class="stat-label">Test Files</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">131</div>
+      <div class="stat-label">Migrations</div>
+    </div>
+  </div>
+
+  <!-- LAYER 1: CLIENT APPLICATIONS -->
+  <div class="layer animate-in delay-2">
+    <div class="layer-header">
+      <div class="layer-number">01</div>
+      <div class="layer-title">Client Applications</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="card-grid cols-2">
+      <!-- Vue Web App -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Vendor Dashboard</div>
+            <div class="card-tech">Vue 3 + Vite + Vuetify 3</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag blue">38 Pages</span>
+          <span class="tag dim">Pinia</span>
+          <span class="tag dim">Vuexy 9</span>
+          <span class="tag dim">TipTap Editor</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Key Screens</div>
+              <ul class="detail-list">
+                <li>Dashboard v2 — revenue overview, upcoming due, overdue invoices</li>
+                <li>Clients — CRUD, contacts, per-client contract/invoice dashboard</li>
+                <li>Contracts — create/edit, proposals, approval workflow, PDF download</li>
+                <li>Invoices — create/edit, preview, email sending, payment recording</li>
+                <li>Settings — business profile, payments, referrals, notifications</li>
+                <li>Stripe Connect — connected account onboarding &amp; verification</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Pinia Stores (13)</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>contract</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>invoice</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>client</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>dashboard</div>
+                <div class="dg-item"><span class="dg-dot green"></span>stripe</div>
+                <div class="dg-item"><span class="dg-dot green"></span>user</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>contractReview</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>fileUploader</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>rules</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>toast</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Client Portal -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon gold">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Client Portal</div>
+            <div class="card-tech">Public encrypted-link pages</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag gold">Token Auth</span>
+          <span class="tag dim">No Login</span>
+          <span class="tag dim">Stripe.js</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Public Flows</div>
+              <ul class="detail-list">
+                <li>Contract Review — view contract details, approve, sign</li>
+                <li>Contract Payment — deposit payment via card or bank transfer</li>
+                <li>Contract Cancellation — request cancellation, pay pending amounts</li>
+                <li>Invoice Payment — view invoice, pay via Stripe payment intent</li>
+                <li>PDF Downloads — public download links for contracts &amp; invoices</li>
+                <li>Payment Response — post-payment confirmation &amp; status page</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Security</div>
+              <ul class="detail-list">
+                <li>Encrypted tokens via EncrypDescrptService (AES-256)</li>
+                <li>Laravel signed URLs for media proxy (60min expiry)</li>
+                <li>Rate-limited: 30 req/min public, 10 req/min payments</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW CONNECTOR -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">REST API &bull; SANCTUM AUTH</div>
+    <div class="flow-labels right">STRIPE WEBHOOKS &bull; EMAIL</div>
+  </div>
+
+  <!-- LAYER 2: API & SERVICES -->
+  <div class="layer animate-in delay-3">
+    <div class="layer-header">
+      <div class="layer-number">02</div>
+      <div class="layer-title">API &amp; Services</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="api-section" id="api-main">
+      <div class="api-header" onclick="toggleApi('api-main')">
+        <div class="api-header-left">
+          <div class="api-badge">Laravel 11</div>
+          <div>
+            <div class="api-title">BillingZero API</div>
+            <div class="api-subtitle">21 Controllers &bull; 52 Services &bull; 131 Migrations &bull; PHP 8.3</div>
+          </div>
+        </div>
+        <div class="card-expand-icon">+</div>
+      </div>
+
+      <div class="api-modules-grid">
+        <!-- Row 1: Core Domain -->
+        <div class="api-module">
+          <div class="api-module-cat cat-core">Core</div>
+          <div class="api-module-name">ContractCrud</div>
+          <div class="api-module-desc">Create, update, list, delete contracts with services &amp; line items</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-core">Core</div>
+          <div class="api-module-name">ContractWorkflow</div>
+          <div class="api-module-desc">Send, validate, review, stats, contact access &amp; status checks</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-core">Core</div>
+          <div class="api-module-name">ContractApproval</div>
+          <div class="api-module-desc">Client approve, vendor approve with notification pipeline</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-core">Core</div>
+          <div class="api-module-name">ContractProposal</div>
+          <div class="api-module-desc">Save proposals, fetch terms &amp; conditions templates</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-core">Core</div>
+          <div class="api-module-name">ContractCancellation</div>
+          <div class="api-module-desc">End, terminate, cancel by client with pending amount settlement</div>
+        </div>
+
+        <!-- Row 2: Payment -->
+        <div class="api-module">
+          <div class="api-module-cat cat-pay">Payment</div>
+          <div class="api-module-name">ContractPayment</div>
+          <div class="api-module-desc">Deposit fees calculation, payment intents, pending amount collection</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-pay">Payment</div>
+          <div class="api-module-name">Invoice</div>
+          <div class="api-module-desc">Create, draft, update, stats, record payments, resend emails</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-pay">Payment</div>
+          <div class="api-module-name">PaymentIntent</div>
+          <div class="api-module-desc">Generate bank &amp; card intents for client-facing payment pages</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-pay">Payment</div>
+          <div class="api-module-name">Stripe Connect</div>
+          <div class="api-module-desc">Connected accounts, verification, payment response handling</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-pay">Payment</div>
+          <div class="api-module-name">Refund</div>
+          <div class="api-module-desc">Issue refunds, per-invoice refund history, refund stats</div>
+        </div>
+
+        <!-- Row 3: Docs, Comm, Admin -->
+        <div class="api-module">
+          <div class="api-module-cat cat-doc">Document</div>
+          <div class="api-module-name">ContractPdf</div>
+          <div class="api-module-desc">Generate &amp; download PDFs via DomPDF + Browsershot</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-doc">Document</div>
+          <div class="api-module-name">InvoicePdf</div>
+          <div class="api-module-desc">Invoice PDF generation with line items &amp; payment status</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-comm">Comms</div>
+          <div class="api-module-name">Mail (25 classes)</div>
+          <div class="api-module-desc">Contract sent, deposit paid, invoice paid, refund processed, etc.</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-comm">Comms</div>
+          <div class="api-module-name">Notifications (9)</div>
+          <div class="api-module-desc">DB + mail channels for approvals, invoices, registration</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-admin">Admin</div>
+          <div class="api-module-name">Dashboard</div>
+          <div class="api-module-desc">Revenue overview, upcoming due, overdue invoices analytics</div>
+        </div>
+
+        <!-- Row 4: Webhook + Services -->
+        <div class="api-module">
+          <div class="api-module-cat cat-pay">Webhook</div>
+          <div class="api-module-name">WebhookPaymentSuccess</div>
+          <div class="api-module-desc">Handle successful payment events from Stripe</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-pay">Webhook</div>
+          <div class="api-module-name">WebhookPaymentFailure</div>
+          <div class="api-module-desc">Handle failed payments, retry logic &amp; notifications</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-pay">Webhook</div>
+          <div class="api-module-name">WebhookInvoiceLifecycle</div>
+          <div class="api-module-desc">Invoice status transitions from Stripe invoice events</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-infra">Infra</div>
+          <div class="api-module-name">Auth &amp; Users</div>
+          <div class="api-module-desc">Login, register, profile, password reset, Sanctum tokens</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-infra">Infra</div>
+          <div class="api-module-name">Client Management</div>
+          <div class="api-module-desc">CRUD, contacts, referral settings, notification prefs</div>
+        </div>
+      </div>
+
+      <div class="middleware-bar">
+        <div class="mw-chip"><span class="mw-dot" style="background:var(--gold)"></span>Sanctum Auth</div>
+        <div class="mw-chip"><span class="mw-dot" style="background:var(--blue)"></span>Rate Limiting (auth/public/webhook/upload)</div>
+        <div class="mw-chip"><span class="mw-dot" style="background:var(--green)"></span>Content Security Policy</div>
+        <div class="mw-chip"><span class="mw-dot" style="background:var(--purple)"></span>Spatie Permissions</div>
+        <div class="mw-chip"><span class="mw-dot" style="background:var(--orange)"></span>AdminBasicAuth</div>
+        <div class="mw-chip"><span class="mw-dot" style="background:var(--red)"></span>CORS</div>
+      </div>
+    </div>
+
+    <!-- Webhook Events Bar -->
+    <div class="ws-bar">
+      <div class="ws-label"><div class="ws-pulse"></div>STRIPE WEBHOOKS</div>
+      <div class="ws-events">
+        <div class="ws-event">payment_intent.succeeded</div>
+        <div class="ws-event">payment_intent.failed</div>
+        <div class="ws-event">invoice.paid</div>
+        <div class="ws-event">invoice.payment_failed</div>
+        <div class="ws-event">account.updated</div>
+        <div class="ws-event">charge.refunded</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW CONNECTOR -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">ELOQUENT ORM &bull; JOBS</div>
+    <div class="flow-labels right">QUEUES &bull; SCHEDULER</div>
+  </div>
+
+  <!-- LAYER 3: DATA LAYER -->
+  <div class="layer animate-in delay-4">
+    <div class="layer-header">
+      <div class="layer-number">03</div>
+      <div class="layer-title">Data Layer</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="card-grid cols-4">
+      <!-- Core Models -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon gold">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Contract Models</div>
+            <div class="card-tech">7 Eloquent Models</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag gold">Core Domain</span>
+          <span class="tag dim">UUID PKs</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Models</div>
+              <ul class="detail-list">
+                <li>Contract — main contract with status, dates, amounts</li>
+                <li>ContractService — line items per contract</li>
+                <li>ContractInvoice — scheduled invoice records</li>
+                <li>ContractApproval — approval audit trail</li>
+                <li>ContractEmail — email send history</li>
+                <li>ContractProposal — proposal drafts &amp; templates</li>
+                <li>InvoiceSchedule — recurring invoice scheduling</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Invoice Models -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Invoice &amp; Payment</div>
+            <div class="card-tech">8 Eloquent Models</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag blue">Payments</span>
+          <span class="tag dim">Stripe</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Models</div>
+              <ul class="detail-list">
+                <li>Invoice — standalone or contract-linked invoices</li>
+                <li>InvoiceService — line items per invoice</li>
+                <li>InvoicePaymentLink — shareable payment URLs</li>
+                <li>Transaction — payment transaction records</li>
+                <li>Refund — refund tracking per invoice</li>
+                <li>StripeCustomer — Stripe customer mapping</li>
+                <li>StripeUserConnectLink — connected account links</li>
+                <li>StripeWebhookEvent — webhook idempotency log</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- User / Client Models -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Users &amp; Clients</div>
+            <div class="card-tech">7 Eloquent Models</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag green">Multi-Tenant</span>
+          <span class="tag dim">RBAC</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Models</div>
+              <ul class="detail-list">
+                <li>User — vendors with Sanctum tokens, vendor_id scoping</li>
+                <li>Client — vendor's customers with company details</li>
+                <li>ClientContact — multiple contacts per client</li>
+                <li>ClientSetting — per-client preferences</li>
+                <li>BillingAddress — client billing addresses</li>
+                <li>Role / Permission — Spatie RBAC models</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Supporting Models -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Supporting</div>
+            <div class="card-tech">5 Eloquent Models</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag purple">System</span>
+          <span class="tag dim">Spatie Media</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Models</div>
+              <ul class="detail-list">
+                <li>Currency — multi-currency support for contracts/invoices</li>
+                <li>TempMedia — Spatie media library temp uploads</li>
+                <li>Communication — email/notification audit log</li>
+                <li>PaymentLinkCommunicationLogs — payment link tracking</li>
+                <li>ReferralAutomationEmail — referral campaign emails</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW CONNECTOR -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">JOBS &bull; SCHEDULER</div>
+    <div class="flow-labels right">QUEUE WORKERS</div>
+  </div>
+
+  <!-- LAYER 4: BACKGROUND JOBS -->
+  <div class="layer animate-in delay-4">
+    <div class="layer-header">
+      <div class="layer-number">04</div>
+      <div class="layer-title">Background Jobs &amp; Automation</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="card-grid cols-4">
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon orange">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">ProcessContractPayments</div>
+            <div class="card-tech">Scheduled Job</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag orange">Automation</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Details</div>
+              <ul class="detail-list">
+                <li>Processes due contract payments automatically</li>
+                <li>Uses ContractPaymentScenarioDetector for logic routing</li>
+                <li>Handles ContractStatusManager transitions</li>
+                <li>Sends notifications via PaymentNotificationService</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">ReconcileStripeInvoice</div>
+            <div class="card-tech">Scheduled Job</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag blue">Reconciliation</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Details</div>
+              <ul class="detail-list">
+                <li>Syncs local invoice status with Stripe invoice status</li>
+                <li>Catches missed webhook events</li>
+                <li>Ensures data consistency between systems</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">SendApprovalNotifications</div>
+            <div class="card-tech">Queued Job</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag green">Notifications</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Details</div>
+              <ul class="detail-list">
+                <li>Sends contract approval notifications asynchronously</li>
+                <li>Dispatched when contracts are approved by client</li>
+                <li>Uses 25 dedicated Mailable classes for rich emails</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon red">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">UpdateInvoiceStatus</div>
+            <div class="card-tech">Scheduled Job</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag red">Due Dates</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Details</div>
+              <ul class="detail-list">
+                <li>Marks invoices as overdue when past due date</li>
+                <li>Triggers overdue notification emails</li>
+                <li>Updates dashboard analytics for overdue metrics</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW CONNECTOR -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">STRIPE CONNECT</div>
+    <div class="flow-labels right">MAILGUN &bull; S3</div>
+  </div>
+
+  <!-- LAYER 5: EXTERNAL SERVICES -->
+  <div class="layer animate-in delay-5">
+    <div class="layer-header">
+      <div class="layer-number">05</div>
+      <div class="layer-title">External Services</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="ext-grid">
+      <div class="ext-card">
+        <div class="ext-icon">💳</div>
+        <div class="ext-name">Stripe Connect</div>
+        <div class="ext-desc">Platform + connected accounts per vendor. Payment intents, invoices, subscriptions, refunds</div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-icon">📧</div>
+        <div class="ext-name">Mailgun</div>
+        <div class="ext-desc">Transactional email delivery. 25 Mailable classes for contract &amp; invoice lifecycle events</div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-icon">🗄</div>
+        <div class="ext-name">AWS S3</div>
+        <div class="ext-desc">File storage via Spatie Media Library. Contract signatures, media uploads, PDF storage</div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-icon">📄</div>
+        <div class="ext-name">Browsershot</div>
+        <div class="ext-desc">Chrome headless PDF generation via Spatie. Contracts &amp; invoices rendered with DomPDF fallback</div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-icon">📊</div>
+        <div class="ext-name">Laravel Pulse</div>
+        <div class="ext-desc">Application performance monitoring. Request durations, slow queries, queue health, exceptions</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW CONNECTOR -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+  </div>
+
+  <!-- LAYER 6: PATTERNS -->
+  <div class="layer animate-in delay-5">
+    <div class="layer-header">
+      <div class="layer-number">06</div>
+      <div class="layer-title">Architecture Patterns</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="patterns-grid">
+      <div class="pattern-card">
+        <div class="pattern-title">Multi-Tenant Scoping</div>
+        <div class="pattern-desc">All queries scoped by vendor_id / parent_id. Vendors see only their own clients, contracts, and invoices.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Stripe Connect Platform</div>
+        <div class="pattern-desc">Platform account orchestrates connected accounts per vendor. Payment splits, fee calculations via StripeFeeCalculationService.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Encrypted Public Tokens</div>
+        <div class="pattern-desc">Public contract/invoice links use AES-256 encrypted tokens via EncrypDescrptService. No auth required for client-facing pages.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Service Manager Pattern</div>
+        <div class="pattern-desc">ContractServiceManager orchestrates 8+ sub-services. StripeServiceFactory for payment service instantiation.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">DTO Value Objects</div>
+        <div class="pattern-desc">8 Data Transfer Objects: DepositResult, PaymentIntentData, TerminationResult, WebhookPaymentTotals, and more.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Webhook Idempotency</div>
+        <div class="pattern-desc">StripeWebhookEvent model logs all events. WebhookTransactionHelper prevents duplicate payment processing.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Scenario-Based Testing</div>
+        <div class="pattern-desc">288 test scenarios with MODULE-TYPE-NNN IDs. Coverage map syncing, gap detection, and staged-file coverage checks.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Tiered Rate Limiting</div>
+        <div class="pattern-desc">4 tiers: auth (10/min), public (30/min), api (60/min), webhook (1000/min). Plus upload-specific throttle.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW CONNECTOR -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+  </div>
+
+  <!-- LAYER 7: TESTING -->
+  <div class="layer animate-in delay-5">
+    <div class="layer-header">
+      <div class="layer-number">07</div>
+      <div class="layer-title">Testing &amp; Quality</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="card-grid cols-3">
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Backend Tests</div>
+            <div class="card-tech">PHPUnit 11 / 177 files</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag green">24 Feature</span>
+          <span class="tag dim">44+ Unit</span>
+          <span class="tag dim">SQLite</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Feature Tests (24 files)</div>
+              <ul class="detail-list">
+                <li>AuthenticationTest, ClientControllerTest, ContractCrudControllerTest</li>
+                <li>ContractApproval, Cancellation, Payment, Workflow, Proposal, Pdf</li>
+                <li>InvoiceControllerTest, DashboardControllerTest, RefundControllerTest</li>
+                <li>SecurityHardeningTest, CrossVendorIsolationTest</li>
+                <li>WebhookControllerTest, StripeControllerTest, PaymentIntentTest</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Unit Test Domains</div>
+              <ul class="detail-list">
+                <li>Services: Cancellation, Notification, PaymentIntent, InvoicePayment</li>
+                <li>Models, Requests, Resources, Mail, Notifications, Middleware</li>
+                <li>Webhook: ContractPayment, InvoicePayment services</li>
+                <li>Jobs, Listeners, Commands, Encryption, StripeFee</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">E2E Tests</div>
+            <div class="card-tech">Cypress / 50 spec files</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag blue">35 Suites</span>
+          <span class="tag dim">Full Lifecycle</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Cypress Suites</div>
+              <ul class="detail-list">
+                <li>Auth, Registration, Password Reset, Dashboard Widgets</li>
+                <li>Clients CRUD, Client Dashboard, Contract CRUD, Contract Lifecycle</li>
+                <li>Contract Public Pages, Proposals, Invoice CRUD, Invoice Lifecycle</li>
+                <li>Invoice Public Payment, Payment Recording, Refunds</li>
+                <li>Stripe Connect, Stripe Payments, Settings (5 suites)</li>
+                <li>Email Sending, PDF Documents, File Uploads, Autocomplete</li>
+                <li>Search/Filter, Error Handling, Edge Cases, Accessibility, Responsive</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Frontend Tests</div>
+            <div class="card-tech">Vitest / 50 spec files</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag purple">12 Store Specs</span>
+          <span class="tag dim">Vue Test Utils</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Store Specs</div>
+              <ul class="detail-list">
+                <li>client.spec, contract.spec, contractReview.spec</li>
+                <li>dashboard.spec, invoice.spec, stripe.spec, user.spec</li>
+                <li>extendedDataTable.spec, fileUploader.spec, rules.spec</li>
+                <li>status.spec, toast.spec</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW CONNECTOR -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+  </div>
+
+  <!-- LAYER 8: INFRASTRUCTURE -->
+  <div class="layer animate-in delay-6">
+    <div class="layer-header">
+      <div class="layer-number">08</div>
+      <div class="layer-title">Infrastructure</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="infra-bar">
+      <div class="infra-cell">
+        <div class="infra-icon">🐘</div>
+        <div class="infra-name">MySQL 8.0</div>
+        <div class="infra-tech">Primary database / 131 migrations</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">⚡</div>
+        <div class="infra-name">Redis</div>
+        <div class="infra-tech">Queue + Cache + Sessions</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">🔧</div>
+        <div class="infra-name">Nginx</div>
+        <div class="infra-tech">Reverse proxy / Static assets</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">📦</div>
+        <div class="infra-name">Docker</div>
+        <div class="infra-tech">PHP-FPM + Nginx + MySQL compose</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">🔄</div>
+        <div class="infra-name">Supervisor</div>
+        <div class="infra-tech">Queue workers + Process management</div>
+      </div>
+    </div>
+
+    <div class="card-grid cols-3" style="margin-top: 16px;">
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon gold">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Security</div>
+            <div class="card-tech">Hardened Config</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag gold">CSP Headers</span>
+          <span class="tag dim">Sanctum</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Security Features</div>
+              <ul class="detail-list">
+                <li>Content Security Policy middleware</li>
+                <li>Tiered rate limiting across 5 groups</li>
+                <li>Spatie RBAC with granular permissions</li>
+                <li>AES-256 encrypted public tokens</li>
+                <li>Signed URLs for media (60min expiry)</li>
+                <li>Cross-vendor isolation tests</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">DevOps Scripts</div>
+            <div class="card-tech">14 Shell &amp; PHP Scripts</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag blue">Automation</span>
+          <span class="tag dim">QA Tooling</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Scripts</div>
+              <ul class="detail-list">
+                <li>check-test-coverage.sh — staged file coverage gating</li>
+                <li>coverage-gaps.php — find untested source files</li>
+                <li>list-scenarios.php / sync-scenarios.php — test registry</li>
+                <li>setup-ssl.sh, setup-supervisor.sh, setup-nginx-preview.sh</li>
+                <li>optimize-server.sh, backup.sh, restore.sh</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Monitoring</div>
+            <div class="card-tech">Laravel Telescope + Pulse</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag green">APM</span>
+          <span class="tag dim">Logs</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Observability</div>
+              <ul class="detail-list">
+                <li>Laravel Telescope — request inspector, queries, jobs, mail</li>
+                <li>Laravel Pulse — real-time dashboard, slow queries, queue health</li>
+                <li>Log Viewer (rap2hpoutre) — web-based log browsing</li>
+                <li>Health endpoint — DB + Redis connectivity checks</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-left">BillingZero &mdash; Contract Billing &amp; Invoicing Platform &bull; Built by QuantaLynk</div>
+    <div class="footer-right">
+      <span class="footer-link">Laravel 11 + Vue 3</span>
+      <span class="footer-link">Stripe Connect</span>
+      <span class="footer-link">288 Test Scenarios</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+function toggleCard(el) {
+  el.classList.toggle('expanded');
+}
+
+function toggleApi(id) {
+  document.getElementById(id).classList.toggle('expanded');
+}
+
+// Animate elements on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.layer, .flow-connector').forEach(el => {
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>

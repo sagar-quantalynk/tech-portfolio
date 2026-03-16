@@ -1,0 +1,2031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q-Invoice — System Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --gold: #E8B931;
+  --gold-dim: #C49A1C;
+  --gold-glow: rgba(232, 185, 49, 0.15);
+  --blue: #5BA0E0;
+  --blue-dim: #3A7BBF;
+  --blue-glow: rgba(91, 160, 224, 0.12);
+  --cream: #F5E6C8;
+  --cream-dim: rgba(245, 230, 200, 0.06);
+  --surface-0: #0B0E14;
+  --surface-1: #111621;
+  --surface-2: #171D2A;
+  --surface-3: #1E2636;
+  --border: rgba(245, 230, 200, 0.08);
+  --border-hover: rgba(245, 230, 200, 0.18);
+  --text-primary: #E8E2D6;
+  --text-secondary: rgba(232, 226, 214, 0.55);
+  --text-tertiary: rgba(232, 226, 214, 0.3);
+  --green: #5EBD73;
+  --red: #E05B5B;
+  --purple: #9B7EDC;
+  --orange: #E8963A;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--surface-0);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245, 230, 200, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 230, 200, 0.018) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: -40%;
+  right: -20%;
+  width: 80vw;
+  height: 80vw;
+  background: radial-gradient(ellipse, rgba(232, 185, 49, 0.03) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+/* HEADER */
+.header {
+  padding: 64px 0 48px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 56px;
+}
+
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--surface-0);
+  box-shadow: 0 4px 24px rgba(232, 185, 49, 0.2);
+}
+
+.logo-text h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--cream);
+  letter-spacing: -0.5px;
+}
+
+.logo-text p {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 2px;
+}
+
+.header-meta {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.meta-block {
+  text-align: right;
+}
+
+.meta-block .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+}
+
+.meta-block .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* STATS BAR */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 56px;
+}
+
+.stat-cell {
+  background: var(--surface-1);
+  padding: 24px 20px;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.stat-cell:hover {
+  background: var(--surface-2);
+}
+
+.stat-number {
+  font-family: 'Instrument Serif', serif;
+  font-size: 36px;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* LAYER SECTIONS */
+.layer {
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.layer-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-left: 4px;
+}
+
+.layer-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gold-dim);
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--gold-dim);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.layer-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--text-secondary);
+}
+
+.layer-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* CONNECTION FLOW */
+.flow-connector {
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
+  position: relative;
+}
+
+.flow-line {
+  width: 2px;
+  height: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.flow-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, var(--gold-dim), transparent);
+  opacity: 0.3;
+}
+
+.flow-line::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -3px;
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: flowPulse 2.5s ease-in-out infinite;
+  box-shadow: 0 0 12px rgba(232, 185, 49, 0.4);
+}
+
+@keyframes flowPulse {
+  0% { top: -8px; opacity: 1; }
+  80% { top: 40px; opacity: 0.3; }
+  100% { top: 40px; opacity: 0; }
+}
+
+.flow-labels {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 40px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+  letter-spacing: 1px;
+}
+
+.flow-labels.left { right: calc(50% + 24px); }
+.flow-labels.right { left: calc(50% + 24px); }
+
+/* CARDS */
+.card-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+
+.card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: transparent;
+  transition: background 0.35s;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.card:hover::before {
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+.card.expanded {
+  border-color: rgba(232, 185, 49, 0.2);
+  box-shadow: 0 4px 24px var(--gold-glow);
+}
+
+.card-head {
+  padding: 20px 20px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+  position: relative;
+}
+
+.card-icon.gold { background: rgba(232, 185, 49, 0.1); color: var(--gold); }
+.card-icon.blue { background: rgba(91, 160, 224, 0.1); color: var(--blue); }
+.card-icon.green { background: rgba(94, 189, 115, 0.1); color: var(--green); }
+.card-icon.purple { background: rgba(155, 126, 220, 0.1); color: var(--purple); }
+.card-icon.orange { background: rgba(232, 150, 58, 0.1); color: var(--orange); }
+.card-icon.red { background: rgba(224, 91, 91, 0.1); color: var(--red); }
+
+.card-info { flex: 1; min-width: 0; }
+
+.card-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+
+.card-tech {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.5px;
+}
+
+.card-expand-icon {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--text-tertiary);
+  transition: transform 0.3s;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.card.expanded .card-expand-icon {
+  transform: rotate(45deg);
+  color: var(--gold);
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 20px 16px;
+}
+
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.tag.gold { background: rgba(232, 185, 49, 0.08); color: var(--gold-dim); }
+.tag.blue { background: rgba(91, 160, 224, 0.08); color: var(--blue-dim); }
+.tag.green { background: rgba(94, 189, 115, 0.08); color: var(--green); }
+.tag.purple { background: rgba(155, 126, 220, 0.08); color: var(--purple); }
+.tag.orange { background: rgba(232, 150, 58, 0.08); color: var(--orange); }
+.tag.dim { background: var(--cream-dim); color: var(--text-secondary); }
+
+/* EXPANDABLE DETAIL */
+.card-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  border-top: 1px solid transparent;
+}
+
+.card.expanded .card-detail {
+  max-height: 600px;
+  border-top-color: var(--border);
+}
+
+.card-detail-inner {
+  padding: 16px 20px 20px;
+}
+
+.detail-section {
+  margin-bottom: 14px;
+}
+
+.detail-section:last-child { margin-bottom: 0; }
+
+.detail-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.detail-list {
+  list-style: none;
+}
+
+.detail-list li {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.detail-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 6px;
+  height: 1px;
+  background: var(--gold-dim);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 16px;
+}
+
+.detail-grid .dg-item {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dg-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dg-dot.gold { background: var(--gold); }
+.dg-dot.blue { background: var(--blue); }
+.dg-dot.green { background: var(--green); }
+.dg-dot.purple { background: var(--purple); }
+.dg-dot.orange { background: var(--orange); }
+
+/* API MODULE GRID */
+.api-section {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.api-header {
+  padding: 24px 24px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.api-header:hover { background: var(--surface-2); }
+
+.api-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.api-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(91, 160, 224, 0.1);
+  color: var(--blue);
+  letter-spacing: 0.5px;
+}
+
+.api-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.api-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.api-modules-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-top: 1px solid var(--border);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.api-section.expanded .api-modules-grid {
+  max-height: 1200px;
+}
+
+.api-module {
+  background: var(--surface-1);
+  padding: 16px;
+  transition: background 0.2s;
+}
+
+.api-module:hover {
+  background: var(--surface-2);
+}
+
+.api-module-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.api-module-desc {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+.api-module-cat {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-bottom: 6px;
+}
+
+.cat-core { background: rgba(232, 185, 49, 0.1); color: var(--gold-dim); }
+.cat-tax { background: rgba(94, 189, 115, 0.1); color: var(--green); }
+.cat-billing { background: rgba(155, 126, 220, 0.1); color: var(--purple); }
+.cat-comm { background: rgba(91, 160, 224, 0.1); color: var(--blue-dim); }
+.cat-export { background: rgba(232, 150, 58, 0.1); color: var(--orange); }
+.cat-portal { background: rgba(232, 226, 214, 0.06); color: var(--text-secondary); }
+
+/* MIDDLEWARE BAR */
+.middleware-bar {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.mw-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.mw-chip:hover {
+  border-color: var(--border-hover);
+  background: var(--cream-dim);
+}
+
+.mw-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+/* EXTERNAL SERVICES */
+.ext-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.ext-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.ext-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.ext-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.ext-name {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.ext-desc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* PATTERNS SECTION */
+.patterns-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.pattern-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  border-left: 2px solid var(--gold-dim);
+  transition: all 0.3s;
+}
+
+.pattern-card:hover {
+  border-color: var(--border-hover);
+  border-left-color: var(--gold);
+  background: var(--surface-2);
+}
+
+.pattern-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+}
+
+.pattern-desc {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+/* INFRA SECTION */
+.infra-bar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.infra-cell {
+  background: var(--surface-1);
+  padding: 20px 16px;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.infra-cell:hover { background: var(--surface-2); }
+
+.infra-icon {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.infra-name {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.infra-tech {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-tertiary);
+}
+
+/* FOOTER */
+.footer {
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-left {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.5px;
+}
+
+.footer-right {
+  display: flex;
+  gap: 24px;
+}
+
+.footer-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-link:hover { color: var(--gold); }
+
+/* ANIMATIONS */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  opacity: 0;
+  animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.24s; }
+.delay-4 { animation-delay: 0.32s; }
+.delay-5 { animation-delay: 0.4s; }
+.delay-6 { animation-delay: 0.48s; }
+
+/* SPAN CARD */
+.span-card {
+  grid-column: span 2;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .card-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+  .api-modules-grid { grid-template-columns: repeat(3, 1fr); }
+  .patterns-grid { grid-template-columns: repeat(2, 1fr); }
+  .ext-grid { grid-template-columns: repeat(3, 1fr); }
+  .stats-bar { grid-template-columns: repeat(3, 1fr); }
+  .infra-bar { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .container { padding: 0 20px; }
+  .card-grid.cols-4,
+  .card-grid.cols-3,
+  .card-grid.cols-2 { grid-template-columns: 1fr; }
+  .span-card { grid-column: span 1; }
+  .api-modules-grid { grid-template-columns: repeat(2, 1fr); }
+  .patterns-grid { grid-template-columns: 1fr; }
+  .ext-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); }
+  .infra-bar { grid-template-columns: repeat(2, 1fr); }
+  .header-top { flex-direction: column; }
+  .header-meta { justify-content: flex-start; }
+  .meta-block { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header class="header animate-in">
+    <div class="header-top">
+      <div class="logo-area">
+        <div class="logo-icon">Q</div>
+        <div class="logo-text">
+          <h1>Q-Invoice</h1>
+          <p>System Architecture v1.0</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-block">
+          <div class="label">Domain</div>
+          <div class="value">GST Invoicing SaaS</div>
+        </div>
+        <div class="meta-block">
+          <div class="label">Market</div>
+          <div class="value">India + Global</div>
+        </div>
+        <div class="meta-block">
+          <div class="label">Last Updated</div>
+          <div class="value">March 2026</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar animate-in delay-1">
+    <div class="stat-cell">
+      <div class="stat-number">42</div>
+      <div class="stat-label">Pages / Screens</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">92</div>
+      <div class="stat-label">API Routes</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">29</div>
+      <div class="stat-label">DB Models</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">138</div>
+      <div class="stat-label">Components</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">11</div>
+      <div class="stat-label">Packages</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number">535</div>
+      <div class="stat-label">Test Files</div>
+    </div>
+  </div>
+
+  <!-- LAYER 1: CLIENT INTERFACE -->
+  <div class="layer animate-in delay-2">
+    <div class="layer-header">
+      <div class="layer-number">01</div>
+      <div class="layer-title">Client Interface</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="card-grid cols-4">
+      <!-- Dashboard -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon gold">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Dashboard App</div>
+            <div class="card-tech">Next.js 14 / React 18 / Tailwind</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag gold">32 Pages</span>
+          <span class="tag dim">Zustand</span>
+          <span class="tag dim">React Query</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Dashboard Screens</div>
+              <ul class="detail-list">
+                <li>Home -- stats cards, revenue chart, invoice status pie, recent activity</li>
+                <li>Invoices -- full CRUD, filters, bulk send/delete, PDF export, duplicate</li>
+                <li>Clients -- CRUD, GSTIN validation, portal access management</li>
+                <li>Reports -- revenue, aging, client analysis, tax summary</li>
+                <li>Recurring Invoices -- template-based, auto-send, pause/resume</li>
+                <li>TDS Tracking -- deduction entries, certificate uploads</li>
+                <li>Export Center -- CSV, GSTR-1, Tally XML, bulk PDF</li>
+                <li>Billing -- plan selection, Stripe/Razorpay checkout, usage tracking</li>
+                <li>Settings -- 8 sub-pages: profile, company, business profiles, payments, CA access, preferences, regional, security</li>
+              </ul>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Key Libraries</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>React Hook Form + Zod</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Recharts</div>
+                <div class="dg-item"><span class="dg-dot green"></span>@react-pdf/renderer</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Radix UI primitives</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Lucide Icons</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>Sonner (toasts)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Public Invoice Portal -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Public Invoice View</div>
+            <div class="card-tech">Shareable link /p/[publicId]</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag blue">3 Pages</span>
+          <span class="tag dim">No Auth</span>
+          <span class="tag dim">Razorpay Pay</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Features</div>
+              <ul class="detail-list">
+                <li>Branded invoice view with company logo and details</li>
+                <li>Online payment via Razorpay checkout</li>
+                <li>PDF download for the recipient</li>
+                <li>Payment success/failure confirmation pages</li>
+                <li>View tracking (view count, last viewed timestamp)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Client Portal -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6"/><path d="M23 11h-6"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Client Portal</div>
+            <div class="card-tech">/portal/[accessToken]</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag green">Token Auth</span>
+          <span class="tag dim">Self-Service</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Capabilities</div>
+              <ul class="detail-list">
+                <li>Client views all invoices from a business</li>
+                <li>Payment history and outstanding balance</li>
+                <li>Token-based access, no account required</li>
+                <li>Businesses generate and manage portal links</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CA Dashboard -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">CA Access Portal</div>
+            <div class="card-tech">/ca/[token]</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag purple">Accountant View</span>
+          <span class="tag dim">Export Tools</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Features</div>
+              <ul class="detail-list">
+                <li>Read-only invoice browsing for chartered accountants</li>
+                <li>GSTR-1 JSON export for GST filing</li>
+                <li>Tally XML export for accounting software</li>
+                <li>Permission-based access control per CA</li>
+                <li>Token expiry and activity tracking</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW CONNECTOR -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">Next.js App Router &middot; Server Actions</div>
+    <div class="flow-labels right">NextAuth v5 &middot; Middleware Guard</div>
+  </div>
+
+  <!-- LAYER 2: API ROUTES -->
+  <div class="layer animate-in delay-3">
+    <div class="layer-header">
+      <div class="layer-number">02</div>
+      <div class="layer-title">API Layer &amp; Services</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="api-section" id="apiSection">
+      <div class="api-header" onclick="toggleApi()">
+        <div class="api-header-left">
+          <div class="api-badge">92 ROUTES</div>
+          <div>
+            <div class="api-title">Next.js API Routes</div>
+            <div class="api-subtitle">apps/web/src/app/api/ &middot; Route Handlers</div>
+          </div>
+        </div>
+        <div class="card-expand-icon" id="apiExpandIcon">+</div>
+      </div>
+
+      <div class="api-modules-grid">
+        <!-- Core: Invoices -->
+        <div class="api-module">
+          <div class="api-module-cat cat-core">CORE</div>
+          <div class="api-module-name">/api/invoices</div>
+          <div class="api-module-desc">CRUD, send, remind, cancel, duplicate, bulk ops, PDF generation</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-core">CORE</div>
+          <div class="api-module-name">/api/clients</div>
+          <div class="api-module-desc">Client management, portal access tokens, GSTIN linking</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-core">CORE</div>
+          <div class="api-module-name">/api/invoices/[id]/payments</div>
+          <div class="api-module-desc">Record payments (cash, UPI, bank, cheque, gateway), track partial</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-core">CORE</div>
+          <div class="api-module-name">/api/recurring-invoices</div>
+          <div class="api-module-desc">Auto-generation templates, pause/resume, frequency scheduling</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-core">CORE</div>
+          <div class="api-module-name">/api/business-profiles</div>
+          <div class="api-module-desc">Multi-GSTIN / multi-entity support, default profile switching</div>
+        </div>
+
+        <!-- Tax & Compliance -->
+        <div class="api-module">
+          <div class="api-module-cat cat-tax">TAX</div>
+          <div class="api-module-name">/api/gstin/validate</div>
+          <div class="api-module-desc">Real-time GSTIN format validation and lookup</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-tax">TAX</div>
+          <div class="api-module-name">/api/hsn/search</div>
+          <div class="api-module-desc">HSN/SAC code search with auto-complete and rate lookup</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-tax">TAX</div>
+          <div class="api-module-name">/api/invoices/[id]/einvoice</div>
+          <div class="api-module-desc">E-Invoice generation (IRN), cancellation, signed QR code</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-tax">TAX</div>
+          <div class="api-module-name">/api/invoices/export/gstr1</div>
+          <div class="api-module-desc">GSTR-1 JSON export for GST portal filing</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-tax">TAX</div>
+          <div class="api-module-name">/api/invoices/export/tally</div>
+          <div class="api-module-desc">Tally XML voucher export for accounting software</div>
+        </div>
+
+        <!-- Billing & Payments -->
+        <div class="api-module">
+          <div class="api-module-cat cat-billing">BILLING</div>
+          <div class="api-module-name">/api/billing/checkout/*</div>
+          <div class="api-module-desc">Stripe + Razorpay subscription checkout sessions</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-billing">BILLING</div>
+          <div class="api-module-name">/api/billing/subscription</div>
+          <div class="api-module-desc">Plan status, usage tracking, trial management</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-billing">BILLING</div>
+          <div class="api-module-name">/api/connected-accounts</div>
+          <div class="api-module-desc">Stripe Connect + Razorpay Route onboarding for seller payouts</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-billing">BILLING</div>
+          <div class="api-module-name">/api/transfers</div>
+          <div class="api-module-desc">Platform transfers, application fees, settlement tracking</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-billing">BILLING</div>
+          <div class="api-module-name">/api/webhooks/billing/*</div>
+          <div class="api-module-desc">Stripe + Razorpay webhook handlers for subscription events</div>
+        </div>
+
+        <!-- Communication -->
+        <div class="api-module">
+          <div class="api-module-cat cat-comm">COMMS</div>
+          <div class="api-module-name">/api/invoices/[id]/send</div>
+          <div class="api-module-desc">Multi-channel delivery: Email (Brevo), WhatsApp, SMS</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-comm">COMMS</div>
+          <div class="api-module-name">/api/cron/reminders</div>
+          <div class="api-module-desc">Automated payment reminders on configurable schedules</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-comm">COMMS</div>
+          <div class="api-module-name">/api/cron/overdue</div>
+          <div class="api-module-desc">Overdue invoice status transition and notifications</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-comm">COMMS</div>
+          <div class="api-module-name">/api/messages/analytics</div>
+          <div class="api-module-desc">WhatsApp/SMS delivery tracking, read receipts, analytics</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-comm">COMMS</div>
+          <div class="api-module-name">/api/webhooks/whatsapp</div>
+          <div class="api-module-desc">WhatsApp Business API webhook for delivery/read status</div>
+        </div>
+
+        <!-- Portal & Export -->
+        <div class="api-module">
+          <div class="api-module-cat cat-portal">PORTAL</div>
+          <div class="api-module-name">/api/portal/[token]</div>
+          <div class="api-module-desc">Client self-service portal: invoices, payments, history</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-portal">PORTAL</div>
+          <div class="api-module-name">/api/ca/[token]</div>
+          <div class="api-module-desc">CA read-only access: browse invoices, export GSTR-1/Tally</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-portal">PORTAL</div>
+          <div class="api-module-name">/api/public/invoices/[id]</div>
+          <div class="api-module-desc">Public invoice view, PDF download, payment initiation</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-export">EXPORT</div>
+          <div class="api-module-name">/api/invoices/export</div>
+          <div class="api-module-desc">CSV export with date range and status filters</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-export">EXPORT</div>
+          <div class="api-module-name">/api/invoices/export/pdf-bulk</div>
+          <div class="api-module-desc">Bulk PDF generation as ZIP download (JSZip)</div>
+        </div>
+
+        <!-- Dashboard & User -->
+        <div class="api-module">
+          <div class="api-module-cat cat-core">ANALYTICS</div>
+          <div class="api-module-name">/api/dashboard/*</div>
+          <div class="api-module-desc">Stats, revenue chart, invoice status, top clients, activity</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-core">ANALYTICS</div>
+          <div class="api-module-name">/api/reports/*</div>
+          <div class="api-module-desc">Revenue, aging, client, and tax reports with date ranges</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-portal">USER</div>
+          <div class="api-module-name">/api/user/*</div>
+          <div class="api-module-desc">Profile, company, preferences, regional, notifications, password</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-portal">AUTH</div>
+          <div class="api-module-name">/api/auth/*</div>
+          <div class="api-module-desc">NextAuth, Google OAuth, email/password, forgot/reset password</div>
+        </div>
+        <div class="api-module">
+          <div class="api-module-cat cat-portal">ONBOARD</div>
+          <div class="api-module-name">/api/onboarding/*</div>
+          <div class="api-module-desc">Multi-step wizard: country, business info, tax registration, payments</div>
+        </div>
+      </div>
+
+      <div class="middleware-bar">
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--green);"></span>NextAuth v5 Session</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--blue);"></span>Middleware Guard</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--purple);"></span>Zod Validation</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--orange);"></span>Rate Limiting (LRU)</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--gold);"></span>Feature Gates</div>
+        <div class="mw-chip"><span class="mw-dot" style="background: var(--red);"></span>Error Handler</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW CONNECTOR -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">Prisma Client &middot; Repositories</div>
+    <div class="flow-labels right">Billing Service &middot; Tax Calculator</div>
+  </div>
+
+  <!-- LAYER 3: MONOREPO PACKAGES -->
+  <div class="layer animate-in delay-3">
+    <div class="layer-header">
+      <div class="layer-number">03</div>
+      <div class="layer-title">Monorepo Packages</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="card-grid cols-4">
+      <!-- @q-invoice/db -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon gold">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">@q-invoice/db</div>
+            <div class="card-tech">Prisma 5 / PostgreSQL 16</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag gold">29 Models</span>
+          <span class="tag dim">21 Enums</span>
+          <span class="tag dim">3 Migrations</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Core Models</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>User / Account / Session</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>Invoice / LineItem</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Client / BusinessProfile</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Payment / PlatformTransfer</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Plan / Subscription</div>
+                <div class="dg-item"><span class="dg-dot green"></span>BillingEvent / UsageRecord</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>EInvoice / HSNCode</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>TDSEntry / TaxRegistration</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Country / Region / TaxConfig</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>WhatsAppMessage / Message</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>ConnectedAccount / Referral</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>RecurringInvoice / CAAccess</div>
+              </div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-label">Seeds</div>
+              <ul class="detail-list">
+                <li>seed-countries.ts -- 4+ countries with tax systems</li>
+                <li>seed-plans.ts -- subscription tiers with limits</li>
+                <li>seed-hsn.ts -- HSN/SAC codes with GST rates</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- @q-invoice/tax -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">@q-invoice/tax</div>
+            <div class="card-tech">Multi-Country Tax Engine</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag green">6 Calculators</span>
+          <span class="tag dim">GST / VAT / Sales Tax</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Country Tax Calculators</div>
+              <ul class="detail-list">
+                <li>India -- GST (CGST/SGST/IGST), inter-state detection, RCM</li>
+                <li>USA -- State-level sales tax variations</li>
+                <li>UK -- Standard/Reduced/Zero VAT rates</li>
+                <li>UAE -- 5% VAT standard rate</li>
+                <li>Canada -- GST/HST/PST/QST provincial rates</li>
+                <li>Australia -- 10% GST standard</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- @q-invoice/gst -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon orange">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H2v7l6.29 6.29c.94.94 2.48.94 3.42 0l3.58-3.58c.94-.94.94-2.48 0-3.42L9 5z"/><circle cx="6" cy="9" r="1"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">@q-invoice/gst</div>
+            <div class="card-tech">India GST Compliance</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag orange">E-Invoice</span>
+          <span class="tag dim">GSTR-1</span>
+          <span class="tag dim">State Codes</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Modules</div>
+              <ul class="detail-list">
+                <li>E-Invoice -- IRN generation, IRP API client, QR code signing</li>
+                <li>GSTR-1 Generator -- B2B/B2C/CDNR JSON output for GST portal</li>
+                <li>State Codes -- Full Indian state code mapping for place of supply</li>
+                <li>Formatters -- Indian currency, GSTIN formatting, tax breakdown display</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- @q-invoice/tally -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">@q-invoice/tally</div>
+            <div class="card-tech">Tally XML Export</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag blue">Voucher XML</span>
+          <span class="tag dim">Batch Export</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Capabilities</div>
+              <ul class="detail-list">
+                <li>Sales voucher XML generation in Tally-compatible format</li>
+                <li>Batch export with date range selection</li>
+                <li>GST tax ledger mapping (CGST/SGST/IGST)</li>
+                <li>Party ledger auto-creation from client data</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- @q-invoice/pdf -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon red">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">@q-invoice/pdf</div>
+            <div class="card-tech">@react-pdf/renderer</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag purple">React PDF</span>
+          <span class="tag dim">Invoice Template</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Features</div>
+              <ul class="detail-list">
+                <li>React-based PDF invoice template with company branding</li>
+                <li>GST tax breakdown, HSN codes, line item details</li>
+                <li>TDS/withholding tax display</li>
+                <li>Bulk generation via ZIP download</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- @q-invoice/email -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">@q-invoice/email</div>
+            <div class="card-tech">Brevo (Sendinblue) API</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag blue">13 Templates</span>
+          <span class="tag dim">React Email</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Email Templates</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>Invoice Sent</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>Payment Reminder</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Payment Received</div>
+                <div class="dg-item"><span class="dg-dot green"></span>Payment Confirmation</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>Password Reset</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>CA Invitation</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Portal Invitation</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>Subscription Activated</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Subscription Upgraded</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>Trial Ending</div>
+                <div class="dg-item"><span class="dg-dot red"></span>Payment Failed</div>
+                <div class="dg-item"><span class="dg-dot red"></span>Subscription Cancelled</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- @q-invoice/whatsapp -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">@q-invoice/whatsapp</div>
+            <div class="card-tech">WhatsApp Business API</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag green">Templates</span>
+          <span class="tag dim">Delivery Tracking</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Capabilities</div>
+              <ul class="detail-list">
+                <li>Template-based message sending via WhatsApp Business API</li>
+                <li>Invoice sent, payment reminder, confirmation messages</li>
+                <li>Delivery and read receipt tracking via webhooks</li>
+                <li>SMS fallback when WhatsApp unavailable</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- @q-invoice/compliance -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">@q-invoice/compliance</div>
+            <div class="card-tech">Regulatory Generators</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag purple">India Focus</span>
+          <span class="tag dim">Generators</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Features</div>
+              <ul class="detail-list">
+                <li>Country-specific compliance report generators</li>
+                <li>India: GSTR-1, TDS certificates, e-invoice formatting</li>
+                <li>Extensible type system for multi-country compliance</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW CONNECTOR -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">Prisma ORM &middot; PostgreSQL 16</div>
+    <div class="flow-labels right">Redis Cache &middot; LRU Rate Limiter</div>
+  </div>
+
+  <!-- LAYER 4: DATA LAYER -->
+  <div class="layer animate-in delay-4">
+    <div class="layer-header">
+      <div class="layer-number">04</div>
+      <div class="layer-title">Data &amp; State Management</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="card-grid cols-3">
+      <!-- Repositories -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon gold">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Repository Layer</div>
+            <div class="card-tech">lib/repositories/ + lib/validations/</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag gold">9 Repositories</span>
+          <span class="tag dim">9 Validators</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Data Access Modules</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>invoice.ts</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>client.ts</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>billing.ts</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>business-profile.ts</div>
+                <div class="dg-item"><span class="dg-dot green"></span>ca-access.ts</div>
+                <div class="dg-item"><span class="dg-dot green"></span>connected-accounts.ts</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>recurring-invoice.ts</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>tds.ts</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>auth.ts (validation)</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>message-repository.ts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Services -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.32 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">Business Services</div>
+            <div class="card-tech">lib/services/ + lib/billing/</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag blue">Billing</span>
+          <span class="tag dim">Payments</span>
+          <span class="tag dim">Messaging</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Service Modules</div>
+              <ul class="detail-list">
+                <li>subscription-service.ts -- Plan management, trial, upgrade/downgrade</li>
+                <li>usage-service.ts -- Invoice/client count tracking per billing period</li>
+                <li>feature-gate.ts -- Plan-based feature access control</li>
+                <li>messaging-service.ts -- Unified email/WhatsApp/SMS orchestration</li>
+                <li>reminder-service.ts -- Scheduled payment reminder logic</li>
+                <li>account-service.ts -- Connected payment account lifecycle</li>
+                <li>payment-service.ts -- Gateway payment processing</li>
+                <li>transfer-service.ts -- Platform fee calculation and transfers</li>
+                <li>fee-calculator.ts -- Application fee BPS calculation</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- React Query Hooks -->
+      <div class="card" onclick="toggleCard(this)">
+        <div class="card-head">
+          <div class="card-icon green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div class="card-info">
+            <div class="card-name">React Query Hooks</div>
+            <div class="card-tech">hooks/api/ &middot; 13 hook files</div>
+          </div>
+          <div class="card-expand-icon">+</div>
+        </div>
+        <div class="card-tags">
+          <span class="tag green">TanStack Query</span>
+          <span class="tag dim">API Client</span>
+        </div>
+        <div class="card-detail">
+          <div class="card-detail-inner">
+            <div class="detail-section">
+              <div class="detail-label">Custom Hooks</div>
+              <div class="detail-grid">
+                <div class="dg-item"><span class="dg-dot gold"></span>use-invoices</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>use-clients</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>use-payments</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>use-billing</div>
+                <div class="dg-item"><span class="dg-dot green"></span>use-dashboard</div>
+                <div class="dg-item"><span class="dg-dot green"></span>use-business-profiles</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>use-recurring-invoices</div>
+                <div class="dg-item"><span class="dg-dot purple"></span>use-connected-accounts</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>use-gstin-validation</div>
+                <div class="dg-item"><span class="dg-dot orange"></span>use-hsn-search</div>
+                <div class="dg-item"><span class="dg-dot gold"></span>use-transfers</div>
+                <div class="dg-item"><span class="dg-dot blue"></span>use-user</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW CONNECTOR -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">Turborepo &middot; pnpm Workspaces</div>
+    <div class="flow-labels right">Country Config &middot; Tax Engine</div>
+  </div>
+
+  <!-- LAYER 5: PATTERNS -->
+  <div class="layer animate-in delay-4">
+    <div class="layer-header">
+      <div class="layer-number">05</div>
+      <div class="layer-title">Architecture Patterns</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="patterns-grid">
+      <div class="pattern-card">
+        <div class="pattern-title">Multi-Tenant SaaS</div>
+        <div class="pattern-desc">User-scoped data isolation. Every query filters by userId. Plan-based feature gates limit access to premium features.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Global Tax Engine</div>
+        <div class="pattern-desc">Pluggable country tax calculators (IN/US/UK/UAE/CA/AU). TaxSystemType enum drives calculator selection. JSON taxBreakdown on invoices.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Dual Payment Gateway</div>
+        <div class="pattern-desc">Stripe Connect + Razorpay Route for seller payouts. Platform application fee in basis points. Unified webhook handling for both providers.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Multi-Channel Messaging</div>
+        <div class="pattern-desc">Unified Message model across WhatsApp, SMS, and Email channels. Template-based delivery with delivery/read tracking. SMS fallback.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Repository Pattern</div>
+        <div class="pattern-desc">Dedicated repository files abstract Prisma queries. Zod validation schemas per entity. Clean separation from route handlers.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Multi-Business Profiles</div>
+        <div class="pattern-desc">Single user can manage multiple business entities with different GSTINs, addresses, and bank accounts. Default profile switching.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Token-Based Portals</div>
+        <div class="pattern-desc">Client portal and CA access use unique access tokens. No account required for recipients. Expiry and permission-based controls.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-title">Subscription Billing</div>
+        <div class="pattern-desc">Freemium with trial. Plan/Subscription/BillingEvent/UsageRecord models. Idempotent webhook processing. Usage-based limits enforcement.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW CONNECTOR -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+    <div class="flow-labels left">Docker Compose &middot; nginx-proxy</div>
+    <div class="flow-labels right">Let's Encrypt &middot; GitHub Actions</div>
+  </div>
+
+  <!-- LAYER 6: EXTERNAL SERVICES -->
+  <div class="layer animate-in delay-5">
+    <div class="layer-header">
+      <div class="layer-number">06</div>
+      <div class="layer-title">External Services</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="ext-grid">
+      <div class="ext-card">
+        <div class="ext-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <div class="ext-name">Stripe</div>
+        <div class="ext-desc">Subscription billing (global) + Connect payouts</div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="ext-name">Razorpay</div>
+        <div class="ext-desc">INR payments, Route payouts, subscription billing</div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div class="ext-name">Brevo</div>
+        <div class="ext-desc">Transactional email: invoices, reminders, subscription alerts</div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        </div>
+        <div class="ext-name">WhatsApp</div>
+        <div class="ext-desc">Business API: invoice delivery, reminders, read receipts</div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="1.5"><path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </div>
+        <div class="ext-name">SMS</div>
+        <div class="ext-desc">Fallback messaging when WhatsApp unavailable</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW CONNECTOR -->
+  <div class="flow-connector">
+    <div class="flow-line"></div>
+  </div>
+
+  <!-- LAYER 7: INFRASTRUCTURE -->
+  <div class="layer animate-in delay-5">
+    <div class="layer-header">
+      <div class="layer-number">07</div>
+      <div class="layer-title">Infrastructure</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="infra-bar">
+      <div class="infra-cell">
+        <div class="infra-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </div>
+        <div class="infra-name">PostgreSQL 16</div>
+        <div class="infra-tech">Prisma ORM &middot; Alpine</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="infra-name">Redis 7</div>
+        <div class="infra-tech">Cache &middot; Rate Limiting</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <div class="infra-name">Docker</div>
+        <div class="infra-tech">Compose &middot; Multi-stage Build</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="infra-name">nginx-proxy</div>
+        <div class="infra-tech">SSL &middot; Let's Encrypt</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div class="infra-name">qinvoice.in</div>
+        <div class="infra-tech">Production Domain</div>
+      </div>
+    </div>
+
+    <!-- CI/CD & DevOps details -->
+    <div style="margin-top: 16px;">
+      <div class="card-grid cols-3">
+        <div class="card" onclick="toggleCard(this)">
+          <div class="card-head">
+            <div class="card-icon blue">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <div class="card-info">
+              <div class="card-name">CI / CD Pipeline</div>
+              <div class="card-tech">GitHub Actions</div>
+            </div>
+            <div class="card-expand-icon">+</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag blue">2 Workflows</span>
+            <span class="tag dim">Husky Hooks</span>
+          </div>
+          <div class="card-detail">
+            <div class="card-detail-inner">
+              <div class="detail-section">
+                <div class="detail-label">Pipelines</div>
+                <ul class="detail-list">
+                  <li>ci.yml -- typecheck, lint, test, build on push/PR</li>
+                  <li>smoke-tests.yml -- Playwright E2E smoke tests</li>
+                  <li>Pre-commit: lint-staged (eslint + prettier)</li>
+                  <li>Pre-push: full build + smoke tests</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" onclick="toggleCard(this)">
+          <div class="card-head">
+            <div class="card-icon gold">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            </div>
+            <div class="card-info">
+              <div class="card-name">Build System</div>
+              <div class="card-tech">Turborepo + pnpm 9</div>
+            </div>
+            <div class="card-expand-icon">+</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag gold">Monorepo</span>
+            <span class="tag dim">11 Packages</span>
+          </div>
+          <div class="card-detail">
+            <div class="card-detail-inner">
+              <div class="detail-section">
+                <div class="detail-label">Workspace Packages</div>
+                <div class="detail-grid">
+                  <div class="dg-item"><span class="dg-dot gold"></span>apps/web (Next.js)</div>
+                  <div class="dg-item"><span class="dg-dot gold"></span>packages/db (Prisma)</div>
+                  <div class="dg-item"><span class="dg-dot blue"></span>packages/tax</div>
+                  <div class="dg-item"><span class="dg-dot blue"></span>packages/gst</div>
+                  <div class="dg-item"><span class="dg-dot green"></span>packages/email</div>
+                  <div class="dg-item"><span class="dg-dot green"></span>packages/whatsapp</div>
+                  <div class="dg-item"><span class="dg-dot purple"></span>packages/pdf</div>
+                  <div class="dg-item"><span class="dg-dot purple"></span>packages/tally</div>
+                  <div class="dg-item"><span class="dg-dot orange"></span>packages/compliance</div>
+                  <div class="dg-item"><span class="dg-dot orange"></span>packages/ui</div>
+                  <div class="dg-item"><span class="dg-dot gold"></span>packages/utils</div>
+                  <div class="dg-item"><span class="dg-dot blue"></span>packages/config</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" onclick="toggleCard(this)">
+          <div class="card-head">
+            <div class="card-icon green">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+            </div>
+            <div class="card-info">
+              <div class="card-name">Deploy Scripts</div>
+              <div class="card-tech">18 shell scripts</div>
+            </div>
+            <div class="card-expand-icon">+</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag green">Production</span>
+            <span class="tag dim">Backup/Restore</span>
+          </div>
+          <div class="card-detail">
+            <div class="card-detail-inner">
+              <div class="detail-section">
+                <div class="detail-label">Operations Scripts</div>
+                <ul class="detail-list">
+                  <li>deploy.sh / prod-deploy.sh -- zero-downtime deployment</li>
+                  <li>backup.sh / prod-backup.sh / restore.sh -- DB backup/restore</li>
+                  <li>rollback.sh -- quick rollback to previous version</li>
+                  <li>server-setup.sh / setup-ssl.sh / setup-cron.sh -- infra provisioning</li>
+                  <li>generate-secrets.sh -- production secret generation</li>
+                  <li>status.sh / logs.sh -- health monitoring</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYER 8: TESTING -->
+  <div style="margin-top: 24px;" class="layer animate-in delay-6">
+    <div class="layer-header">
+      <div class="layer-number">08</div>
+      <div class="layer-title">Testing &amp; Quality</div>
+      <div class="layer-line"></div>
+    </div>
+
+    <div class="infra-bar" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="infra-cell">
+        <div class="infra-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <div class="infra-name">535 Test Files</div>
+        <div class="infra-tech">Vitest &middot; Testing Library</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="infra-name">E2E Tests</div>
+        <div class="infra-tech">Playwright &middot; Smoke Tests</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <div class="infra-name">Type Safety</div>
+        <div class="infra-tech">TypeScript 5.3 &middot; Zod 4</div>
+      </div>
+      <div class="infra-cell">
+        <div class="infra-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div class="infra-name">API Docs</div>
+        <div class="infra-tech">OpenAPI &middot; Swagger UI</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer animate-in delay-6">
+    <div class="footer-left">Q-Invoice &middot; GST Invoicing Platform &middot; QuantaLynk</div>
+    <div class="footer-right">
+      <a href="https://qinvoice.in" class="footer-link">qinvoice.in</a>
+      <span class="footer-link">Next.js 14 + Prisma + Turborepo</span>
+      <span class="footer-link">Node &ge;20</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+function toggleCard(el) {
+  el.classList.toggle('expanded');
+}
+
+function toggleApi() {
+  const section = document.getElementById('apiSection');
+  const icon = document.getElementById('apiExpandIcon');
+  section.classList.toggle('expanded');
+  if (section.classList.contains('expanded')) {
+    icon.style.transform = 'rotate(45deg)';
+    icon.style.color = 'var(--gold)';
+  } else {
+    icon.style.transform = 'rotate(0)';
+    icon.style.color = 'var(--text-tertiary)';
+  }
+}
+
+// Intersection Observer for scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.animationPlayState = 'running';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.animate-in').forEach(el => {
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>
