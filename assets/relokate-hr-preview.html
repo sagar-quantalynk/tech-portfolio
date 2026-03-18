@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1200">
+<title>Relokate HR — OG Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    width: 1200px; height: 630px;
+    background: #0B0E14;
+    font-family: 'JetBrains Mono', monospace;
+    color: #C8CCD4;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 80px;
+  }
+  body::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(232,185,49,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,185,49,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .accent-bar { position: absolute; top: 0; left: 80px; width: 120px; height: 4px; background: linear-gradient(90deg, #E8B931, #D4A52A); border-radius: 0 0 2px 2px; }
+  .corner { position: absolute; width: 24px; height: 24px; border-color: rgba(232,185,49,0.15); border-style: solid; }
+  .corner.tl { top: 24px; left: 24px; border-width: 2px 0 0 2px; }
+  .corner.tr { top: 24px; right: 24px; border-width: 2px 2px 0 0; }
+  .corner.bl { bottom: 24px; left: 24px; border-width: 0 0 2px 2px; }
+  .corner.br { bottom: 24px; right: 24px; border-width: 0 2px 2px 0; }
+  .category {
+    display: inline-block;
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #E8B931;
+    background: rgba(232,185,49,0.1);
+    border: 1px solid rgba(232,185,49,0.2);
+    padding: 6px 16px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+    align-self: flex-start;
+  }
+  .platform-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 64px;
+    color: #E2E6ED;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .description {
+    font-size: 20px;
+    color: #7A8191;
+    margin-bottom: 40px;
+    line-height: 1.4;
+  }
+  .metrics {
+    font-size: 18px;
+    color: #E8B931;
+    font-weight: 500;
+    margin-bottom: 40px;
+    letter-spacing: 0.5px;
+  }
+  .tech-stack { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tech-tag {
+    font-size: 13px;
+    color: #9BA1B0;
+    background: rgba(155,161,176,0.08);
+    border: 1px solid rgba(155,161,176,0.15);
+    padding: 6px 14px;
+    border-radius: 4px;
+  }
+  .author { position: absolute; bottom: 36px; right: 80px; font-size: 13px; color: #5A6170; }
+</style>
+</head>
+<body>
+  <div class="accent-bar"></div>
+  <div class="corner tl"></div><div class="corner tr"></div>
+  <div class="corner bl"></div><div class="corner br"></div>
+
+  <div class="category">Immigration Workflow Platform</div>
+  <div class="platform-name">Relokate HR</div>
+  <div class="description">Visa tracking & relocation for Germany</div>
+  <div class="metrics">25 Modules &nbsp;•&nbsp; 3 Workflow Types</div>
+  <div class="tech-stack">
+    <span class="tech-tag">NestJS</span>
+    <span class="tech-tag">Next.js</span>
+    <span class="tech-tag">MongoDB</span>
+    <span class="tech-tag">Auth0</span>
+  </div>
+  <div class="author">Sagar Sutaria</div>
+</body>
+</html>
