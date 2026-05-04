@@ -254,22 +254,85 @@ L5 (above) is the synthesis: situation-first opening (First Principles), de-risk
 
 ## 8. Deployment & Domain
 
-**Current hosting:** GitHub Pages from `sagar-quantalynk/tech-portfolio` repo, main branch.
+**Hosting decision (locked 2026-05-04):** self-hosted Docker container on the user's `quantalynk-new` server (Hetzner CX/CPX, Ubuntu 24.04, IP `89.167.40.182`), routed through the existing **`nginx-proxy` + `nginx-proxy-acme`** reverse-proxy stack. **Not** GitHub Pages, **not** Vercel — overrides the original `superpowers:brainstorming` recommendation per Sagar's explicit choice to consolidate on owned infrastructure.
 
-**Migration to sagarsutaria.com:**
+This buys: zero vendor lock-in, headers / redirects / cache fully under our control, ability to add same-host services later (writing-cadence tooling, eventual product backend, n8n integration), and consolidation onto a box already running ~28 containers including the previous quantalynk.com site.
 
-1. Add `CNAME` file at repo root containing `sagarsutaria.com`.
-2. Configure DNS at the registrar:
-   - `A` records pointing apex domain to GitHub Pages IPs (`185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`).
-   - `CNAME` record for `www` pointing to `sagar-quantalynk.github.io`.
-3. In repo settings → Pages, set custom domain to `sagarsutaria.com` and enable "Enforce HTTPS" once cert provisions (10–60 minutes).
-4. Add 301 redirects from `sagar-quantalynk.github.io/tech-portfolio/*` → `sagarsutaria.com/*` (GitHub Pages auto-handles after CNAME, but verify each existing URL).
-5. Update absolute URLs in OG meta, sitemap, schema, internal links.
-6. Resubmit sitemap to Google Search Console under the new property.
+This costs: ~5 min/month of attention on cert renewals (auto, but verify), kernel patches, disk usage. Acceptable trade given the box is already running.
 
-**No CI/CD changes needed:** GitHub Pages builds on push.
+**Domain registration / DNS:** sagarsutaria.com is registered at GoDaddy with nameservers delegated to Cloudflare (`deborah.ns.cloudflare.com`, `vasilii.ns.cloudflare.com`).
 
-**Backup plan:** keep `github.io` URL accessible during transition; do not delete the GitHub Pages site config until 30 days after sagarsutaria.com is stable.
+### 8.1 DNS records (Cloudflare zone `sagarsutaria.com`)
+
+Final state at zone level:
+
+| Type | Name | Content | Proxied | Why |
+|---|---|---|---|---|
+| A | `sagarsutaria.com` | `89.167.40.182` | **DNS-only (gray cloud)** initially | acme-companion uses HTTP-01 challenge for Let's Encrypt provisioning; Cloudflare proxy can interfere. Flip to orange cloud after cert is stable, IF Cloudflare CDN benefits are wanted. |
+| CNAME | `www` | `sagarsutaria.com` | DNS-only | apex-aliasing for www subdomain |
+| TXT | `_dmarc` | `v=DMARC1; p=quarantine; ...` | n/a | preserved from GoDaddy import (email DMARC policy, unrelated to hosting) |
+| CNAME | `_domainconnect` | `_domainconnect.gd.domaincontrol.com` | n/a | GoDaddy artifact, harmless, can be removed in a later cleanup |
+
+Records explicitly **removed** from the original GoDaddy import: 2 apex A records pointing to GoDaddy parking IPs (`13.248.243.5`, `76.223.105.230`); 1 default Cloudflare CNAME `www → apex` with proxy enabled.
+
+### 8.2 Server-side container
+
+A new container is added to the server's docker-compose stack:
+
+```yaml
+# /opt/sagarsutaria/docker-compose.yml (illustrative)
+services:
+  sagarsutaria:
+    image: nginx:1.27-alpine
+    container_name: sagarsutaria_web
+    volumes:
+      - ./public:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    environment:
+      VIRTUAL_HOST: sagarsutaria.com,www.sagarsutaria.com
+      VIRTUAL_PORT: "80"
+      LETSENCRYPT_HOST: sagarsutaria.com,www.sagarsutaria.com
+      LETSENCRYPT_EMAIL: sagar@quantalynk.com
+    networks:
+      - nginx-proxy
+    restart: unless-stopped
+
+networks:
+  nginx-proxy:
+    external: true
+    name: nginx-proxy_default  # match the existing shared network name on the box
+```
+
+Static site files served directly by the lightweight `nginx:alpine` container. Build output (HTML/CSS/JS/MDX-rendered-to-HTML) lives in `./public`. acme-companion auto-provisions the cert based on the `LETSENCRYPT_HOST` env var; nginx-proxy auto-routes based on `VIRTUAL_HOST`. Zero per-site reverse-proxy config to write.
+
+### 8.3 CI/CD pipeline
+
+GitHub Actions on the `tech-portfolio` repo, triggered on push to `main`:
+
+1. Build static output (run any build steps for MDX → HTML, image optimization, etc.).
+2. SSH to `quantalynk-new` (Actions secret: deploy SSH key with limited scope — only the sagarsutaria deploy directory).
+3. `rsync` build output to `/opt/sagarsutaria/public/`.
+4. `docker compose -f /opt/sagarsutaria/docker-compose.yml exec sagarsutaria nginx -s reload` (graceful nginx reload; no container restart).
+5. Verify HTTP 200 on `https://sagarsutaria.com` from the runner.
+
+Total deploy time per push: ~30–60 seconds.
+
+### 8.4 First-time setup checklist
+
+1. Server: `mkdir -p /opt/sagarsutaria/public` + the docker-compose.yml + nginx.conf.
+2. Initial deploy: `rsync` the existing tech-portfolio HTML to `/opt/sagarsutaria/public/`.
+3. `docker compose -f /opt/sagarsutaria/docker-compose.yml up -d`.
+4. Watch acme-companion logs: `docker logs -f nginx-proxy-acme` until the cert provisions (~30s after DNS resolves).
+5. Verify: `curl -sI https://sagarsutaria.com` returns 200 with valid cert.
+6. Configure GitHub Actions deploy workflow.
+7. Remove the `CNAME` file from the repo (it referenced GitHub Pages; obsolete here).
+
+### 8.5 Backup plan
+
+- Source code lives in GitHub (`sagar-quantalynk/tech-portfolio`) → primary recovery surface.
+- Server-side `/opt/sagarsutaria/public/` is regenerable from any commit; not separately backed up.
+- Let's Encrypt certs auto-renew via acme-companion (60-day cycle, renews at 30 days remaining); if the box dies and is rebuilt, certs re-provision automatically on first DNS resolution.
+- DNS records are documented in this spec (§8.1) so they can be recreated in Cloudflare in <2 minutes if the zone needs to be re-imported.
 
 ---
 
