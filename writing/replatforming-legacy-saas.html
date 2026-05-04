@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","vxm9ehsfth");</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2102GJ5G7M"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-2102GJ5G7M");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Replatforming legacy SaaS without a full rewrite | Sagar Sutaria</title>
+<meta name="description" content="A working framework for migrating a legacy SaaS to a modern stack without stopping shipping. Stranglers, parallel runs, traffic gates, and the four moves that keep customers shipping while engineering replatforms.">
+<link rel="canonical" href="https://sagarsutaria.com/writing/replatforming-legacy-saas">
+<meta name="author" content="Sagar Sutaria">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sagarsutaria.com/writing/replatforming-legacy-saas">
+<meta property="og:title" content="Replatforming legacy SaaS without a full rewrite">
+<meta property="og:description" content="A working framework for migrating a legacy SaaS without stopping shipping.">
+<meta property="og:site_name" content="Sagar Sutaria">
+<meta property="article:author" content="Sagar Sutaria">
+<meta property="article:published_time" content="2026-05-04">
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:title" content="Replatforming legacy SaaS without a full rewrite">
+<meta property="twitter:description" content="A working framework. Stranglers, parallel runs, traffic gates.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50' y='72' font-size='86' text-anchor='middle' font-family='serif' font-weight='600' fill='%239A3408' font-style='italic'>S.</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Replatforming legacy SaaS without a full rewrite","description":"A working framework for migrating a legacy SaaS without stopping shipping.","author":{"@type":"Person","name":"Sagar Sutaria","url":"https://sagarsutaria.com"},"publisher":{"@type":"Organization","name":"QuantaLynk","logo":{"@type":"ImageObject","url":"https://quantalynk.com/icon.svg"}},"datePublished":"2026-05-04","dateModified":"2026-05-04","mainEntityOfPage":{"@type":"WebPage","@id":"https://sagarsutaria.com/writing/replatforming-legacy-saas"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://sagarsutaria.com/"},{"@type":"ListItem","position":2,"name":"Writing","item":"https://sagarsutaria.com/writing/"},{"@type":"ListItem","position":3,"name":"Replatforming legacy SaaS"}]}
+</script>
+
+<style>
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --paper:#F4ECDC; --paper-2:#FAF5E9;
+  --ink:#1F1A14; --ink-2:#3A2F22; --ink-3:#6B5840;
+  --line:rgba(31,26,20,0.12); --line-2:rgba(31,26,20,0.22);
+  --sienna:#9A3408; --sienna-soft:rgba(154,52,8,0.08); --sienna-deep:#7A2906;
+  --green:#2A6B4F;
+  --red:#A33A1F; --red-soft:rgba(163,58,31,0.10);
+  --display:'Bricolage Grotesque',Georgia,serif;
+  --body:'DM Sans',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  --r:4px; --max:920px; --max-narrow:720px; --pad:clamp(20px,4vw,48px);
+}
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 18px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--sienna); color: var(--paper); }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--pad); }
+.wrap-narrow { max-width: var(--max-narrow); margin: 0 auto; padding: 0 var(--pad); }
+.nav { position: sticky; top:0; z-index: 50; background: rgba(244,236,220,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.nav-inner { display:flex; align-items:center; justify-content:space-between; height: 64px; max-width: var(--max); margin: 0 auto; padding: 0 var(--pad); }
+.brand { font-family: var(--display); font-weight: 600; font-size: 19px; letter-spacing: -0.01em; }
+.brand em { color: var(--sienna); font-style: italic; font-weight: 600; }
+.back { font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; transition: color 150ms; }
+.back:hover { color: var(--sienna); }
+article { padding: clamp(48px,7vw,96px) 0 0; }
+.crumb { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--ink-3); margin-bottom: 28px; }
+.crumb a { color: var(--ink-3); transition: color 150ms; }
+.crumb a:hover { color: var(--sienna); }
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(36px, 5.5vw, 56px); line-height: 1.05; letter-spacing: -0.022em; margin-bottom: 20px; color: var(--ink); }
+h1 em { color: var(--sienna); font-style: italic; font-weight: 700; }
+.lede { font-size: 21px; line-height: 1.5; color: var(--ink-2); margin-bottom: 32px; }
+.byline { font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: 0.04em; padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 0; display: flex; gap: 16px; flex-wrap: wrap; }
+.byline strong { color: var(--ink); font-weight: 500; }
+.essay-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin: 48px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+@media (max-width:760px) { .essay-stats { grid-template-columns: repeat(2, 1fr); } .essay-stats > div:nth-child(2), .essay-stats > div:nth-child(4) { border-right: none; } }
+.essay-stats > div { padding: 26px 18px; border-right: 1px solid var(--line); }
+.essay-stats > div:last-child { border-right: none; }
+.essay-stats .num { font-family: var(--display); font-weight: 700; font-size: clamp(26px, 3.6vw, 38px); line-height: 1; color: var(--sienna); letter-spacing: -0.02em; margin-bottom: 6px; }
+.essay-stats .label { font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); line-height: 1.45; }
+.tldr { background: var(--sienna-soft); border-left: 4px solid var(--sienna); padding: 28px 32px; margin: 0 0 48px; }
+.tldr h2 { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sienna); margin-bottom: 14px; }
+.tldr p { font-size: 18px; color: var(--ink); margin: 0; line-height: 1.55; }
+.tldr p strong { color: var(--ink); font-weight: 700; background: rgba(154,52,8,0.12); padding: 1px 6px; border-radius: 3px; }
+article p { margin-bottom: 22px; color: var(--ink-2); max-width: 65ch; }
+article p strong { color: var(--ink); font-weight: 600; }
+article a { color: var(--sienna); border-bottom: 1px solid currentColor; transition: opacity 150ms; }
+article a:hover { opacity: 0.7; }
+article h2 { font-family: var(--display); font-weight: 700; font-size: clamp(26px, 3.8vw, 34px); line-height: 1.15; letter-spacing: -0.018em; margin: 56px 0 16px; color: var(--ink); }
+article h2 em { font-style: italic; color: var(--sienna); font-weight: 700; }
+
+/* Approach grid */
+.approach-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 24px 0 36px; }
+@media (max-width:680px) { .approach-grid { grid-template-columns: 1fr; } }
+.approach-card { padding: 24px; background: var(--paper-2); border: 1px solid var(--line); }
+.approach-card.bad { border-left: 3px solid var(--red); background: var(--red-soft); }
+.approach-card.good { border-left: 3px solid var(--green); }
+.approach-card h4 { font-family: var(--display); font-weight: 700; font-size: 17px; line-height: 1.2; color: var(--ink); margin-bottom: 8px; }
+.approach-card .tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px; display: block; }
+.approach-card p { font-size: 14.5px; color: var(--ink-2); line-height: 1.55; margin: 0; }
+
+/* Move sequence visual */
+.moves { margin: 24px 0 36px; }
+.move-row { display: grid; grid-template-columns: 80px 1fr; gap: 24px; padding: 24px 0; border-bottom: 1px solid var(--line); align-items: start; }
+.move-row:last-child { border-bottom: none; }
+@media (max-width:680px) { .move-row { grid-template-columns: 1fr; gap: 8px; } }
+.move-row .num { font-family: var(--display); font-weight: 700; font-size: 48px; color: var(--sienna); line-height: 1; }
+.move-row h3 { font-family: var(--display); font-weight: 600; font-size: 21px; line-height: 1.2; margin-bottom: 8px; color: var(--ink); }
+.move-row .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-3); margin-bottom: 12px; }
+.move-row p { font-size: 16px; line-height: 1.6; color: var(--ink-2); margin-bottom: 0; max-width: 60ch; }
+
+/* Traffic gate visual */
+.gate-vis { background: var(--paper-2); border: 1px solid var(--line); padding: 28px clamp(20px, 3vw, 32px); margin: 24px 0 36px; }
+.gate-row { display: grid; grid-template-columns: 110px 1fr 110px; gap: 16px; align-items: center; padding: 12px 0; border-bottom: 1px dashed var(--line); }
+.gate-row:last-child { border-bottom: none; }
+@media (max-width:680px) { .gate-row { grid-template-columns: 100px 1fr; } .gate-row .pct { display: none; } }
+.gate-row .week { font-family: var(--display); font-weight: 600; font-size: 14px; color: var(--ink); }
+.gate-row .week small { display: block; font-family: var(--mono); font-size: 10px; color: var(--ink-3); letter-spacing: 0.04em; font-weight: 400; margin-top: 2px; }
+.gate-row .bar-track { height: 22px; background: rgba(31,26,20,0.05); border-radius: 3px; position: relative; }
+.gate-row .bar-old { position: absolute; top: 0; bottom: 0; left: 0; background: rgba(31,26,20,0.35); border-radius: 3px 0 0 3px; }
+.gate-row .bar-new { position: absolute; top: 0; bottom: 0; right: 0; background: linear-gradient(90deg, rgba(154,52,8,0.75), rgba(154,52,8,0.95)); border-radius: 0 3px 3px 0; }
+.gate-row .pct { font-family: var(--mono); font-size: 12px; color: var(--ink-2); text-align: right; }
+.gate-legend { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.04em; padding-top: 14px; border-top: 1px solid var(--line); margin-top: 8px; }
+.gate-legend .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+
+/* Failure flag */
+.flag { padding: 18px 22px; border-left: 3px solid var(--red); background: var(--red-soft); margin: 24px 0; }
+.flag h5 { font-family: var(--display); font-weight: 700; font-size: 16px; margin-bottom: 6px; color: var(--ink); }
+.flag p { font-size: 14.5px; line-height: 1.55; color: var(--ink-2); margin: 0; }
+
+.cta-block { margin: 56px 0 0; padding: 36px 32px; background: var(--ink); color: var(--paper); }
+.cta-block h3 { font-family: var(--display); font-weight: 700; font-size: 24px; line-height: 1.15; color: var(--paper); margin-bottom: 12px; }
+.cta-block h3 em { color: #E8B5B5; font-style: italic; }
+.cta-block p { color: rgba(244,236,220,0.78); margin-bottom: 22px; font-size: 16px; line-height: 1.55; max-width: none; }
+.cta-block a { display: inline-block; background: var(--sienna); color: var(--paper); font-size: 14px; font-weight: 500; padding: 12px 22px; border-radius: var(--r); border-bottom: none; transition: opacity 200ms; }
+.cta-block a:hover { opacity: 0.85; }
+.related { margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--line); }
+.related h4 { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 16px; }
+.related ul { list-style: none; padding: 0; }
+.related li { padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 16px; }
+.related li:last-child { border-bottom: none; }
+.related a { color: var(--ink); border-bottom: none; }
+.related a:hover { color: var(--sienna); }
+.footer { padding: 28px 0 40px; font-family: var(--mono); font-size: 12px; color: var(--ink-3); border-top: 1px solid var(--line); margin-top: 80px; }
+.footer-inner { display:flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; max-width: var(--max); margin: 0 auto; padding: 24px var(--pad) 0; }
+.footer a { color: var(--ink-3); }
+.footer a:hover { color: var(--sienna); }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="brand">Sagar <em>Sutaria.</em></a>
+    <a href="/writing/" class="back">&larr; Writing</a>
+  </div>
+</nav>
+
+<article>
+  <div class="wrap-narrow">
+    <div class="crumb"><a href="/">Home</a> &nbsp;/&nbsp; <a href="/writing/">Writing</a> &nbsp;/&nbsp; Replatforming legacy SaaS</div>
+
+    <h1>Replatforming legacy SaaS without a <em>full rewrite</em>.</h1>
+    <p class="lede">A working framework for migrating a five-year-old SaaS to a modern stack without stopping shipping. Stranglers, parallel runs, traffic gates, and the four moves that keep customers happy while engineering replatforms.</p>
+    <div class="byline">
+      <span><strong>Sagar Sutaria</strong></span>
+      <span>Published 4 May 2026</span>
+      <span>11 min read</span>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="essay-stats">
+      <div>
+        <div class="num">12&ndash;18</div>
+        <div class="label">Months for a typical replatform</div>
+      </div>
+      <div>
+        <div class="num">0</div>
+        <div class="label">Customer-visible feature freeze weeks</div>
+      </div>
+      <div>
+        <div class="num">5%</div>
+        <div class="label">Traffic on new stack at first gate</div>
+      </div>
+      <div>
+        <div class="num">4</div>
+        <div class="label">Moves that compose the framework</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap-narrow">
+
+    <div class="tldr">
+      <h2>TLDR</h2>
+      <p>Full rewrites have a <strong>~30% historical success rate</strong> and force a six-month feature freeze that competitors will use to eat your lunch. The replatform that ships keeps the old stack live, runs the new stack in parallel under traffic gates that move from <strong>5% to 100%</strong> over months, and never stops shipping customer features in the meantime. Four moves: strangler, parallel data, gated traffic, contract test.</p>
+    </div>
+
+    <p>"We need to replatform" usually arrives in one of three flavors. The framework is broken in ways the team cannot fix in place. The infrastructure cost is climbing faster than revenue. Hiring is hard because the stack is unfashionable. All three are real reasons. None of them is a reason to do a full rewrite.</p>
+
+    <p>The full rewrite is the most expensive way to fail. Joel Spolsky's "things you should never do" essay holds up. The data behind it has improved, not weakened: industry surveys still show roughly <strong>30% of major rewrites ship and meet acceptance criteria</strong>. The other 70% miss the deadline by a year or more, ship something that customers reject, or get killed before completion.</p>
+
+    <p>The replatform that works is structurally different. It does not stop the business. It does not need a feature freeze. It does not bet the company on the new stack working better than the old before customers see it. Here is the shape.</p>
+
+    <h2>The two approaches, side by side.</h2>
+
+    <div class="approach-grid">
+      <div class="approach-card bad">
+        <span class="tag">The trap</span>
+        <h4>Full rewrite</h4>
+        <p>Six month feature freeze. Build new stack to feature parity with old. Cut over in one weekend. Customers experience the new stack only after it ships. <strong>~30% of these projects succeed.</strong> The rest miss by a year or get killed.</p>
+      </div>
+      <div class="approach-card good">
+        <span class="tag">The framework</span>
+        <h4>Strangler with traffic gates</h4>
+        <p>New stack lives alongside old. Routes migrate one at a time. Traffic ramps from 5% to 100% per route. Old stack retires when its last route is gone. <strong>No feature freeze, ever.</strong> The business keeps shipping while engineering replatforms.</p>
+      </div>
+    </div>
+
+    <h2>The <em>four moves</em>.</h2>
+
+    <div class="moves">
+      <div class="move-row">
+        <div class="num">01</div>
+        <div>
+          <h3>Strangler at the edge</h3>
+          <div class="meta">Weeks 1-3 &middot; Routing change only</div>
+          <p>Put a routing layer in front of the legacy stack. Cloudflare Workers, AWS API Gateway, or a Caddy in front. Every request still goes to the old stack. Nothing changes for users. What you have bought: the ability to route requests selectively without changing application code.</p>
+        </div>
+      </div>
+      <div class="move-row">
+        <div class="num">02</div>
+        <div>
+          <h3>Parallel data, single source of truth</h3>
+          <div class="meta">Weeks 4-8 &middot; Read replicas, write fanout</div>
+          <p>Stand up the new database alongside the old. Set up CDC (change data capture) so every write to the old DB streams to the new one within seconds. Reads still happen against the old. Now both stacks can serve the same data with the old as authoritative. Verify lag tolerances; most replatforms need sub-5 second propagation, some need sub-100ms.</p>
+        </div>
+      </div>
+      <div class="move-row">
+        <div class="num">03</div>
+        <div>
+          <h3>Contract tests on the old stack</h3>
+          <div class="meta">Weeks 6-10 &middot; Behavior pinning</div>
+          <p>Before migrating any route, write contract tests that pin the existing behavior of that route. Request format, response shape, edge cases, error codes. The new implementation must pass the same contract before any traffic moves. This is the single biggest quality-of-replatform predictor; teams that skip it ship 3-5 customer-visible regressions per route.</p>
+        </div>
+      </div>
+      <div class="move-row">
+        <div class="num">04</div>
+        <div>
+          <h3>Gated traffic ramps</h3>
+          <div class="meta">Weeks 8 onwards &middot; Per route, per cohort</div>
+          <p>Move traffic in deliberate steps. 5% to internal users only. 5% to a friendly customer cohort. 25%, 50%, 100%. Each step holds for at least 48 hours with monitoring. If error rate or latency moves, gate stays. Most routes complete the ramp in two to four weeks; complex ones take longer. The whole replatform is the sum of these per-route ramps.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>What the <em>traffic gate</em> looks like in practice.</h2>
+  </div>
+
+  <div class="wrap">
+    <div class="gate-vis">
+      <div class="gate-row">
+        <div class="week">Week 1<small>Internal only</small></div>
+        <div class="bar-track">
+          <div class="bar-old" style="width: 95%;"></div>
+          <div class="bar-new" style="width: 5%;"></div>
+        </div>
+        <div class="pct">5% new</div>
+      </div>
+      <div class="gate-row">
+        <div class="week">Week 3<small>Friendly cohort</small></div>
+        <div class="bar-track">
+          <div class="bar-old" style="width: 90%;"></div>
+          <div class="bar-new" style="width: 10%;"></div>
+        </div>
+        <div class="pct">10% new</div>
+      </div>
+      <div class="gate-row">
+        <div class="week">Week 5<small>Quarter cohort</small></div>
+        <div class="bar-track">
+          <div class="bar-old" style="width: 75%;"></div>
+          <div class="bar-new" style="width: 25%;"></div>
+        </div>
+        <div class="pct">25% new</div>
+      </div>
+      <div class="gate-row">
+        <div class="week">Week 7<small>Half cohort</small></div>
+        <div class="bar-track">
+          <div class="bar-old" style="width: 50%;"></div>
+          <div class="bar-new" style="width: 50%;"></div>
+        </div>
+        <div class="pct">50% new</div>
+      </div>
+      <div class="gate-row">
+        <div class="week">Week 9<small>Majority</small></div>
+        <div class="bar-track">
+          <div class="bar-old" style="width: 25%;"></div>
+          <div class="bar-new" style="width: 75%;"></div>
+        </div>
+        <div class="pct">75% new</div>
+      </div>
+      <div class="gate-row">
+        <div class="week">Week 11<small>Full cutover</small></div>
+        <div class="bar-track">
+          <div class="bar-new" style="width: 100%;"></div>
+        </div>
+        <div class="pct">100% new</div>
+      </div>
+      <div class="gate-legend">
+        <span><span class="swatch" style="background:rgba(31,26,20,0.35);"></span>Legacy stack traffic</span>
+        <span><span class="swatch" style="background:rgba(154,52,8,0.85); margin-left:14px;"></span>New stack traffic</span>
+        <span style="margin-left:14px; font-style: italic;">Per-route. Whole platform = sum of these ramps.</span>
+      </div>
+    </div>
+
+    <h2>What goes <em>wrong</em>, and the early signal.</h2>
+
+    <div class="flag">
+      <h5>Failure 1: Skipping contract tests</h5>
+      <p>Team builds the new route, gates 5% traffic, sees that errors look fine, ramps to 100%. Two weeks later a customer reports a regression on an edge case the team forgot. Without contract tests pinning the behavior, every regression is found by customers, not by tests. <strong>Early signal:</strong> the team cannot list every edge case of the existing route from memory.</p>
+    </div>
+
+    <div class="flag">
+      <h5>Failure 2: Letting the data layer drift</h5>
+      <p>CDC pipeline lags during a high-write period. New stack reads stale data. Bug reports are intermittent and route-specific, hard to debug. <strong>Early signal:</strong> the team does not have a monitor on replication lag, or the monitor's threshold has never alerted in production.</p>
+    </div>
+
+    <div class="flag">
+      <h5>Failure 3: Stopping mid-ramp because "it is good enough"</h5>
+      <p>50% of traffic is on new stack. The team gets pulled to a customer feature. Replatform pauses. The double-running cost is meaningful, the team carries two stacks for a year, and the original goal (retire old) never lands. <strong>Early signal:</strong> the per-route ramp does not have a deadline; whichever PM is loudest reroutes attention.</p>
+    </div>
+
+    <h2>What this <em>costs</em>.</h2>
+  </div>
+
+  <div class="wrap-narrow">
+    <p>A 12-month replatform of a non-trivial SaaS, executed with this framework, runs <strong>€300K-€800K in engineering cost</strong> at EU senior rates. The same scope as a full rewrite would estimate at €1M+ and complete with 30% probability. The framework is more expensive in nominal infrastructure cost (you run two stacks for months) but dramatically cheaper in expected value because the ship probability is materially higher.</p>
+
+    <p>For a studio engagement, the framework breaks into shippable chunks. The first move (strangler at the edge) is a four to six week fixed-scope build. The second move (parallel data) is six to eight weeks. Subsequent route migrations are typically four week chunks each. A founder running this against an internal team with senior advisory on architecture would buy a fractional CTO retainer to keep the framework honest while their team executes.</p>
+
+    <p>This is the framework that produced the Relokate HR replatform between 2024 and 2025. The technical detail of that engagement is on the <a href="/platforms/relokate-hr">platform page</a>; the shape above is what shipped.</p>
+
+    <div class="cta-block">
+      <h3>Replatforming a SaaS this <em>quarter?</em></h3>
+      <p>The studio takes one to two replatform engagements per year, scoped against this framework. From €30K capped at €60K for a single move, fractional CTO retainer for the multi-move arc. Discovery call is 30 minutes.</p>
+      <a href="/services/build-engagement">Read the build detail &rarr;</a>
+    </div>
+
+    <div class="related">
+      <h4>Related</h4>
+      <ul>
+        <li><a href="/platforms/relokate-hr">Case study: Relokate HR replatform</a></li>
+        <li><a href="/services/build-engagement">Service: Fixed-scope build engagement</a></li>
+        <li><a href="/services/advisory-retainer">Service: Advisory retainer for the multi-move arc</a></li>
+        <li><a href="/writing/what-ai-integration-actually-costs">What an AI integration project actually costs</a></li>
+        <li><a href="https://quantalynk.com/pricing">QuantaLynk: Pricing in public</a></li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>&copy; 2026 Sagar Sutaria &middot; Operating from Ahmedabad, India</div>
+    <div>Studio: <a href="https://quantalynk.com" title="QuantaLynk Technologies Private Limited">QuantaLynk</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
