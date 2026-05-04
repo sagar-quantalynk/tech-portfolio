@@ -18,32 +18,33 @@
 <meta property="twitter:title" content="Satshrut | System Architecture">
 <meta property="twitter:description" content="Multi-portal content platform — Next.js, Flutter, NestJS, AWS IVS, Payload CMS">
 <meta property="twitter:image" content="https://sagar-quantalynk.github.io/tech-portfolio/assets/satshrut-preview.png">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --gold: #E8B931;
-  --gold-dim: #C49A1C;
-  --gold-glow: rgba(232, 185, 49, 0.15);
-  --blue: #5BA0E0;
-  --blue-dim: #3A7BBF;
-  --blue-glow: rgba(91, 160, 224, 0.12);
-  --cream: #F5E6C8;
-  --cream-dim: rgba(245, 230, 200, 0.06);
-  --surface-0: #0B0E14;
-  --surface-1: #111621;
-  --surface-2: #171D2A;
-  --surface-3: #1E2636;
-  --border: rgba(245, 230, 200, 0.08);
-  --border-hover: rgba(245, 230, 200, 0.18);
-  --text-primary: #E8E2D6;
-  --text-secondary: rgba(232, 226, 214, 0.55);
-  --text-tertiary: rgba(232, 226, 214, 0.3);
-  --green: #5EBD73;
-  --red: #E05B5B;
-  --purple: #9B7EDC;
-  --orange: #E8963A;
+  /* Sienna design system. locked 2026-05-04 (palette swap from dark+gold) */
+  --gold: #9A3408;
+  --gold-dim: #7F1D1D;
+  --gold-glow: rgba(154, 52, 8, 0.08);
+  --blue: #1F1A14;
+  --blue-dim: #3A2F22;
+  --blue-glow: rgba(31, 26, 20, 0.06);
+  --cream: #1F1A14;
+  --cream-dim: rgba(31, 26, 20, 0.55);
+  --surface-0: #F4ECDC;
+  --surface-1: #FAF5E9;
+  --surface-2: #FFFFFF;
+  --surface-3: #FAF5E9;
+  --border: rgba(31, 26, 20, 0.12);
+  --border-hover: rgba(31, 26, 20, 0.22);
+  --text-primary: #1F1A14;
+  --text-secondary: rgba(31, 26, 20, 0.7);
+  --text-tertiary: rgba(31, 26, 20, 0.5);
+  --green: #15803D;
+  --red: #B91C1C;
+  --purple: #7F1D1D;
+  --orange: #9A3408;
 }
 
 html { scroll-behavior: smooth; }
@@ -62,24 +63,14 @@ body::before {
   position: fixed;
   inset: 0;
   background-image:
-    linear-gradient(rgba(245, 230, 200, 0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(245, 230, 200, 0.018) 1px, transparent 1px);
+    linear-gradient(rgba(31, 26, 20, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31, 26, 20, 0.04) 1px, transparent 1px);
   background-size: 60px 60px;
   pointer-events: none;
   z-index: 0;
 }
 
-body::after {
-  content: '';
-  position: fixed;
-  top: -40%;
-  right: -20%;
-  width: 80vw;
-  height: 80vw;
-  background: radial-gradient(ellipse, rgba(232, 185, 49, 0.03) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: 0;
-}
+body::after { content: none; }
 
 .container {
   position: relative;
@@ -112,7 +103,7 @@ body::after {
 .logo-icon {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dim) 100%);
+  background: var(--gold);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -121,11 +112,11 @@ body::after {
   font-weight: 700;
   font-size: 20px;
   color: var(--surface-0);
-  box-shadow: 0 4px 24px rgba(232, 185, 49, 0.2);
+  box-shadow: 0 4px 24px rgba(154, 52, 8, 0.15);
 }
 
 .logo-text h1 {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'Bricolage Grotesque', serif;
   font-size: 28px;
   font-weight: 400;
   color: var(--cream);
@@ -192,7 +183,7 @@ body::after {
 }
 
 .stat-number {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'Bricolage Grotesque', serif;
   font-size: 36px;
   color: var(--gold);
   line-height: 1;
@@ -289,7 +280,7 @@ body::after {
   background: var(--gold);
   border-radius: 50%;
   animation: flowPulse 2.5s ease-in-out infinite;
-  box-shadow: 0 0 12px rgba(232, 185, 49, 0.4);
+  box-shadow: 0 0 12px rgba(154, 52, 8, 0.15);
 }
 
 @keyframes flowPulse {
@@ -355,7 +346,7 @@ body::after {
 }
 
 .card.expanded {
-  border-color: rgba(232, 185, 49, 0.2);
+  border-color: rgba(154, 52, 8, 0.15);
   box-shadow: 0 4px 24px var(--gold-glow);
 }
 
@@ -378,7 +369,7 @@ body::after {
   position: relative;
 }
 
-.card-icon.gold { background: rgba(232, 185, 49, 0.1); color: var(--gold); }
+.card-icon.gold { background: rgba(154, 52, 8, 0.15); color: var(--gold); }
 .card-icon.blue { background: rgba(91, 160, 224, 0.1); color: var(--blue); }
 .card-icon.green { background: rgba(94, 189, 115, 0.1); color: var(--green); }
 .card-icon.purple { background: rgba(155, 126, 220, 0.1); color: var(--purple); }
@@ -433,7 +424,7 @@ body::after {
   white-space: nowrap;
 }
 
-.tag.gold { background: rgba(232, 185, 49, 0.08); color: var(--gold-dim); }
+.tag.gold { background: rgba(154, 52, 8, 0.15); color: var(--gold-dim); }
 .tag.blue { background: rgba(91, 160, 224, 0.08); color: var(--blue-dim); }
 .tag.green { background: rgba(94, 189, 115, 0.08); color: var(--green); }
 .tag.purple { background: rgba(155, 126, 220, 0.08); color: var(--purple); }
@@ -622,7 +613,7 @@ body::after {
   margin-bottom: 6px;
 }
 
-.cat-core { background: rgba(232, 185, 49, 0.1); color: var(--gold-dim); }
+.cat-core { background: rgba(154, 52, 8, 0.15); color: var(--gold-dim); }
 .cat-content { background: rgba(91, 160, 224, 0.1); color: var(--blue-dim); }
 .cat-user { background: rgba(155, 126, 220, 0.1); color: var(--purple); }
 .cat-media { background: rgba(94, 189, 115, 0.1); color: var(--green); }
@@ -914,7 +905,7 @@ body::after {
 }
 
 .snapshot-title {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'Bricolage Grotesque', serif;
   font-size: 42px;
   font-weight: 400;
   color: var(--cream);
@@ -1098,7 +1089,7 @@ body::after {
 .metric-cell:hover { background: var(--surface-2); }
 
 .metric-number {
-  font-family: 'Instrument Serif', serif;
+  font-family: 'Bricolage Grotesque', serif;
   font-size: 40px;
   line-height: 1;
   margin-bottom: 8px;
@@ -1245,7 +1236,7 @@ body::after {
 .nav-back:hover {
   color: var(--gold);
   border-color: var(--gold-dim);
-  background: rgba(232, 185, 49, 0.05);
+  background: rgba(154, 52, 8, 0.15);
 }
 
 /* ─── RESPONSIVE (new sections) ─── */
@@ -1265,6 +1256,13 @@ body::after {
   .role-grid { grid-template-columns: 1fr; }
   .nav-grid { grid-template-columns: 1fr; }
 }
+
+/* Sienna palette swap — defensive overrides */
+html, body { background: var(--surface-0); color: var(--text-primary); }
+a { color: var(--text-primary); }
+.logo-text h1 { color: var(--text-primary); }
+.logo-icon { color: var(--surface-0); background: var(--gold) !important; box-shadow: none !important; }
+::selection { background: var(--gold); color: var(--surface-0); }
 </style>
 </head>
 <body>

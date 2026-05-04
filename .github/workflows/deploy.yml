@@ -1,0 +1,64 @@
+name: Deploy to quantalynk-new
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-sagarsutaria
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Deploy via rsync
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          rsync -az --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='node_modules/' \
+            --exclude='docs/' \
+            --exclude='scripts/' \
+            --exclude='package*.json' \
+            --exclude='.gitignore' \
+            --exclude='.DS_Store' \
+            --exclude='CNAME' \
+            -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" \
+            ./ ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/
+
+      - name: Reload nginx in the container
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
+            ${DEPLOY_USER}@${DEPLOY_HOST} \
+            "docker exec sagarsutaria_web nginx -s reload"
+
+      - name: Verify deployment
+        run: |
+          set -e
+          STATUS=$(curl -sI -o /dev/null -w "%{http_code}" \
+            --resolve sagarsutaria.com:443:${{ secrets.DEPLOY_HOST }} \
+            https://sagarsutaria.com)
+          if [ "$STATUS" != "200" ]; then
+            echo "Deploy verification failed: HTTP $STATUS"
+            exit 1
+          fi
+          echo "Deploy verified: HTTPS 200"
