@@ -169,7 +169,7 @@ article h2 em { font-style: italic; color: var(--sienna); font-weight: 700; }
   <div class="wrap">
     <div class="essay-stats">
       <div>
-        <div class="num">12&ndash;18</div>
+        <div class="num">12 to 18</div>
         <div class="label">Months for a typical replatform</div>
       </div>
       <div>
@@ -191,12 +191,12 @@ article h2 em { font-style: italic; color: var(--sienna); font-weight: 700; }
 
     <div class="tldr">
       <h2>TLDR</h2>
-      <p>Full rewrites have a <strong>~30% historical success rate</strong> and force a six-month feature freeze that competitors will use to eat your lunch. The replatform that ships keeps the old stack live, runs the new stack in parallel under traffic gates that move from <strong>5% to 100%</strong> over months, and never stops shipping customer features in the meantime. Four moves: strangler, parallel data, gated traffic, contract test.</p>
+      <p>Full rewrites consistently miss their deadlines and force a long feature freeze that competitors will use to eat your lunch. The replatform that ships keeps the old stack live, runs the new stack in parallel under traffic gates that move from <strong>5% to 100%</strong> over months, and never stops shipping customer features in the meantime. Four moves: strangler, parallel data, gated traffic, contract test.</p>
     </div>
 
     <p>"We need to replatform" usually arrives in one of three flavors. The framework is broken in ways the team cannot fix in place. The infrastructure cost is climbing faster than revenue. Hiring is hard because the stack is unfashionable. All three are real reasons. None of them is a reason to do a full rewrite.</p>
 
-    <p>The full rewrite is the most expensive way to fail. Joel Spolsky's "things you should never do" essay holds up. The data behind it has improved, not weakened: industry surveys still show roughly <strong>30% of major rewrites ship and meet acceptance criteria</strong>. The other 70% miss the deadline by a year or more, ship something that customers reject, or get killed before completion.</p>
+    <p>The full rewrite is the most expensive way to fail. Joel Spolsky's "things you should never do" essay holds up. The pattern repeats every cycle: most full rewrites miss the deadline by a year or more, ship something customers reject, or get killed before completion.</p>
 
     <p>The replatform that works is structurally different. It does not stop the business. It does not need a feature freeze. It does not bet the company on the new stack working better than the old before customers see it. Here is the shape.</p>
 
@@ -206,7 +206,7 @@ article h2 em { font-style: italic; color: var(--sienna); font-weight: 700; }
       <div class="approach-card bad">
         <span class="tag">The trap</span>
         <h4>Full rewrite</h4>
-        <p>Six month feature freeze. Build new stack to feature parity with old. Cut over in one weekend. Customers experience the new stack only after it ships. <strong>~30% of these projects succeed.</strong> The rest miss by a year or get killed.</p>
+        <p>Six month feature freeze. Build new stack to feature parity with old. Cut over in one weekend. Customers experience the new stack only after it ships. <strong>Most of these projects miss the deadline by a year or get killed.</strong></p>
       </div>
       <div class="approach-card good">
         <span class="tag">The framework</span>
@@ -239,7 +239,7 @@ article h2 em { font-style: italic; color: var(--sienna); font-weight: 700; }
         <div>
           <h3>Contract tests on the old stack</h3>
           <div class="meta">Weeks 6-10 &middot; Behavior pinning</div>
-          <p>Before migrating any route, write contract tests that pin the existing behavior of that route. Request format, response shape, edge cases, error codes. The new implementation must pass the same contract before any traffic moves. This is the single biggest quality-of-replatform predictor; teams that skip it ship 3-5 customer-visible regressions per route.</p>
+          <p>Before migrating any route, write contract tests that pin the existing behavior of that route. Request format, response shape, edge cases, error codes. The new implementation must pass the same contract before any traffic moves. This is the single biggest quality-of-replatform predictor; teams that skip it consistently ship customer-visible regressions on the routes they did not pin.</p>
         </div>
       </div>
       <div class="move-row">
@@ -332,7 +332,7 @@ article h2 em { font-style: italic; color: var(--sienna); font-weight: 700; }
   </div>
 
   <div class="wrap-narrow">
-    <p>A 12-month replatform of a non-trivial SaaS, executed with this framework, runs <strong>€300K-€800K in engineering cost</strong> at EU senior rates. The same scope as a full rewrite would estimate at €1M+ and complete with 30% probability. The framework is more expensive in nominal infrastructure cost (you run two stacks for months) but dramatically cheaper in expected value because the ship probability is materially higher.</p>
+    <p>A 12-month replatform of a non-trivial SaaS, executed with this framework, runs <strong>€300K to €800K in engineering cost</strong> at EU senior rates. The framework is more expensive in nominal infrastructure cost than a full rewrite (you run two stacks for months) but dramatically cheaper in expected value, because the ship probability is materially higher when the business never stops shipping.</p>
 
     <p>For a studio engagement, the framework breaks into shippable chunks. The first move (strangler at the edge) is a four to six week fixed-scope build. The second move (parallel data) is six to eight weeks. Subsequent route migrations are typically four week chunks each. A founder running this against an internal team with senior advisory on architecture would buy a fractional CTO retainer to keep the framework honest while their team executes.</p>
 
