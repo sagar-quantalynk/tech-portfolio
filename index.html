@@ -99,7 +99,14 @@ img, svg { display:block; max-width:100%; }
 @media (max-width:720px) { .nav-links { display:none; } }
 
 /* Hero */
-.hero { padding: clamp(60px, 10vw, 120px) 0 clamp(80px, 12vw, 140px); border-bottom: 1px solid var(--line); }
+.hero { padding: clamp(60px, 10vw, 120px) 0 0; border-bottom: 1px solid var(--line); }
+.hero-stat-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: clamp(56px, 7vw, 80px); border-top: 1px solid var(--line); }
+@media (max-width:760px) { .hero-stat-strip { grid-template-columns: repeat(2, 1fr); } .hero-stat-strip > div:nth-child(2), .hero-stat-strip > div:nth-child(4) { border-right: none; } }
+.hero-stat-strip > div { padding: 30px 22px; border-right: 1px solid var(--line); }
+.hero-stat-strip > div:last-child { border-right: none; }
+.hero-stat-strip .num { font-family: var(--display); font-weight: 600; font-size: clamp(30px, 4.4vw, 46px); line-height: 1; color: var(--sienna); letter-spacing: -0.02em; margin-bottom: 8px; }
+.hero-stat-strip .num em { font-style: italic; }
+.hero-stat-strip .label { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); line-height: 1.5; }
 .hero-badge {
   display:inline-flex; align-items:center; gap:8px;
   font-family: var(--mono); font-size:11px; font-weight:500;
@@ -387,6 +394,25 @@ img, svg { display:block; max-width:100%; }
       </a>
       <a href="#work" class="btn-secondary">See selected work</a>
     </div>
+
+    <div class="hero-stat-strip">
+      <div>
+        <div class="num"><em>13+</em></div>
+        <div class="label">Years senior engineering</div>
+      </div>
+      <div>
+        <div class="num">7</div>
+        <div class="label">Production platforms shipped</div>
+      </div>
+      <div>
+        <div class="num">3&ndash;4</div>
+        <div class="label">Engagements per quarter, capped</div>
+      </div>
+      <div>
+        <div class="num">&euro;8K&ndash;&euro;60K</div>
+        <div class="label">Engagement price range</div>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -416,7 +442,7 @@ img, svg { display:block; max-width:100%; }
         <div style="display:flex; flex-direction:column;">
           <div class="service-price"><strong>From &euro;25K</strong>, scope locked</div>
           <div class="service-meta">6 to 10 weeks. 50% on signing, 50% on shipped.</div>
-          <a href="/services/ai-integration.html" class="btn-inline">Read more about AI integration</a>
+          <a href="/services/ai-integration" class="btn-inline">Read more about AI integration</a>
         </div>
       </div>
 
@@ -430,7 +456,7 @@ img, svg { display:block; max-width:100%; }
         </ul>
         <div class="service-price"><strong>From &euro;30K</strong></div>
         <div class="service-meta">4 to 12 weeks. Capped at &euro;60K. Scope locked SOW.</div>
-        <a href="/services/build-engagement.html" class="btn-inline">Read more about build engagements</a>
+        <a href="/services/build-engagement" class="btn-inline">Read more about build engagements</a>
       </div>
 
       <div class="service-card standard">
@@ -443,7 +469,7 @@ img, svg { display:block; max-width:100%; }
         </ul>
         <div class="service-price"><strong>From &euro;8K per month</strong></div>
         <div class="service-meta">6 month minimum. &euro;10K to &euro;12K pilot (4 weeks).</div>
-        <a href="/services/advisory-retainer.html" class="btn-inline">Read more about the advisory retainer</a>
+        <a href="/services/advisory-retainer" class="btn-inline">Read more about the advisory retainer</a>
       </div>
     </div>
 
@@ -465,7 +491,7 @@ img, svg { display:block; max-width:100%; }
 
     <div class="work-grid">
 
-      <a href="platforms/relokate-hr.html" class="work-card">
+      <a href="platforms/relokate-hr" class="work-card">
         <div class="vertical">HR and talent, EU</div>
         <h3>Relokate HR</h3>
         <p class="outcome">Relocation aware HR and talent platform. Multi deliverable engagement spanning audit, HR app v1 and v5, and the marketing site. Built end to end for an EU client.</p>
@@ -478,7 +504,7 @@ img, svg { display:block; max-width:100%; }
         <span class="arrow">View architecture</span>
       </a>
 
-      <a href="platforms/platypus.html" class="work-card">
+      <a href="platforms/platypus" class="work-card">
         <div class="vertical">Real time geospatial</div>
         <h3>Platypus Platform</h3>
         <p class="outcome">Real time matching and live tracking marketplace. 50k+ concurrent connections, sub second match latency, geospatial indexing built for the actual movement profile of users.</p>
@@ -491,7 +517,7 @@ img, svg { display:block; max-width:100%; }
         <span class="arrow">View architecture</span>
       </a>
 
-      <a href="platforms/satshrut.html" class="work-card">
+      <a href="platforms/satshrut" class="work-card">
         <div class="vertical">Content and streaming</div>
         <h3>Satshrut Platform</h3>
         <p class="outcome">Multi portal content and live streaming for a Jain spiritual trust. Web and mobile clients, distributed CDN, content rights model that maps to the trust&rsquo;s governance.</p>
@@ -504,7 +530,7 @@ img, svg { display:block; max-width:100%; }
         <span class="arrow">View architecture</span>
       </a>
 
-      <a href="platforms/numerology.html" class="work-card">
+      <a href="platforms/numerology" class="work-card">
         <div class="vertical">Consumer software</div>
         <h3>JET Numerology CMS</h3>
         <p class="outcome">Headless CMS for a numerology consultancy with rule driven personalization. Phase 2 launches with extended content modules and subscriber tooling.</p>

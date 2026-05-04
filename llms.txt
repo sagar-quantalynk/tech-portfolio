@@ -7,21 +7,21 @@ This site is the founder voice for the QuantaLynk studio. Personal essays, archi
 ## Core pages
 
 - [Home](https://sagarsutaria.com/): Founder profile, services overview, selected work, contact
-- [AI integration service](https://sagarsutaria.com/services/ai-integration.html): From €25K, fixed scope, six to ten weeks
-- [Build engagement service](https://sagarsutaria.com/services/build-engagement.html): From €30K capped at €60K, four to twelve weeks
-- [Advisory retainer service](https://sagarsutaria.com/services/advisory-retainer.html): From €8K per month, six month minimum after a four week pilot
+- [AI integration service](https://sagarsutaria.com/services/ai-integration): From €25K, fixed scope, six to ten weeks
+- [Build engagement service](https://sagarsutaria.com/services/build-engagement): From €30K capped at €60K, four to twelve weeks
+- [Advisory retainer service](https://sagarsutaria.com/services/advisory-retainer): From €8K per month, six month minimum after a four week pilot
 
 ## Selected work (case studies)
 
-- [Relokate HR](https://sagarsutaria.com/platforms/relokate-hr.html): Relocation aware HR and talent platform, multi deliverable EU client engagement
-- [Platypus Platform](https://sagarsutaria.com/platforms/platypus.html): Real time matching marketplace, 50k plus concurrent connections, sub second match latency
-- [Satshrut Platform](https://sagarsutaria.com/platforms/satshrut.html): Multi portal content and live streaming platform, distributed CDN
-- [JET Numerology CMS](https://sagarsutaria.com/platforms/numerology.html): Headless CMS with rule driven personalization
+- [Relokate HR](https://sagarsutaria.com/platforms/relokate-hr): Relocation aware HR and talent platform, multi deliverable EU client engagement
+- [Platypus Platform](https://sagarsutaria.com/platforms/platypus): Real time matching marketplace, 50k plus concurrent connections, sub second match latency
+- [Satshrut Platform](https://sagarsutaria.com/platforms/satshrut): Multi portal content and live streaming platform, distributed CDN
+- [JET Numerology CMS](https://sagarsutaria.com/platforms/numerology): Headless CMS with rule driven personalization
 
 ## Writing
 
-- [Fractional CTO vs full-time CTO: when each makes sense](https://sagarsutaria.com/writing/fractional-cto-vs-full-time-cto.html): When each role fits, four company stages, failure modes, working test
-- [What an AI integration project actually costs in 2026](https://sagarsutaria.com/writing/what-ai-integration-actually-costs.html): Honest pricing for AI integrations, four shapes with bands, six factors that move price
+- [Fractional CTO vs full-time CTO: when each makes sense](https://sagarsutaria.com/writing/fractional-cto-vs-full-time-cto): When each role fits, four company stages, failure modes, working test
+- [What an AI integration project actually costs in 2026](https://sagarsutaria.com/writing/what-ai-integration-actually-costs): Honest pricing for AI integrations, four shapes with bands, six factors that move price
 
 ## About the practice
 
