@@ -172,13 +172,19 @@ L5 (above) is the synthesis: situation-first opening (First Principles), de-risk
 - The Relokate name is referenced only after the deal signs (15–20 May 2026); pre-signing wording reads *"becoming CTO at a Berlin startup"* or omits the role line entirely.
 - Final wording at implementation time will be A/B-test-ready — L5 is the launch lede; refinements happen with real click data, not more council iterations.
 
-**Services voice — three offerings (per Council Session 1's Approach A, calibrated for solo + AI):**
+**Services — three offerings, council-locked pricing 2026-05-04 (Pricing Council session 6).**
 
-1. **Advisory** — for founders / heads of eng who need senior judgment without a full CTO hire. €4–10K/mo retainer (calibrated post-Relokate).
-2. **Build sprint** — fixed-scope, 4–12 weeks, defined product / feature / platform shipped end-to-end. €20–80K (calibrated).
-3. **AI uplift** — retrofit AI into an existing product. 6–10 weeks, fixed scope. €15–50K (calibrated).
+The pricing council overturned the original spec's draft pricing in both directions — too cheap on the floor (Advisory was €4K — "scary-cheap cliff" that kills trust the credential buys), too high on the ceiling (Build Sprint was €80K — invites German-agency comparison Sagar loses on team size). Final locked structure:
 
-**Naming:** the Council Session 3 Outsider critique that "Embedded Senior Builder" / "AI Uplift" / "Fixed-Scope Build Sprint" read as jargon stands. Final naming will be revisited at implementation; spec-level names above are placeholders for clearer human-language alternatives ("Advise me", "Build with me", "Add AI to my product" — to be calibrated).
+1. **AI Uplift — `Add AI to your product, the right way.`** — **HERO offer**, leads the Services section visually. Retrofit AI into a product that already has users. RAG, agentic workflows, evaluation harness. **From €25K**, 6–10 weeks, scope-locked. Typical €30–35K, ceiling €50K, walk below €25K.
+2. **Build Sprint — `Build it with me.`** — Fixed-scope, fixed-price engineering. End-to-end ownership of one defined product / feature / platform. **From €30K**, 4–12 weeks, capped at **€60K** (above €60K invites German-agency comparison). 20% milestone holdback. Walk below €30K or above €60K.
+3. **Advisory — `Advise me.`** — Senior technical judgment on a retainer. Architecture, hiring, scaling, vendor selection, the calls that don't show up on a sprint board. **From €8K / month**, 6-month minimum. Pilot available: €10–12K for 4 weeks. Walk below €6K/mo.
+
+**Why these prices, given Sagar is operating from India:** the council's Outsider buyer-persona testimony pegged the Berlin-CTO credential placed *adjacent to the price* (not buried in the bio) at **+30–40% price tolerance** vs. an unanchored "Indian solo." The credential strip on the live site appears immediately below the Services tiles for that reason. Below the published floor on any service, Sagar walks; the throttle matters more than fill-rate in year 1, when Relokate ramp-up caps studio capacity at one retainer + one active build.
+
+**Display ordering on the site:** AI Uplift first (hero treatment, full-width dark card), then Build Sprint and Advisory side-by-side. This is opposite to the conventional "lead with retainer" pattern — the council's evidence: AI Uplift has the lowest geo-stigma, highest pricing power, fastest close, and converts best at €25–35K from EU/US founders who recognize the moment in 2026.
+
+**Names:** the spec-level placeholders ("AI Uplift", "Build Sprint") shipped on the live site as the *headline labels* but each tile uses a plainer call ("Add AI to your product, the right way.", "Build it with me.", "Advise me.") which the Outsider council advisor identified as the conversion-friendly phrasing — drops the jargon while keeping the structural names for SEO and future referral-conversation shorthand.
 
 **Selected systems framing:** the existing portfolio cards are spec-led ("288 test scenarios", "4 background jobs"). They get rewritten as outcome-led ("EU HR scale-up: candidate pipeline 5x in 4 months" — per client permission). Existing platform pages stay structurally; copy gets a content-pass.
 
