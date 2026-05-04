@@ -66,7 +66,13 @@ h1 em { color: var(--sienna); font-style: italic; font-weight: 700; }
 .lede { font-size: 21px; line-height: 1.5; color: var(--ink-2); margin-bottom: 32px; }
 .byline { font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: 0.04em; padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 0; display: flex; gap: 16px; flex-wrap: wrap; }
 .byline strong { color: var(--ink); font-weight: 500; }
-.tldr { background: var(--sienna-soft); border-left: 4px solid var(--sienna); padding: 28px 32px; margin: 48px 0 48px; }
+.essay-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin: 48px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+@media (max-width:760px) { .essay-stats { grid-template-columns: repeat(2, 1fr); } .essay-stats > div:nth-child(2), .essay-stats > div:nth-child(4) { border-right: none; } }
+.essay-stats > div { padding: 26px 18px; border-right: 1px solid var(--line); }
+.essay-stats > div:last-child { border-right: none; }
+.essay-stats .num { font-family: var(--display); font-weight: 700; font-size: clamp(26px, 3.6vw, 38px); line-height: 1; color: var(--sienna); letter-spacing: -0.02em; margin-bottom: 6px; }
+.essay-stats .label { font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); line-height: 1.45; }
+.tldr { background: var(--sienna-soft); border-left: 4px solid var(--sienna); padding: 28px 32px; margin: 0 0 48px; }
 .tldr h2 { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sienna); margin-bottom: 14px; }
 .tldr p { font-size: 18px; color: var(--ink); margin: 0; line-height: 1.55; }
 .tldr p strong { color: var(--ink); font-weight: 700; background: rgba(154,52,8,0.12); padding: 1px 6px; border-radius: 3px; }
@@ -115,6 +121,25 @@ article h2 em { font-style: italic; color: var(--sienna); font-weight: 700; }
       <span><strong>Sagar Sutaria</strong></span>
       <span>Published 5 May 2026</span>
       <span>7 min read</span>
+    </div>
+
+    <div class="essay-stats">
+      <div>
+        <div class="num">€8K-€12K</div>
+        <div class="label">Fractional CTO retainer, monthly</div>
+      </div>
+      <div>
+        <div class="num">€300-€500</div>
+        <div class="label">Hourly advisor alternative</div>
+      </div>
+      <div>
+        <div class="num">60</div>
+        <div class="label">Day window for the architectural-mistake test</div>
+      </div>
+      <div>
+        <div class="num">3-6</div>
+        <div class="label">Months to Series-A pitch where the fit lands</div>
+      </div>
     </div>
 
     <div class="tldr">
