@@ -1,0 +1,30 @@
+# Sagar Sutaria
+
+> Senior engineering practice operating from Ahmedabad, India. Fractional CTO retainers and fixed-scope build engagements through QuantaLynk Technologies Private Limited. Thirteen plus years shipping production systems across HR, real time marketplaces, AI enabled SaaS, and content streaming.
+
+This site is the founder voice for the QuantaLynk studio. Personal essays, architecture writeups, and engagement notes live here. The studio's commercial surface is at https://quantalynk.com.
+
+## Core pages
+
+- [Home](https://sagarsutaria.com/): Founder profile, services overview, selected work, contact
+- [AI integration service](https://sagarsutaria.com/services/ai-integration.html): From €25K, fixed scope, six to ten weeks
+- [Build engagement service](https://sagarsutaria.com/services/build-engagement.html): From €30K capped at €60K, four to twelve weeks
+- [Advisory retainer service](https://sagarsutaria.com/services/advisory-retainer.html): From €8K per month, six month minimum after a four week pilot
+
+## Selected work (case studies)
+
+- [Relokate HR](https://sagarsutaria.com/platforms/relokate-hr.html): Relocation aware HR and talent platform, multi deliverable EU client engagement
+- [Platypus Platform](https://sagarsutaria.com/platforms/platypus.html): Real time matching marketplace, 50k plus concurrent connections, sub second match latency
+- [Satshrut Platform](https://sagarsutaria.com/platforms/satshrut.html): Multi portal content and live streaming platform, distributed CDN
+- [JET Numerology CMS](https://sagarsutaria.com/platforms/numerology.html): Headless CMS with rule driven personalization
+
+## Writing
+
+- [Fractional CTO vs full-time CTO: when each makes sense](https://sagarsutaria.com/writing/fractional-cto-vs-full-time-cto.html): When each role fits, four company stages, failure modes, working test
+- [What an AI integration project actually costs in 2026](https://sagarsutaria.com/writing/what-ai-integration-actually-costs.html): Honest pricing for AI integrations, four shapes with bands, six factors that move price
+
+## About the practice
+
+QuantaLynk operates as a senior solo practice with senior contractors brought in on specific scopes. Three to four engagements per quarter cap. The studio walks from anything outside that capacity, regardless of price. Pricing reflects an Ahmedabad delivery base, not a discount on quality.
+
+Founder: Sagar Sutaria. LinkedIn: https://www.linkedin.com/in/sagar-sutaria. Studio entity: https://quantalynk.com.
