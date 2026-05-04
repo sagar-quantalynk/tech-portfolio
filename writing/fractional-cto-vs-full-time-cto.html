@@ -96,9 +96,44 @@ h1 { font-family: var(--display); font-weight: 700; font-size: clamp(36px, 5.5vw
 .lede { font-size: 22px; line-height: 1.5; color: var(--ink-2); margin-bottom: 36px; }
 .byline { font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: 0.04em; padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 48px; display: flex; gap: 16px; flex-wrap: wrap; }
 .byline strong { color: var(--ink); font-weight: 500; }
-.tldr { background: var(--sienna-soft); border-left: 3px solid var(--sienna); padding: 22px 28px; margin: 32px 0 48px; }
-.tldr h2 { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sienna); margin-bottom: 12px; }
-.tldr p { font-size: 17px; color: var(--ink-2); margin: 0; line-height: 1.6; }
+.tldr { background: var(--sienna-soft); border-left: 4px solid var(--sienna); padding: 28px 32px; margin: 0 0 48px; }
+.tldr h2 { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sienna); margin-bottom: 14px; }
+.tldr p { font-size: 18px; color: var(--ink); margin: 0; line-height: 1.55; }
+.tldr p strong { color: var(--ink); font-weight: 600; background: rgba(154,52,8,0.12); padding: 1px 6px; border-radius: 3px; }
+/* Hero stats */
+.essay-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin: 48px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+@media (max-width:760px) { .essay-stats { grid-template-columns: repeat(2, 1fr); } .essay-stats > div:nth-child(2), .essay-stats > div:nth-child(4) { border-right: none; } }
+.essay-stats > div { padding: 26px 18px; border-right: 1px solid var(--line); }
+.essay-stats > div:last-child { border-right: none; }
+.essay-stats .num { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4vw, 40px); line-height: 1; color: var(--sienna); letter-spacing: -0.02em; margin-bottom: 6px; }
+.essay-stats .label { font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); line-height: 1.45; }
+
+/* Stage decision matrix */
+.stages { margin: 24px 0 36px; border: 1px solid var(--line); background: var(--paper-2); }
+.stages-row { display: grid; grid-template-columns: 80px 1fr 200px; gap: 20px; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--line); }
+.stages-row:last-child { border-bottom: none; }
+@media (max-width:680px) { .stages-row { grid-template-columns: 1fr; gap: 8px; } }
+.stages-row .stage-num { font-family: var(--display); font-weight: 700; font-size: 32px; color: var(--sienna); line-height: 1; }
+.stages-row .stage-detail h4 { font-family: var(--display); font-weight: 600; font-size: 18px; line-height: 1.2; color: var(--ink); margin-bottom: 4px; }
+.stages-row .stage-detail p { font-size: 14px; color: var(--ink-2); line-height: 1.5; margin: 0; }
+.stages-row .stage-answer { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; padding: 8px 12px; border-radius: 3px; text-align: center; }
+.stage-answer.fractional { background: rgba(154,52,8,0.12); color: var(--sienna); font-weight: 500; }
+.stage-answer.fulltime { background: rgba(31,26,20,0.08); color: var(--ink); font-weight: 500; }
+.stage-answer.skip { background: rgba(31,26,20,0.04); color: var(--ink-3); }
+
+/* Failure mode visual */
+.failure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 24px 0 36px; }
+@media (max-width:680px) { .failure-grid { grid-template-columns: 1fr; } }
+.failure-card { padding: 22px 24px; border-left: 3px solid #A33A1F; background: rgba(163,58,31,0.06); }
+.failure-card h4 { font-family: var(--display); font-weight: 700; font-size: 16px; line-height: 1.2; color: var(--ink); margin-bottom: 6px; }
+.failure-card p { font-size: 14.5px; color: var(--ink-2); line-height: 1.5; margin: 0; }
+
+/* Working test - decision visual */
+.test-flow { background: var(--paper-2); border: 1px solid var(--line); padding: 28px 32px; margin: 24px 0 36px; }
+.test-question { font-family: var(--display); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 12px; line-height: 1.4; }
+.test-answer { padding: 10px 14px; border-left: 3px solid var(--sienna); background: rgba(154,52,8,0.05); margin-bottom: 22px; font-size: 15px; color: var(--ink-2); line-height: 1.5; }
+.test-answer:last-child { margin-bottom: 0; }
+.test-answer strong { color: var(--ink); font-weight: 500; }
 article p { margin-bottom: 22px; color: var(--ink-2); }
 article p strong { color: var(--ink); font-weight: 500; }
 article a { color: var(--sienna); border-bottom: 1px solid currentColor; transition: opacity 150ms; }
@@ -150,7 +185,26 @@ article blockquote { border-left: 3px solid var(--ink-3); padding-left: 20px; ma
 
     <div class="tldr">
       <h2>TLDR</h2>
-      <p>If your engineering org needs a leader who is in every conversation, on the cap table, and accountable for retention, the answer is full-time. If you need senior judgment in a few specific decisions per week and on the architecture review on Friday, fractional is faster, cheaper, and produces better calls than the wrong full-time hire. The failure mode is hiring full-time before you have something for them to manage.</p>
+      <p><strong>Full-time</strong> when the engineering org has 8+ engineers and people work matters. <strong>Fractional</strong> when you have 2-7 engineers and need senior judgment in 2-5 specific decisions per week. The failure mode is hiring full-time before you have something for them to manage, or fractional after the org has tipped into needing line management.</p>
+    </div>
+
+    <div class="essay-stats">
+      <div>
+        <div class="num">€8K&ndash;€15K</div>
+        <div class="label">Fractional /mo, market band</div>
+      </div>
+      <div>
+        <div class="num">€200K+</div>
+        <div class="label">Full-time CTO total comp, EU</div>
+      </div>
+      <div>
+        <div class="num">8</div>
+        <div class="label">Engineer threshold for full-time</div>
+      </div>
+      <div>
+        <div class="num">30&ndash;50%</div>
+        <div class="label">Of CTO role is people work</div>
+      </div>
     </div>
 
     <p>The framing that makes this question hard is that founders treat both options as fungible. They benchmark a full-time CTO at <strong>&euro;200K-&euro;280K total comp in the EU</strong>, a fractional CTO at <strong>&euro;8K-&euro;15K per month</strong>, and assume the fractional version is the cheap version of the same job.</p>
@@ -172,33 +226,67 @@ article blockquote { border-left: 3px solid var(--ink-3); padding-left: 20px; ma
     <p>This makes fractional the correct shape when the company has fewer than eight engineers, when the founder is technical or technical-adjacent, and when the engineering decisions worth a senior brain happen on the order of two to five per week. Below that volume, even a fractional retainer is overkill. Above it, you need full-time presence.</p>
 
     <h2>The four shapes</h2>
-    <p>It helps to get specific. Most companies are in one of four states.</p>
+    <p>Most companies are in one of four states. Here is which seat each one needs.</p>
 
-    <h3>1. Pre-product, founder is the engineer</h3>
-    <p>You do not need a CTO at all. You need either a co-founder or no one. A fractional retainer at this stage is a status purchase. Skip it. Spend the money on the build.</p>
+    <div class="stages">
+      <div class="stages-row">
+        <div class="stage-num">01</div>
+        <div class="stage-detail">
+          <h4>Pre-product, founder is the engineer</h4>
+          <p>No team, no product, no users. The founder is in the code daily.</p>
+        </div>
+        <div class="stage-answer skip">Skip both. Build.</div>
+      </div>
+      <div class="stages-row">
+        <div class="stage-num">02</div>
+        <div class="stage-detail">
+          <h4>Post-product, 2-7 engineers, founder still in the code</h4>
+          <p>Daily calls sit with the founder. Architecture review on Friday is the bottleneck. Senior hiring screens are guesswork.</p>
+        </div>
+        <div class="stage-answer fractional">Fractional CTO &euro;8K&ndash;15K/mo</div>
+      </div>
+      <div class="stages-row">
+        <div class="stage-num">03</div>
+        <div class="stage-detail">
+          <h4>8-20 engineers, growing fast</h4>
+          <p>Role tips into mostly people work. Performance reviews, retention, culture, hiring debriefs. Fractional cannot hold this seat.</p>
+        </div>
+        <div class="stage-answer fulltime">Full-time CTO &euro;200K+ total</div>
+      </div>
+      <div class="stages-row">
+        <div class="stage-num">04</div>
+        <div class="stage-detail">
+          <h4>Mature engineering org, board-driven</h4>
+          <p>VP Engineering for execution. Board observer fractional for technical narrative. Different conversation.</p>
+        </div>
+        <div class="stage-answer fulltime">Full-time + observer</div>
+      </div>
+    </div>
 
-    <h3>2. Post-product, two to seven engineers, founder still in the code</h3>
-    <p>Fractional is the right answer. The founder makes the daily calls. The fractional CTO sits in the weekly architecture review, runs senior hiring screens, and is on speed dial when the founder cannot delegate the call. Cost: <strong>&euro;8K-&euro;15K per month</strong>. ROI: very high if the founder respects the role and uses it. Very low if the founder treats the call as a meeting.</p>
-
-    <h3>3. Eight to twenty engineers, growing fast</h3>
-    <p>Full-time CTO. The role tips into being mostly people work. A fractional cannot hold this seat. The cost of a wrong full-time hire is ugly, but the cost of leaving the seat empty is worse.</p>
-
-    <h3>4. Mature engineering org, board-driven</h3>
-    <p>Full-time CTO or VP Engineering with a board observer fractional. Different conversation entirely.</p>
-
-    <h2>The failure mode</h2>
-    <p>The most common mistake is hiring a full-time CTO when the company is in state 2. The new CTO arrives, finds three engineers and a founder who is still pushing code, has nothing to manage, and either spends six months building structure that does not earn its keep or quietly moves into IC work and now you are paying senior leader rates for senior IC output.</p>
-
-    <p>The second most common mistake is the reverse. Hiring fractional when the company is in state 3. The fractional cannot retain the team. The team feels unmanaged. Senior people leave. The fractional retainer that was supposed to save money costs the company an entire engineering rebuild eighteen months later.</p>
-
+    <h2>The failure modes</h2>
     <p>Both errors have the same root cause: pricing the seat instead of staging the seat.</p>
 
+    <div class="failure-grid">
+      <div class="failure-card">
+        <h4>Failure A: Full-time hire at stage 2</h4>
+        <p>New CTO arrives, finds 3 engineers and a founder still pushing code. Nothing to manage. Spends 6 months building structure that does not earn its keep, or quietly slides into IC work. You are paying senior leader rates for senior IC output.</p>
+      </div>
+      <div class="failure-card">
+        <h4>Failure B: Fractional at stage 3</h4>
+        <p>Fractional cannot retain the team. Team feels unmanaged. Senior people leave. The retainer that was supposed to save money costs you an engineering rebuild 18 months later.</p>
+      </div>
+    </div>
+
     <h2>A working test</h2>
-    <p>If you cannot answer "what is the most important thing my engineering team is doing this week" off the top of your head, you do not need a fractional CTO. You need to be in your engineering more, or you need a full-time CTO who will be.</p>
+    <p>Two questions. The answer pattern tells you which seat fits.</p>
 
-    <p>If you can answer it but you cannot answer "is the way we are doing it the right way," that is the fractional CTO question. That is what a fractional retainer is for. A senior brain on the architecture review, the vendor evaluation, the hiring panel, the board section.</p>
-
-    <p>If you can answer both, you do not need either yet. Spend the money on the build.</p>
+    <div class="test-flow">
+      <div class="test-question">Q1: Can you answer "what is my engineering team doing this week" off the top of your head?</div>
+      <div class="test-answer"><strong>No.</strong> You do not need a fractional CTO. You need to be in your engineering more, or you need a full-time CTO who will be.</div>
+      <div class="test-question">Q2: If yes to Q1, can you answer "is the way we are doing it the right way"?</div>
+      <div class="test-answer"><strong>No.</strong> That is the fractional CTO question. Senior brain on architecture review, vendor evaluation, hiring panel, board section.</div>
+      <div class="test-answer"><strong>Yes to both.</strong> You do not need either yet. Spend the money on the build.</div>
+    </div>
 
     <div class="cta-block">
       <h3>Considering a fractional CTO retainer.</h3>
