@@ -185,106 +185,42 @@ article h2 em { font-style: italic; color: var(--sienna); font-weight: 700; }
 
     <p>The base case for an AI integration in 2026, covered in <a href="/writing/what-ai-integration-actually-costs">a separate post</a>, is €25K-€80K with a typical band of €25K-€55K for RAG over a clean corpus. That number assumes no special data handling, no audit obligations, no deletion guarantees, and no model attribution requirements. As soon as any of those become hard requirements, the band moves.</p>
 
-    <h2>The four <em>regulated industries</em>, by AI cost premium.</h2>
-    <p style="font-size:15px; color:var(--ink-3); margin-top:-10px; margin-bottom:18px; max-width:65ch;">Bands below are the studio's observed price uplift on regulated AI builds versus the unregulated baseline, not an industry survey. Your quote will land inside its band based on the seven multipliers in the next section.</p>
   </div>
 
-  <div class="wrap">
-    <div class="industries">
-      <div class="industry-card">
-        <h4>HR &amp; people operations</h4>
-        <div class="reg">GDPR &middot; equal opportunity laws &middot; data minimization</div>
-        <div class="uplift">+15-30%</div>
-        <p>Personal data is the default in HR. The EU AI Act classifies hiring AI as high-risk; full obligations including bias auditing phase in through 2026 and 2027. Data deletion rights take longer to implement correctly than the AI feature itself.</p>
-      </div>
-      <div class="industry-card">
-        <h4>Finance &amp; fintech</h4>
-        <div class="reg">PCI-DSS &middot; SOX &middot; financial advice rules &middot; AML/KYC</div>
-        <div class="uplift">+20-35%</div>
-        <p>Audit logging is non-negotiable. Any AI that informs financial decisions has explainability requirements. PCI scope creeps fast if AI prompts touch card data, even briefly.</p>
-      </div>
-      <div class="industry-card">
-        <h4>Healthcare</h4>
-        <div class="reg">HIPAA &middot; HITECH &middot; GDPR Art. 9 &middot; FDA software-as-medical-device</div>
-        <div class="uplift">+30-60%</div>
-        <p>Most expensive band. PHI handling extends to inference logs, prompt history, and any cached output. BAA contracts with model providers required. Some use cases trigger SaMD review, which is a different conversation.</p>
-      </div>
-      <div class="industry-card">
-        <h4>Legal &amp; insurance</h4>
-        <div class="reg">Privilege &middot; ABA model rules &middot; UPL exposure</div>
-        <div class="uplift">+25-50%</div>
-        <p>Privilege rules govern what can leave the firm; sending privileged data through a third-party LLM without a no-training contract is malpractice in most jurisdictions. Model output disclaimers and human-in-the-loop reviews are mandatory in most US states.</p>
-      </div>
-    </div>
+  <div class="wrap-narrow">
+    <h2>What actually <em>kills</em> the engagement.</h2>
 
-    <h2>The <em>seven cost multipliers</em>.</h2>
+    <p>Before the cost conversation, before the timeline conversation, there is one document that decides whether a regulated AI build can ship at all: the contract chain between you, your build vendor, and the underlying model provider.</p>
 
-    <div class="multipliers">
-      <div class="multiplier-row">
-        <div class="num">01</div>
-        <div class="label">Data residency<small>EU data must stay in EU. PHI usually must stay in-country. Add per-region inference endpoints, regional vector stores, region-aware routing.</small></div>
-        <div class="impact">+10-20%</div>
-      </div>
-      <div class="multiplier-row">
-        <div class="num">02</div>
-        <div class="label">Comprehensive audit logging<small>Every prompt, every retrieval result, every model call, every user-facing output. Tamper-evident storage. Retention windows tied to regulator (often 7 years).</small></div>
-        <div class="impact">+8-15%</div>
-      </div>
-      <div class="multiplier-row">
-        <div class="num">03</div>
-        <div class="label">Right-to-deletion machinery<small>GDPR Article 17. Deletion has to propagate to vector stores, training caches, and any embedded model fine-tunes. Most teams forget the cache.</small></div>
-        <div class="impact">+5-12%</div>
-      </div>
-      <div class="multiplier-row">
-        <div class="num">04</div>
-        <div class="label">Model attribution and explainability<small>Why did the AI say this. Confidence score. Source documents cited inline. Required in finance, healthcare, and EU AI Act high-risk categories.</small></div>
-        <div class="impact">+10-20%</div>
-      </div>
-      <div class="multiplier-row">
-        <div class="num">05</div>
-        <div class="label">Vendor BAA / DPA chain<small>BAA with the model provider, DPA with subprocessors, written subprocessor list. Model vendors charge premium tiers for regulated contracts.</small></div>
-        <div class="impact">Direct invoice cost</div>
-      </div>
-      <div class="multiplier-row">
-        <div class="num">06</div>
-        <div class="label">Bias and fairness testing<small>Required for hiring, lending, insurance, healthcare triage. Test set construction. Disparate impact measurement. Documentation for regulator review.</small></div>
-        <div class="impact">+12-20%</div>
-      </div>
-      <div class="multiplier-row">
-        <div class="num">07</div>
-        <div class="label">Compliance review cycle<small>2-4 additional weeks of timeline. Internal counsel, external counsel, sometimes regulator pre-clearance. Engineering parks waiting on review.</small></div>
-        <div class="impact">+timeline, not direct cost</div>
-      </div>
-    </div>
+    <p>If the model provider does not sign a Business Associate Agreement (in healthcare) or a Data Processing Agreement that lets your data sit under your jurisdiction's protection (in finance, HR, and most EU contexts), the engagement is dead before scoping starts. If the build vendor is routing prompts through a default-tier API and assures you the data is not used for training, the assurance is at the wrong layer. The no-training contract lives on the model provider's enterprise tier; you need that tier in writing, or you do not have the contract.</p>
 
-    <h2>The <em>contract clauses</em> that matter.</h2>
+    <p>This is the question that surfaces in week two of a build that did not have its compliance review front-loaded, and it kills the project. I tell clients to handle it before the SOW is signed, not after. The cost conversation below assumes the contract chain is intact; if it is not, the cost conversation is moot.</p>
 
-    <div class="clauses">
-      <div class="clause">
-        <h4>No-training clause with the model provider</h4>
-        <p>Your data is not used to train the model, full stop. <strong>Major model providers offer this guarantee to qualifying enterprise customers; specific terms vary by vendor and tier.</strong> Verify in writing before signing the build contract. If your AI vendor is using a free or default-tier API and tells you "data is not used for training," check the actual TOS for that tier rather than taking the assurance.</p>
-      </div>
-      <div class="clause">
-        <h4>Subprocessor list with notification</h4>
-        <p><strong>Right to be notified before the vendor adds a new subprocessor.</strong> Standard DPA clause. Without it, your build vendor can swap the underlying LLM provider without telling you, which can break your compliance posture mid-engagement.</p>
-      </div>
-      <div class="clause">
-        <h4>Audit log retention and access</h4>
-        <p>Who owns the audit logs. Where they are stored. How long they are retained. <strong>Your right to access them on demand for regulator investigations.</strong> If the build vendor stores logs in their own infrastructure with no client access, that is a defect.</p>
-      </div>
-      <div class="clause">
-        <h4>Deletion proof on contract end</h4>
-        <p>What happens to your data when the engagement ends. <strong>Specific deletion timeline (often 30 days), written attestation of deletion, including from any vendor caches and vector stores.</strong> Default contracts say nothing about this and rely on goodwill.</p>
-      </div>
-      <div class="clause">
-        <h4>Liability cap and breach indemnification</h4>
-        <p>Standard breach indemnification carveouts often exclude "GDPR fines" or "regulator fines." <strong>Negotiate breach indemnification that explicitly includes regulator fines up to a cap.</strong> Without it, the entire downside of a vendor breach falls on you.</p>
-      </div>
-      <div class="clause">
-        <h4>Right to audit</h4>
-        <p>Annual right to audit the vendor's security and data handling. SOC 2 Type II report or equivalent on request. <strong>For healthcare, BAA must include the right to audit BAA compliance directly.</strong> Without this, you have no enforcement mechanism short of breach litigation.</p>
-      </div>
-    </div>
+    <h2>What you are <em>actually</em> paying extra for.</h2>
+
+    <p>The same AI integration scope that runs €25K to €55K in an unregulated SaaS lands €15K to €60K higher in a regulated one. The uplift is not vendor markup. It is real engineering work plus real legal work, and most of the engineering happens around things that are invisible in a demo.</p>
+
+    <p>The biggest line item is <strong>audit logging</strong>. Every prompt, every retrieval result, every model call, every user-facing output, stored tamper-evident, retained for the regulator's window (often seven years). The infrastructure is straightforward; the discipline of capturing it on every code path including the ones added in week ten is where teams skip and pay later.</p>
+
+    <p>The second biggest is <strong>data residency and deletion</strong>. EU personal data must stay in EU; PHI usually must stay in-country. That means per-region inference endpoints, regional vector stores, region-aware routing. Deletion rights under GDPR Article 17 propagate not only to the database but to vector stores, retrieval caches, and any embedded fine-tunes. Most teams remember the database and forget the cache, and the cache is what the regulator looks for.</p>
+
+    <p>Then there is <strong>explainability and bias testing</strong>, which apply almost everywhere a model informs a decision about a person, money, or care. Why did the AI say this; what confidence; what sources. Disparate impact measurement, with a documented test set the regulator can review. The EU AI Act's high-risk obligations phase in through 2026 and 2027 for hiring, lending, and other categories; if your AI is in any of those, this work is non-negotiable by next year.</p>
+
+    <p>Everything else (the timeline uplift from internal and external compliance review, the BAA premium charged by the model provider, the slightly larger scoping window) is real but smaller. The three above are where the money goes.</p>
+
+    <h2>The <em>industries</em> in one paragraph.</h2>
+
+    <p><strong>Healthcare</strong> is the most expensive band because PHI handling pulls inference logs, prompt history, and cached output into HIPAA scope, and some use cases trigger FDA software-as-medical-device review which is a different conversation entirely. <strong>Legal and insurance</strong> sit just below; privilege rules mean privileged data through a third-party LLM without a no-training contract carries real exposure in most jurisdictions, and model output disclaimers plus human-in-the-loop are mandatory in most US states. <strong>Finance</strong> follows; audit logging is non-negotiable, explainability is required for any AI that informs financial decisions, and PCI scope creeps fast if AI prompts touch card data even briefly. <strong>HR</strong> is the lowest band of the four; personal data is the default but the EU AI Act's hiring-AI obligations are still phasing in, and most of the cost is data deletion machinery and bias documentation for regulator review.</p>
+
+    <h2>The <em>contract</em> things to actually negotiate.</h2>
+
+    <p>Most of the contract work for a regulated AI build is procedural. Annual right to audit, SOC 2 Type II on request, BAA with the right-to-audit clause for healthcare; these go in the standard template, your counsel asks for them, the build vendor's counsel agrees. They are the floor.</p>
+
+    <p>The one that matters most, and that gets dropped most often, is breach indemnification that explicitly includes regulator fines. Standard carveouts exclude "GDPR fines" or "regulator fines" by default; without that explicit inclusion, capped at whatever the parties agree is reasonable, the entire downside of a vendor breach lands on you. I have seen a client absorb a six-figure cost on this exact carve-out, in a contract their counsel reviewed twice and signed because nobody flagged that line. Push for it; cap is fine, exclusion is not.</p>
+
+    <p>Subprocessor notification is its sibling. Without a clause that obligates the build vendor to tell you before they swap the underlying LLM provider, they can break your compliance posture mid-engagement and you find out at audit. Standard DPA language; the build vendor should not push back.</p>
+
+    <p>The remaining two are audit log access (you should be able to pull the logs yourself for a regulator investigation, on demand, not on the build vendor's schedule) and the no-training clause being on the correct model-provider tier rather than just being claimed. Verify the tier name, not the assurance. Both of these get sloppy in default contracts.</p>
 
     <h2>How to <em>scope</em> a regulated AI build.</h2>
 
