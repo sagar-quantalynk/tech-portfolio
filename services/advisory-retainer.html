@@ -15,6 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,300;1,6..72,400;1,6..72,500&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/architectural-shell.css">
 <style>
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
 :root {
@@ -95,11 +96,24 @@ h2 { font-family: var(--display); font-weight: 600; font-size: clamp(26px,3.5vw,
 <body>
 
 <nav class="nav">
-  <div class="nav-inner">
-    <a href="/" class="brand">Sagar <em>Sutaria.</em></a>
-    <a href="/" class="back">&larr; Home</a>
+  <div class="wrap nav-inner">
+    <a href="/" class="nav-brand"><span class="ss">S.S</span>Sagar Sutaria</a>
+    <span class="nav-coords"><span class="live">Live</span> &middot; Ahmedabad &middot; Operating since 2011</span>
+    <div class="nav-links">
+      <a href="/#shapes">Shapes</a>
+      <a href="/writing/" data-nav="writing">Writing</a>
+      <a href="/#work" data-nav="work">Work</a>
+      <a href="/#about">About</a>
+      <a href="https://quantalynk.com" title="QuantaLynk Technologies Private Limited">Studio</a>
+      <a href="/#contact">Contact</a>
+    </div>
   </div>
 </nav>
+<div class="wrap"><div class="sheet-meta">
+      <span><strong>Sheet S-01</strong> &middot; Service</span>
+      <span class="ref">Advisory retainer</span>
+      <span class="rev">2026 &middot; REV. 1</span>
+    </div></div>
 
 <header class="head">
   <div class="wrap">
@@ -199,11 +213,20 @@ h2 { font-family: var(--display); font-weight: 600; font-size: clamp(26px,3.5vw,
 
 </main>
 
-<footer class="footer">
-  <div class="footer-inner">
-    <div>&copy; 2026 Sagar Sutaria &middot; Operating from Ahmedabad, India</div>
-    <div>Studio: <a href="https://quantalynk.com" title="QuantaLynk Technologies Private Limited">QuantaLynk</a></div>
+<footer class="site-footer">
+  <div class="wrap site-footer-row">
+    <div class="legend">
+      <div class="row"><span class="swatch ink"></span><span>Ink &middot; primary stroke</span></div>
+      <div class="row"><span class="swatch blueprint"></span><span>Blueprint &middot; active / link</span></div>
+      <div class="row"><span class="swatch pencil"></span><span>Pencil &middot; emphasis / annotation</span></div>
+      <div class="row"><span class="swatch dash"></span><span>Dashed &middot; provisional / future</span></div>
+    </div>
+    <div class="scale-bar">
+      <div class="bar"><span class="seg fill"></span><span class="seg"></span><span class="seg fill"></span><span class="seg"></span><span class="seg fill"></span></div>
+      <span style="font-size: 10px; color: var(--ink-3);">SCALE 1:1 &middot; 2026 &middot; <a href="https://quantalynk.com" title="QuantaLynk Technologies Private Limited">QuantaLynk</a></span>
+    </div>
   </div>
+  <div class="wrap meta-line">&copy; 2026 Sagar Sutaria &middot; Operating from Ahmedabad, India &middot; Drawn by hand</div>
 </footer>
 
 </body>
