@@ -26,7 +26,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/architectural-shell.css?v=6">
+<link rel="stylesheet" href="/assets/architectural-shell.css?v=7">
 
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Person","name":"Sagar Sutaria","jobTitle":"Solo Studio Operator","url":"https://sagarsutaria.com","sameAs":["https://www.linkedin.com/in/sagar-sutaria","https://github.com/sagar-quantalynk"],"worksFor":{"@type":"Organization","name":"QuantaLynk Technologies Private Limited","url":"https://quantalynk.com"},"address":{"@type":"PostalAddress","addressLocality":"Ahmedabad","addressRegion":"Gujarat","addressCountry":"IN"}}
@@ -85,20 +85,7 @@ img, svg { display: block; max-width: 100%; }
 .title-block .col.right { text-align: right; }
 @media (max-width: 760px) { .title-block { grid-template-columns: 1fr; gap: 8px; } .title-block .col.right { text-align: left; } }
 
-/* Top nav */
-.nav { padding: 16px 0; border-bottom: 1px solid var(--rule); background: var(--paper); position: sticky; top: 0; z-index: 50; backdrop-filter: blur(6px); }
-.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
-.nav-brand { color: var(--ink); font-weight: 600; }
-.nav-brand .ss { display: inline-block; border: 1px solid var(--ink); padding: 2px 6px; margin-right: 8px; }
-.nav-coords { color: var(--ink-3); }
-.nav-coords .live { color: var(--pencil); }
-.nav-coords .live::before { content: ""; display: inline-block; width: 6px; height: 6px; background: var(--pencil); border-radius: 50%; margin-right: 6px; vertical-align: 1px; animation: blink 2.4s ease-in-out infinite; }
 @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-.nav-links { display: flex; gap: 22px; }
-.nav-links a { transition: color 200ms; }
-.nav-links a:hover { color: var(--blueprint); }
-@media (max-width: 760px) { .nav-coords { display: none; } .nav-links { gap: 14px; } }
-
 /* === HERO: drawn system diagram + headline === */
 .hero { padding: 56px 0 40px; position: relative; }
 .hero-meta { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 32px; display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: end; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
@@ -336,24 +323,6 @@ svg .label-display { font-family: 'Newsreader', serif; font-size: 14px; fill: va
 .contact-aside a { color: var(--blueprint); border-bottom: 1px solid currentColor; }
 
 /* === FOOTER: scale bar and legend === */
-.footer { padding: 40px 0; border-top: 2px solid var(--ink); margin-top: 60px; }
-.footer-row { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.04em; }
-@media (max-width: 720px) { .footer-row { grid-template-columns: 1fr; gap: 18px; } }
-.legend { display: grid; gap: 6px; }
-.legend .row { display: flex; gap: 12px; align-items: center; }
-.legend .swatch { width: 28px; height: 12px; border: 1px solid var(--rule-2); position: relative; }
-.legend .swatch.ink { background: var(--ink); }
-.legend .swatch.pencil { background: var(--pencil); }
-.legend .swatch.blueprint { background: var(--blueprint); }
-.legend .swatch.dash { background: var(--paper); }
-.legend .swatch.dash::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--ink); }
-.scale-bar { display: grid; gap: 6px; justify-items: end; }
-.scale-bar .bar { display: flex; gap: 0; }
-.scale-bar .seg { width: 24px; height: 8px; border: 1px solid var(--ink); border-right: none; }
-.scale-bar .seg:last-child { border-right: 1px solid var(--ink); }
-.scale-bar .seg.fill { background: var(--ink); }
-.footer-row a { color: var(--blueprint); border-bottom: 1px solid currentColor; }
-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
   .draw-in { stroke-dashoffset: 0; transition: none; }
@@ -978,8 +947,8 @@ svg .label-display { font-family: 'Newsreader', serif; font-size: 14px; fill: va
   </div>
 </section>
 
-<footer class="footer">
-  <div class="wrap footer-row">
+<footer class="site-footer">
+  <div class="wrap-chrome site-footer-row">
     <div class="legend">
       <div class="row"><span class="swatch ink"></span><span>Ink &middot; primary stroke</span></div>
       <div class="row"><span class="swatch blueprint"></span><span>Blueprint &middot; active / link</span></div>
@@ -991,9 +960,7 @@ svg .label-display { font-family: 'Newsreader', serif; font-size: 14px; fill: va
       <span style="font-size: 10px; color: var(--ink-3);">SCALE 1:1 &middot; 2026 &middot; <a href="https://quantalynk.com" title="QuantaLynk Technologies Private Limited">QuantaLynk</a></span>
     </div>
   </div>
-  <div class="wrap" style="margin-top: 24px; font-family: var(--mono); font-size: 10.5px; color: var(--ink-4); letter-spacing: 0.06em;">
-    &copy; 2026 Sagar Sutaria &middot; Operating from Ahmedabad, India &middot; Drawn by hand
-  </div>
+  <div class="wrap-chrome meta-line">&copy; 2026 Sagar Sutaria &middot; Operating from Ahmedabad, India &middot; Drawn by hand</div>
 </footer>
 
 <script>

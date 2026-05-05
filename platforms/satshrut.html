@@ -19,7 +19,7 @@
 <meta property="twitter:description" content="Multi-portal content platform. Next.js, Flutter, NestJS, AWS IVS, Payload CMS">
 <meta property="twitter:image" content="https://sagar-quantalynk.github.io/tech-portfolio/assets/satshrut-preview.png">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,300;1,6..72,400;1,6..72,500&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/architectural-shell.css?v=6">
+<link rel="stylesheet" href="/assets/architectural-shell.css?v=7">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -56,12 +56,14 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background: var(--surface-0);
-  color: var(--text-primary);
-  font-family: 'Inter Tight', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
   min-height: 100vh;
   overflow-x: hidden;
- background-image:linear-gradient(rgba(43,43,43,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(43,43,43,0.06) 1px,transparent 1px);background-size:8px 8px;}
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
 
 /* Background grid */
 body::before {
@@ -772,15 +774,6 @@ body::after { content: none; }
 }
 
 /* FOOTER */
-.footer {
-  padding: 48px 0;
-  border-top: 1px solid var(--border);
-  margin-top: 56px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .footer-left {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
@@ -1264,7 +1257,7 @@ body::after { content: none; }
 }
 
 /* Sienna palette swap, defensive overrides */
-html, body { background: var(--surface-0); color: var(--text-primary); }
+html, body { background: var(--paper); color: var(--ink); }
 a { color: var(--text-primary); }
 .logo-text h1 { color: var(--text-primary); }
 .logo-icon { color: var(--surface-0); background: var(--gold) !important; box-shadow: none !important; }
