@@ -3,124 +3,255 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1200">
-<title>Sagar Sutaria. Portfolio OG Preview</title>
+<title>Sagar Sutaria — OG Preview</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: 1200px; height: 630px; overflow: hidden; }
+  :root {
+    --paper: #F4F1EA;
+    --paper-elevated: #FBF8F0;
+    --ink: #2B2B2B;
+    --ink-2: #4A4A4A;
+    --ink-3: #7A7A7A;
+    --rule: rgba(43,43,43,0.16);
+    --rule-2: rgba(43,43,43,0.30);
+    --grid: rgba(43,43,43,0.06);
+    --blueprint: #1E3A8A;
+    --pencil: #DC2626;
+    --display: 'Newsreader', Georgia, serif;
+    --body: 'Inter Tight', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
   body {
     width: 1200px;
     height: 630px;
-    background: #0B0E14;
-    font-family: 'JetBrains Mono', monospace;
-    color: #C8CCD4;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 60px 80px;
-  }
-  /* Blueprint grid */
-  body::before {
-    content: '';
-    position: absolute;
-    inset: 0;
+    background: var(--paper);
     background-image:
-      linear-gradient(rgba(232, 185, 49, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(232, 185, 49, 0.04) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 8px 8px;
+    font-family: var(--body);
+    color: var(--ink);
+    position: relative;
+    padding: 48px 72px 110px 72px;
   }
-  /* Gold accent bar at top */
-  .accent-bar {
-    position: absolute;
-    top: 0;
-    left: 80px;
-    width: 160px;
-    height: 4px;
-    background: linear-gradient(90deg, #E8B931, #D4A52A);
-    border-radius: 0 0 2px 2px;
+
+  /* Top sheet header bar */
+  .sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink-3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 14px;
+    margin-bottom: 36px;
+  }
+  .sheet-header .ss-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .sheet-header .ss {
+    border: 1.5px solid var(--ink);
+    padding: 4px 10px;
+    font-size: 14px;
+  }
+  .sheet-header .live::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--pencil);
+    margin-right: 10px;
+    vertical-align: 1px;
+  }
+  .sheet-header .live { color: var(--pencil); }
+  .sheet-header .meta-right { color: var(--ink-3); }
+
+  /* Main grid */
+  .grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+
+  .left {
+    padding-top: 4px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--blueprint);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
   }
   .name {
-    font-family: 'Instrument Serif', serif;
-    font-size: 72px;
-    color: #E8B931;
-    line-height: 1.1;
-    margin-bottom: 12px;
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 78px;
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin-bottom: 18px;
+    font-variation-settings: "opsz" 72;
   }
-  .role {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 28px;
+  .name em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--blueprint);
+  }
+  .tagline {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.35;
+    color: var(--ink-2);
+    max-width: 22ch;
+    margin-bottom: 0;
+    font-variation-settings: "opsz" 24;
+  }
+  .stamped {
+    display: inline-block;
+    background: rgba(220,38,38,0.12);
+    border-bottom: 2px solid var(--pencil);
+    color: var(--pencil);
+    font-style: italic;
     font-weight: 500;
-    color: #E2E6ED;
-    margin-bottom: 8px;
+    padding: 0 6px;
+    transform: rotate(-1.4deg);
   }
-  .subtitle {
-    font-size: 20px;
-    color: #7A8191;
-    margin-bottom: 48px;
+
+  /* Right side — spec block */
+  .spec {
+    background: var(--paper-elevated);
+    border: 1px solid var(--rule);
+    padding: 22px 26px;
+    position: relative;
   }
-  .stats {
-    display: flex;
-    gap: 32px;
-    margin-bottom: 32px;
-  }
-  .stat {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 16px;
-    color: #9BA1B0;
-  }
-  .stat .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #E8B931;
-    opacity: 0.6;
-  }
-  .stat .value {
-    color: #E2E6ED;
-    font-weight: 700;
-  }
-  .former {
-    font-size: 15px;
-    color: #5A6170;
-    letter-spacing: 1px;
-  }
-  /* Corner accents */
-  .corner {
+  .spec::before, .spec::after, .spec-bl, .spec-br {
+    content: "";
     position: absolute;
-    width: 24px;
-    height: 24px;
-    border-color: rgba(232, 185, 49, 0.15);
-    border-style: solid;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid var(--ink);
   }
-  .corner.tl { top: 24px; left: 24px; border-width: 2px 0 0 2px; }
-  .corner.tr { top: 24px; right: 24px; border-width: 2px 2px 0 0; }
-  .corner.bl { bottom: 24px; left: 24px; border-width: 0 0 2px 2px; }
-  .corner.br { bottom: 24px; right: 24px; border-width: 0 2px 2px 0; }
+  .spec::before { top: -4px; left: -4px; border-right: none; border-bottom: none; }
+  .spec::after { top: -4px; right: -4px; border-left: none; border-bottom: none; }
+  .spec-bl { bottom: -4px; left: -4px; border-right: none; border-top: none; }
+  .spec-br { bottom: -4px; right: -4px; border-left: none; border-top: none; }
+  .spec-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    border-bottom: 1px dashed var(--rule);
+    display: flex;
+    justify-content: space-between;
+  }
+  .spec-title .pencil { color: var(--pencil); }
+  dl {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 9px 16px;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  dt { color: var(--ink-3); letter-spacing: 0.04em; }
+  dd { color: var(--ink); font-weight: 500; }
+  dd .v-blue { color: var(--blueprint); }
+
+  /* Footer line */
+  .footer-line {
+    position: absolute;
+    bottom: 36px;
+    left: 72px;
+    right: 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-3);
+    letter-spacing: 0.08em;
+    border-top: 1px solid var(--rule);
+    padding-top: 14px;
+  }
+  .footer-line .domain {
+    color: var(--ink);
+    font-weight: 500;
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+    font-size: 14px;
+  }
+  .scale-bar {
+    display: flex;
+    gap: 0;
+    align-items: end;
+  }
+  .scale-bar .seg {
+    width: 22px;
+    height: 8px;
+    border: 1px solid var(--ink);
+    border-right: none;
+  }
+  .scale-bar .seg:last-child { border-right: 1px solid var(--ink); }
+  .scale-bar .seg.fill { background: var(--ink); }
 </style>
 </head>
 <body>
-  <div class="accent-bar"></div>
-  <div class="corner tl"></div>
-  <div class="corner tr"></div>
-  <div class="corner bl"></div>
-  <div class="corner br"></div>
 
-  <div class="name">Sagar Sutaria</div>
-  <div class="role">Engineering Leader</div>
-  <div class="subtitle">Distributed Systems & AI Platforms</div>
+<div class="sheet-header">
+  <span class="ss-mark"><span class="ss">S.S</span>SAGAR SUTARIA</span>
+  <span><span class="live">LIVE</span> &middot; AHMEDABAD &middot; OPERATING SINCE 2011</span>
+  <span class="meta-right">SHEET 00 &middot; COVER &middot; 2026</span>
+</div>
 
-  <div class="stats">
-    <div class="stat"><span class="dot"></span><span class="value">7</span> Production Platforms</div>
-    <div class="stat"><span class="dot"></span><span class="value">50k+</span> Connections</div>
-    <div class="stat"><span class="dot"></span><span class="value">13+</span> Years</div>
+<div class="grid">
+  <div class="left">
+    <div class="eyebrow">A solo studio of senior engineering</div>
+    <h1 class="name">Senior <em>judgment,</em><br>not <span class="stamped">headcount.</span></h1>
+    <p class="tagline">AI integration. Build engagements. Advisory retainers, drawn as a system.</p>
   </div>
 
-  <div class="former">Ex-Tesco &nbsp;•&nbsp; Ex-Lowe's</div>
+  <aside class="spec">
+    <span class="spec-bl"></span>
+    <span class="spec-br"></span>
+    <div class="spec-title"><span>Spec card &middot; A-00</span><span class="pencil">DIM. CHK</span></div>
+    <dl>
+      <dt>Operator</dt><dd>Sagar Sutaria</dd>
+      <dt>Operating</dt><dd>Since 2011</dd>
+      <dt>Based in</dt><dd>Ahmedabad, IN</dd>
+      <dt>Practice</dt><dd>Solo + AI + contractors</dd>
+      <dt>Cap</dt><dd class="v-blue">3-4 engagements / Q</dd>
+      <dt>Retainer</dt><dd class="v-blue">From &euro;8K /mo</dd>
+      <dt>Build</dt><dd class="v-blue">From &euro;25K, capped &euro;60K</dd>
+    </dl>
+  </aside>
+</div>
+
+<div class="footer-line">
+  <span class="domain">sagarsutaria.com</span>
+  <span class="scale-bar">
+    <span class="seg fill"></span><span class="seg"></span><span class="seg fill"></span><span class="seg"></span><span class="seg fill"></span>
+  </span>
+  <span>SCALE 1:1 &middot; STUDIO: QUANTALYNK</span>
+</div>
+
 </body>
 </html>
