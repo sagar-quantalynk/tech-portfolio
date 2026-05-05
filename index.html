@@ -298,6 +298,21 @@ svg .label-display { font-family: 'Newsreader', serif; font-size: 14px; fill: va
 .spec-card dd { color: var(--ink); }
 .spec-card dd a { color: var(--blueprint); border-bottom: 1px solid currentColor; }
 
+/* Operator portrait. Technical passport block */
+.operator-card { background: var(--paper); border: 1px solid var(--rule-2); padding: 20px; margin-bottom: 18px; }
+.operator-card .corner { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); padding-bottom: 8px; margin-bottom: 14px; border-bottom: 1px dashed var(--rule); display: flex; justify-content: space-between; }
+.operator-card .corner .pencil { color: var(--pencil); }
+.operator-card .frame { position: relative; padding: 8px; border: 1px solid var(--rule); margin-bottom: 14px; background: var(--paper-2); }
+.operator-card .frame::before, .operator-card .frame::after { content: ""; position: absolute; width: 14px; height: 14px; border: 1px solid var(--ink); }
+.operator-card .frame::before { top: -4px; left: -4px; border-right: none; border-bottom: none; }
+.operator-card .frame::after { bottom: -4px; right: -4px; border-left: none; border-top: none; }
+.operator-card .photo { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; filter: contrast(1.02) saturate(0.92); }
+.operator-card .meta { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; color: var(--ink-3); display: grid; grid-template-columns: 1fr auto; gap: 4px; margin-bottom: 14px; }
+.operator-card .meta .v { color: var(--ink); text-align: right; }
+.operator-card .li-cta { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--paper); background: var(--ink); padding: 9px 14px 9px 12px; transition: background 180ms; width: 100%; justify-content: center; }
+.operator-card .li-cta:hover { background: var(--blueprint); }
+.operator-card .li-cta svg { width: 13px; height: 13px; flex-shrink: 0; }
+
 /* === CONTACT === */
 .contact-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; align-items: start; }
 @media (max-width: 880px) { .contact-grid { grid-template-columns: 1fr; gap: 32px; } }
@@ -868,21 +883,36 @@ svg .label-display { font-family: 'Newsreader', serif; font-size: 14px; fill: va
         <p><span class="first">T</span>hirteen plus years shipping production engineering. Architecture chops on real time systems, AI feature integration into shipped products, regulated-industry build constraints, and the senior hires that come with growing engineering teams from two to twenty.</p>
         <p>The previous shape, an eighteen person team between 2022 and 2024, was deliberately wound down once AI tooling matured to the point where one senior operator and a tight contractor bench could deliver the focused work scale-ups actually need.</p>
         <p>Continuity is contractual, not goodwill. <strong>Every retainer includes a written handover plan in the SOW. Every build engagement ships with documentation and runbooks the client team owns at handoff.</strong> Three to four engagements per quarter is the cap. The studio walks from anything outside that capacity, regardless of price.</p>
-        <p>The commercial entity is <a href="https://quantalynk.com">QuantaLynk Technologies Pvt Ltd</a>. Engineering practice, contracts, and founder-level technical decisions sit here. Reach me on <a href="https://www.linkedin.com/in/sagar-sutaria">LinkedIn</a> or by booking a 30 minute call below.</p>
+        <p>The commercial entity is <a href="https://quantalynk.com" title="QuantaLynk Technologies Private Limited">QuantaLynk</a>. Engineering practice, contracts, and founder-level technical decisions sit here. Reach me on <a href="https://www.linkedin.com/in/sagar-sutaria">LinkedIn</a> or by booking a 30 minute call below.</p>
       </div>
 
-      <aside class="spec-card">
-        <div class="corner"><span>Spec card &middot; A-04</span><span class="pencil">DIM. CHK</span></div>
-        <dl>
-          <dt>Operator</dt><dd>Sagar Sutaria</dd>
-          <dt>Operating</dt><dd>Since 2011</dd>
-          <dt>Based in</dt><dd>Ahmedabad, IN</dd>
-          <dt>Practice</dt><dd>Solo + AI + contractors</dd>
-          <dt>Cap</dt><dd>3-4 engagements / Q</dd>
-          <dt>Time zones</dt><dd>IST + EU + US East</dd>
-          <dt>Studio</dt><dd><a href="https://quantalynk.com">QuantaLynk</a></dd>
-          <dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/sagar-sutaria">/in/sagar-sutaria</a></dd>
-        </dl>
+      <aside>
+        <div class="operator-card">
+          <div class="corner"><span>Operator &middot; A-04.1</span><span class="pencil">PORTRAIT</span></div>
+          <div class="frame">
+            <img class="photo" src="/assets/sagar.jpg" alt="Sagar Sutaria" loading="lazy" width="280" height="280">
+          </div>
+          <div class="meta"><span>Subject</span><span class="v">Sagar Sutaria</span></div>
+          <div class="meta"><span>Location</span><span class="v">Ahmedabad, IN</span></div>
+          <div class="meta" style="margin-bottom: 18px;"><span>Drawn</span><span class="v">2026</span></div>
+          <a href="https://www.linkedin.com/in/sagar-sutaria" target="_blank" rel="noopener" class="li-cta">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            Connect on LinkedIn
+          </a>
+        </div>
+        <div class="spec-card">
+          <div class="corner"><span>Spec card &middot; A-04</span><span class="pencil">DIM. CHK</span></div>
+          <dl>
+            <dt>Operator</dt><dd>Sagar Sutaria</dd>
+            <dt>Operating</dt><dd>Since 2011</dd>
+            <dt>Based in</dt><dd>Ahmedabad, IN</dd>
+            <dt>Practice</dt><dd>Solo + AI + contractors</dd>
+            <dt>Cap</dt><dd>3-4 engagements / Q</dd>
+            <dt>Time zones</dt><dd>IST + EU + US East</dd>
+            <dt>Studio</dt><dd><a href="https://quantalynk.com" title="QuantaLynk Technologies Private Limited">QuantaLynk</a></dd>
+            <dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/sagar-sutaria">/in/sagar-sutaria</a></dd>
+          </dl>
+        </div>
       </aside>
     </div>
   </div>
@@ -957,7 +987,7 @@ svg .label-display { font-family: 'Newsreader', serif; font-size: 14px; fill: va
     </div>
     <div class="scale-bar">
       <div class="bar"><span class="seg fill"></span><span class="seg"></span><span class="seg fill"></span><span class="seg"></span><span class="seg fill"></span></div>
-      <span style="font-size: 10px; color: var(--ink-3);">SCALE 1:1 &middot; 2026 &middot; <a href="https://quantalynk.com">QuantaLynk</a></span>
+      <span style="font-size: 10px; color: var(--ink-3);">SCALE 1:1 &middot; 2026 &middot; <a href="https://quantalynk.com" title="QuantaLynk Technologies Private Limited">QuantaLynk</a></span>
     </div>
   </div>
   <div class="wrap" style="margin-top: 24px; font-family: var(--mono); font-size: 10.5px; color: var(--ink-4); letter-spacing: 0.06em;">
