@@ -7,42 +7,50 @@
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+/*
+  Design tokens with !important — shell wins over per-page :root drift.
+  Palette and fonts are uniform across the site, no per-page negotiation.
+  Content-width tokens (--max, --pad) intentionally NOT !important so essay
+  pages can use a narrower reading column.
+*/
 :root {
-  --paper: #F4F1EA;
-  --paper-warm: #EFEBE2;
-  --paper-elevated: #FBF8F0;
-  --ink: #2B2B2B;
-  --ink-2: #4A4A4A;
-  --ink-3: #7A7A7A;
-  --ink-4: #B5B0A4;
-  --rule: rgba(43,43,43,0.16);
-  --rule-2: rgba(43,43,43,0.30);
-  --grid: rgba(43,43,43,0.06);
-  --blueprint: #1E3A8A;
-  --blueprint-soft: rgba(30,58,138,0.08);
-  --blueprint-deep: #0B1E50;
-  --pencil: #DC2626;
-  --pencil-soft: rgba(220,38,38,0.10);
-  --green: #16653A;
-  --green-soft: rgba(22,101,58,0.10);
-  --display: 'Newsreader', Georgia, serif;
-  --body: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
-  --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --paper: #F4F1EA !important;
+  --paper-warm: #EFEBE2 !important;
+  --paper-elevated: #FBF8F0 !important;
+  --ink: #2B2B2B !important;
+  --ink-2: #4A4A4A !important;
+  --ink-3: #7A7A7A !important;
+  --ink-4: #B5B0A4 !important;
+  --rule: rgba(43,43,43,0.16) !important;
+  --rule-2: rgba(43,43,43,0.30) !important;
+  --grid: rgba(43,43,43,0.06) !important;
+  --blueprint: #1E3A8A !important;
+  --blueprint-soft: rgba(30,58,138,0.08) !important;
+  --blueprint-deep: #0B1E50 !important;
+  --pencil: #DC2626 !important;
+  --pencil-soft: rgba(220,38,38,0.10) !important;
+  --green: #16653A !important;
+  --green-soft: rgba(22,101,58,0.10) !important;
+  --display: 'Newsreader', Georgia, serif !important;
+  --body: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace !important;
+  --max-chrome: 1280px !important;
+
+  /* Page-overridable */
   --pad: clamp(16px, 4vw, 56px);
   --max: 1280px;
-  --max-chrome: 1280px;
   --max-content: 920px;
   --max-narrow: 680px;
   --grid-unit: 8px;
 
-  /* Legacy aliases — sub-pages still reference these names */
-  --line: var(--rule);
-  --line-2: var(--rule-2);
-  --sienna: var(--blueprint);
-  --sienna-soft: var(--blueprint-soft);
-  --sienna-deep: var(--blueprint-deep);
-  --paper-2: var(--paper-warm);
-  --accent: var(--blueprint);
+  /* Legacy aliases — pages reference these names; force them to point at new palette */
+  --line: rgba(43,43,43,0.16) !important;
+  --line-2: rgba(43,43,43,0.30) !important;
+  --sienna: #1E3A8A !important;
+  --sienna-soft: rgba(30,58,138,0.08) !important;
+  --sienna-deep: #0B1E50 !important;
+  --paper-2: #EFEBE2 !important;
+  --accent: #1E3A8A !important;
 }
 
 html { scroll-behavior: smooth; }
