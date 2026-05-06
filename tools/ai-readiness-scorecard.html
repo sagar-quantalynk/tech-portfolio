@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","vxm9ehsfth");</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2102GJ5G7M"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-2102GJ5G7M");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Readiness Scorecard. A 6-question diagnostic for founders | Sagar Sutaria</title>
+<meta name="description" content="A 6-question diagnostic for founders deciding whether to integrate AI now. Returns one of four answers: not yet, audit, build engagement, or solve the leadership question first. Free, no email required, runs in your browser. The only AI readiness tool that will tell you when not to do AI.">
+<link rel="canonical" href="https://sagarsutaria.com/tools/ai-readiness-scorecard">
+<meta name="author" content="Sagar Sutaria">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sagarsutaria.com/tools/ai-readiness-scorecard">
+<meta property="og:title" content="AI Readiness Scorecard. A 6-question diagnostic">
+<meta property="og:description" content="6 questions. Returns not yet, audit, build, or solve the leadership question first. Free, no email required.">
+<meta property="og:site_name" content="Sagar Sutaria">
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:title" content="AI Readiness Scorecard. 6-question diagnostic">
+<meta property="twitter:description" content="6 questions. Free, no email required. Tells you when not to do AI.">
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23F4F1EA'/><g stroke='%232B2B2B' stroke-width='2' fill='none'><rect x='22' y='28' width='56' height='44'/><line x1='22' y1='50' x2='78' y2='50'/></g><text x='50' y='44' font-family='monospace' font-size='14' text-anchor='middle' fill='%232B2B2B'>S.S</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,300;1,6..72,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"AI Readiness Scorecard","description":"A 6-question diagnostic for founders deciding whether to integrate AI now. Returns one of four answers: not yet, audit, build engagement, or solve the leadership question first.","url":"https://sagarsutaria.com/tools/ai-readiness-scorecard","applicationCategory":"BusinessApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript. Requires HTML5.","author":{"@type":"Person","name":"Sagar Sutaria","url":"https://sagarsutaria.com"},"publisher":{"@type":"Organization","name":"QuantaLynk Technologies Private Limited","url":"https://quantalynk.com"},"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR","availability":"https://schema.org/InStock"},"isAccessibleForFree":true,"inLanguage":"en"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://sagarsutaria.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://sagarsutaria.com/tools/"},{"@type":"ListItem","position":3,"name":"AI Readiness Scorecard"}]}
+</script>
+
+<link rel="stylesheet" href="/assets/architectural-shell.css?v=7">
+<style>
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --paper:#F4F1EA;
+  --paper-2:#EFEBE2;
+  --paper-3:#E9E4D5;
+  --ink:#2B2B2B;
+  --ink-2:#4A4A4A;
+  --ink-3:#7A7A7A;
+  --line:rgba(43,43,43,0.16);
+  --line-2:rgba(43,43,43,0.30);
+  --sienna:#1E3A8A;
+  --sienna-soft:rgba(30,58,138,0.08);
+  --sienna-deep:#0B1E50;
+  --green:#16653A;
+  --green-soft:rgba(22,101,58,0.10);
+  --pencil:#DC2626;
+  --pencil-soft:rgba(220,38,38,0.10);
+  --display:'Newsreader',Georgia,serif;
+  --body:'Inter Tight',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  --r:0; --max:920px; --max-narrow:680px; --pad:clamp(20px,4vw,48px);
+}
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; background-image: linear-gradient(rgba(43,43,43,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(43,43,43,0.06) 1px, transparent 1px); background-size: 8px 8px; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+::selection { background: var(--sienna); color: var(--paper); }
+.wrap-narrow { max-width: var(--max-narrow); margin: 0 auto; padding: 0 var(--pad); }
+.brand { font-family: var(--display); font-weight: 600; font-size: 19px; letter-spacing: -0.01em; }
+.brand em { color: var(--sienna); font-style: italic; font-weight: 600; }
+.back { font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; transition: color 150ms; }
+.back:hover { color: var(--sienna); }
+
+main { padding: clamp(48px,7vw,96px) 0 0; }
+.crumb { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--ink-3); margin-bottom: 28px; }
+.crumb a { color: var(--ink-3); }
+.crumb a:hover { color: var(--sienna); }
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(34px, 5vw, 50px); line-height: 1.05; letter-spacing: -0.022em; margin-bottom: 18px; color: var(--ink); }
+h1 em { color: var(--sienna); font-style: italic; font-weight: 700; }
+.lede { font-size: 18px; line-height: 1.55; color: var(--ink-2); margin-bottom: 24px; }
+.fineprint { font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: 0.04em; padding: 14px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 40px; }
+
+.progress { display: flex; gap: 6px; margin-bottom: 24px; }
+.progress > div { height: 4px; flex: 1; background: rgba(31,26,20,0.08); border-radius: 2px; transition: background 250ms; }
+.progress > div.done { background: var(--sienna); }
+.progress > div.current { background: var(--sienna-deep); }
+
+.q-card { background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r); padding: 32px clamp(20px,3vw,40px); margin-bottom: 24px; }
+.q-num { font-family: var(--mono); font-size: 11px; color: var(--sienna); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 8px; }
+.q-text { font-family: var(--display); font-weight: 600; font-size: clamp(20px, 3vw, 28px); line-height: 1.2; color: var(--ink); margin-bottom: 8px; letter-spacing: -0.012em; }
+.q-help { font-size: 14px; color: var(--ink-3); margin-bottom: 22px; line-height: 1.5; }
+
+.opts { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.opts label {
+  display: block; padding: 14px 18px; border: 1px solid var(--line-2); border-radius: var(--r);
+  cursor: pointer; transition: all 200ms; background: var(--paper);
+  font-size: 15.5px; color: var(--ink-2); line-height: 1.45;
+}
+.opts label:hover { border-color: var(--sienna); background: var(--sienna-soft); }
+.opts input[type="radio"] { display: none; }
+.opts input[type="radio"]:checked + label, .opts label.selected { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.opts label:focus-within { outline: 2px solid var(--sienna); outline-offset: 2px; }
+.opts label small { display: block; font-size: 12.5px; opacity: 0.7; margin-top: 2px; font-family: var(--mono); letter-spacing: 0.02em; }
+
+.actions { display: flex; gap: 12px; margin-top: 24px; align-items: center; flex-wrap: wrap; }
+.btn-primary, .btn-secondary {
+  font-size: 14px; font-weight: 500; padding: 12px 22px; border-radius: var(--r);
+  border: 1px solid transparent; cursor: pointer; transition: all 200ms;
+}
+.btn-primary { background: var(--sienna); color: var(--paper); border-color: var(--sienna); }
+.btn-primary:hover { background: var(--sienna-deep); border-color: var(--sienna-deep); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-secondary { background: transparent; color: var(--ink-2); border-color: var(--line-2); }
+.btn-secondary:hover { color: var(--sienna); border-color: var(--sienna); }
+.btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+.actions .step-of { font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: 0.04em; margin-left: auto; }
+
+/* Result */
+.result { background: var(--paper-2); border: 1px solid var(--line); border-radius: var(--r); padding: 36px clamp(20px,3vw,44px); }
+.result-tag { display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--paper); background: var(--sienna); padding: 5px 12px; border-radius: 100px; margin-bottom: 16px; }
+.result-tag.tag-pencil { background: var(--pencil); }
+.result-tag.tag-ink { background: var(--ink); }
+.result-tag.tag-green { background: var(--green); }
+.result-tag.tag-blueprint { background: var(--sienna); }
+.result h2 { font-family: var(--display); font-weight: 700; font-size: clamp(26px, 3.6vw, 36px); line-height: 1.15; letter-spacing: -0.018em; color: var(--ink); margin-bottom: 16px; }
+.result h2 em { color: var(--sienna); font-style: italic; font-weight: 700; }
+.result .summary { font-size: 17px; line-height: 1.55; color: var(--ink-2); margin-bottom: 22px; }
+.result .summary strong { color: var(--ink); font-weight: 600; }
+.result .why { padding: 16px 20px; background: var(--paper); border-left: 3px solid var(--sienna); margin: 22px 0; font-size: 15px; line-height: 1.55; color: var(--ink-2); }
+.result .why h4 { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sienna); margin-bottom: 8px; }
+.result .next { padding: 18px 20px; background: var(--ink); color: var(--paper); border-radius: var(--r); margin: 22px 0; }
+.result .next h4 { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: #E8B5B5; margin-bottom: 8px; }
+.result .next p { font-size: 15px; line-height: 1.5; margin: 0 0 12px; }
+.result .next a { display: inline-block; color: #E8B5B5; border-bottom: 1px solid currentColor; font-size: 14px; }
+.result .next a:hover { opacity: 0.7; }
+.result .related { padding-top: 20px; border-top: 1px solid var(--line); margin-top: 22px; font-size: 14px; color: var(--ink-3); line-height: 1.55; }
+.result .related a { color: var(--sienna); border-bottom: 1px solid currentColor; }
+.result .related a:hover { opacity: 0.7; }
+.result .restart { display: inline-block; margin-top: 20px; font-size: 13px; color: var(--ink-3); border-bottom: 1px solid var(--line-2); padding-bottom: 1px; cursor: pointer; }
+.result .restart:hover { color: var(--sienna); border-color: var(--sienna); }
+
+.score-line { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 14px; }
+.score-line .num { color: var(--ink); font-weight: 500; }
+
+.share { margin-top: 32px; padding: 20px; background: var(--paper-3); border-radius: var(--r); font-size: 14px; color: var(--ink-2); line-height: 1.55; }
+.share strong { color: var(--ink); font-weight: 500; display: block; margin-bottom: 6px; }
+.share a { color: var(--sienna); border-bottom: 1px solid currentColor; }
+.share a:hover { opacity: 0.7; }
+
+/* Hidden by default */
+.hidden { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap-chrome nav-inner">
+    <a href="/" class="nav-brand"><span class="ss">S.S</span>Sagar Sutaria</a>
+    <span class="nav-coords"><span class="live">Live</span> &middot; Ahmedabad &middot; Operating since 2011</span>
+    <div class="nav-links">
+      <a href="/#shapes">Shapes</a>
+      <a href="/writing/" data-nav="writing">Writing</a>
+      <a href="/#work" data-nav="work">Work</a>
+      <a href="/#about">About</a>
+      <a href="https://quantalynk.com" title="QuantaLynk Technologies Private Limited">Studio</a>
+      <a href="/#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+<div class="wrap-chrome"><div class="sheet-meta">
+      <span><strong>Sheet T-02</strong> &middot; Tool</span>
+      <span class="ref">AI Readiness Scorecard</span>
+      <span class="rev">2026 &middot; REV. 1</span>
+    </div></div>
+
+<main>
+  <div class="wrap-narrow">
+    <div class="crumb"><a href="/">Home</a> &nbsp;/&nbsp; Tools &nbsp;/&nbsp; AI Readiness Scorecard</div>
+
+    <h1>Are you <em>ready</em> for AI integration?</h1>
+    <p class="lede">A 6-question diagnostic. Returns one of four answers: not yet, AI integration audit, build engagement, or solve the leadership question first. Free, no email required, runs entirely in your browser.</p>
+    <p class="fineprint">Effective May 2026 &middot; Reviewed quarterly</p>
+
+    <div id="quiz-host">
+      <div class="progress" id="progress">
+        <div class="current"></div><div></div><div></div><div></div><div></div><div></div>
+      </div>
+
+      <!-- Question 1 -->
+      <div class="q-card" data-q="1">
+        <div class="q-num">Question 1 of 6</div>
+        <div class="q-text">Do you have a working product with paying users right now?</div>
+        <div class="q-help">A paid pilot or two paying customers count as yes.</div>
+        <div class="opts" data-name="product">
+          <label><input type="radio" name="product" value="yes-revenue">Yes, working product with real revenue or paid pilots<small>Production traffic, paying users</small></label>
+          <label><input type="radio" name="product" value="users-no-revenue">Working product with users, no paying customers yet<small>In-market, free or in trial</small></label>
+          <label><input type="radio" name="product" value="pre-product">Pre-product or pre-revenue<small>Building toward first launch</small></label>
+        </div>
+      </div>
+
+      <!-- Question 2 -->
+      <div class="q-card hidden" data-q="2">
+        <div class="q-num">Question 2 of 6</div>
+        <div class="q-text">Can you describe the AI feature in one sentence with a specific user, a specific input, and a specific output?</div>
+        <div class="q-help">Example. Support agents paste a customer message, the assistant returns a draft reply that cites our help docs.</div>
+        <div class="opts" data-name="usecase">
+          <label><input type="radio" name="usecase" value="specific">Yes, I can name the user, the input, and the output<small>Concrete feature, not a category</small></label>
+          <label><input type="radio" name="usecase" value="category">I have a category in mind, not a specific user-input-output<small>Search, copilot, classification, agent</small></label>
+          <label><input type="radio" name="usecase" value="vague">I just know we should be doing something with AI<small>No specific feature yet</small></label>
+        </div>
+      </div>
+
+      <!-- Question 3 -->
+      <div class="q-card hidden" data-q="3">
+        <div class="q-num">Question 3 of 6</div>
+        <div class="q-text">Where does the data your AI feature would use actually live, and can your team query it today?</div>
+        <div class="q-help">If the data is in a vendor product you don't have export rights to, that is a data problem, not an AI problem.</div>
+        <div class="opts" data-name="data">
+          <label><input type="radio" name="data" value="owned-db">In a database we own and query daily<small>Direct access, clean schema</small></label>
+          <label><input type="radio" name="data" value="saas-api">Spread across SaaS tools but accessible via API<small>Notion, Salesforce, Drive, HubSpot</small></label>
+          <label><input type="radio" name="data" value="locked">In a vendor product we cannot export, or in PDFs and spreadsheets nobody has cleaned<small>Cleanup work needed first</small></label>
+          <label><input type="radio" name="data" value="unknown">I do not know yet<small>Need to find out</small></label>
+        </div>
+      </div>
+
+      <!-- Question 4 -->
+      <div class="q-card hidden" data-q="4">
+        <div class="q-num">Question 4 of 6</div>
+        <div class="q-text">How will you tell if the AI feature is working well enough to ship?</div>
+        <div class="q-help">Plain-English version. What will you measure, and who will look at the outputs?</div>
+        <div class="opts" data-name="eval">
+          <label><input type="radio" name="eval" value="examples">We have or can label 50 to 200 example inputs with the correct answer<small>Measurable success criterion</small></label>
+          <label><input type="radio" name="eval" value="expert-review">A domain expert can review samples weekly and flag bad outputs<small>Human in the loop</small></label>
+          <label><input type="radio" name="eval" value="vibes">We will know it when we see it<small>No measurement plan yet</small></label>
+        </div>
+      </div>
+
+      <!-- Question 5 -->
+      <div class="q-card hidden" data-q="5">
+        <div class="q-num">Question 5 of 6</div>
+        <div class="q-text">Who would own the AI feature in production after launch?</div>
+        <div class="q-help">An AI feature without an owner is a one-shot demo, not a feature.</div>
+        <div class="opts" data-name="ownership">
+          <label><input type="radio" name="ownership" value="engineer-bandwidth">An engineer or team with real bandwidth to own it<small>Has cycles for production work</small></label>
+          <label><input type="radio" name="ownership" value="engineer-stretched">An existing team but stretched, would need to deprioritise something<small>Capacity needs reshuffling</small></label>
+          <label><input type="radio" name="ownership" value="no-engineer">No engineer to hand it to<small>Leadership and capacity gap first</small></label>
+        </div>
+      </div>
+
+      <!-- Question 6 -->
+      <div class="q-card hidden" data-q="6">
+        <div class="q-num">Question 6 of 6</div>
+        <div class="q-text">What is your budget and timeline for this AI feature?</div>
+        <div class="q-help">Decides between a 1 to 2 week audit, a 6 to 10 week build, or a larger capability engagement.</div>
+        <div class="opts" data-name="budget">
+          <label><input type="radio" name="budget" value="60k-plus">&euro;60K plus, building a larger AI capability not a single feature<small>Multi-feature, multi-quarter</small></label>
+          <label><input type="radio" name="budget" value="25-60k-quarter">&euro;25K to &euro;60K, ship a single AI feature this quarter<small>Build engagement range</small></label>
+          <label><input type="radio" name="budget" value="10-25k-flexible">&euro;10K to &euro;25K, flexible on timeline 4 to 6 months<small>Audit and scoped pilot range</small></label>
+          <label><input type="radio" name="budget" value="under-10k">Under &euro;10K, or no fixed budget yet<small>Read the cost essay first</small></label>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-secondary" id="prev" disabled>Back</button>
+        <button class="btn-primary" id="next" disabled>Next</button>
+        <span class="step-of" id="step-of">Step 1 of 6</span>
+      </div>
+    </div>
+
+    <div id="result-host" class="hidden"></div>
+
+    <div class="share">
+      <strong>About this scorecard</strong>
+      Built by Sagar Sutaria, who delivers AI integration engagements through <a href="https://quantalynk.com" title="QuantaLynk Technologies Private Limited">QuantaLynk</a>. The scorecard scores six dimensions and routes to one of four shapes: not yet, AI integration audit, build engagement, or fractional CTO fit check. The recommendation is the same thing Sagar would say to a founder asking the same question on a discovery call. Read also <a href="/writing/what-ai-integration-actually-costs">what an AI integration actually costs</a> and <a href="/writing/ai-integration-in-regulated-industries">AI integration in regulated industries</a>. Free, no email captured, runs in your browser.
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap-chrome site-footer-row">
+    <div class="legend">
+      <div class="row"><span class="swatch ink"></span><span>Ink &middot; primary stroke</span></div>
+      <div class="row"><span class="swatch blueprint"></span><span>Blueprint &middot; active / link</span></div>
+      <div class="row"><span class="swatch pencil"></span><span>Pencil &middot; emphasis / annotation</span></div>
+      <div class="row"><span class="swatch dash"></span><span>Dashed &middot; provisional / future</span></div>
+    </div>
+    <div class="scale-bar">
+      <div class="bar"><span class="seg fill"></span><span class="seg"></span><span class="seg fill"></span><span class="seg"></span><span class="seg fill"></span></div>
+      <span style="font-size: 10px; color: var(--ink-3);">SCALE 1:1 &middot; 2026 &middot; <a href="https://quantalynk.com" title="QuantaLynk Technologies Private Limited">QuantaLynk</a></span>
+    </div>
+  </div>
+  <div class="wrap-chrome meta-line">&copy; 2026 Sagar Sutaria &middot; Operating from Ahmedabad, India &middot; Drawn by hand</div>
+</footer>
+
+<script>
+(function(){
+  var answers = {};
+  var current = 1;
+  var total = 6;
+
+  var prevBtn = document.getElementById('prev');
+  var nextBtn = document.getElementById('next');
+  var stepOf = document.getElementById('step-of');
+  var progress = document.getElementById('progress');
+  var quizHost = document.getElementById('quiz-host');
+  var resultHost = document.getElementById('result-host');
+
+  // Numeric weight per option per question. ready=2, almost=1, not-ready=0.
+  // Q5 is also tested for the "no engineer" override; that override routes to tier-4 regardless of total.
+  // Q6 is shape-selector: 60k-plus and 25-60k-quarter both score 2 (ready). 10-25k flexible = 1. under-10k = 0.
+  var weights = {
+    product:    { 'yes-revenue': 2, 'users-no-revenue': 1, 'pre-product': 0 },
+    usecase:    { 'specific': 2, 'category': 1, 'vague': 0 },
+    data:       { 'owned-db': 2, 'saas-api': 1, 'locked': 0, 'unknown': 0 },
+    eval:       { 'examples': 2, 'expert-review': 1, 'vibes': 0 },
+    ownership:  { 'engineer-bandwidth': 2, 'engineer-stretched': 1, 'no-engineer': 0 },
+    budget:     { '60k-plus': 2, '25-60k-quarter': 2, '10-25k-flexible': 1, 'under-10k': 0 }
+  };
+
+  function showQ(n){
+    document.querySelectorAll('.q-card').forEach(function(c){
+      c.classList.toggle('hidden', String(c.dataset.q) !== String(n));
+    });
+    var bars = progress.children;
+    for (var i=0; i<bars.length; i++){
+      bars[i].classList.remove('current','done');
+      if (i+1 < n) bars[i].classList.add('done');
+      else if (i+1 === n) bars[i].classList.add('current');
+    }
+    prevBtn.disabled = (n === 1);
+    nextBtn.textContent = (n === total) ? 'Get my recommendation' : 'Next';
+    nextBtn.disabled = !answers['q'+n];
+    stepOf.textContent = 'Step ' + n + ' of ' + total;
+  }
+
+  // Listen on quiz-host for change events on radios
+  quizHost.addEventListener('change', function(e){
+    if (e.target.tagName !== 'INPUT' || e.target.type !== 'radio') return;
+    answers['q'+current] = { name: e.target.name, value: e.target.value };
+    nextBtn.disabled = false;
+  });
+
+  prevBtn.addEventListener('click', function(){
+    if (current > 1){ current--; showQ(current); }
+  });
+
+  nextBtn.addEventListener('click', function(){
+    if (current < total){
+      current++;
+      showQ(current);
+    } else {
+      computeAndShow();
+    }
+  });
+
+  function scoreFor(q){
+    if (!q) return 0;
+    var table = weights[q.name];
+    if (!table) return 0;
+    return (typeof table[q.value] === 'number') ? table[q.value] : 0;
+  }
+
+  function tierFromScore(score){
+    if (score <= 4) return 'tier-1';
+    if (score <= 8) return 'tier-2';
+    return 'tier-3';
+  }
+
+  function computeAndShow(){
+    var sum = 0;
+    for (var i=1; i<=6; i++){ sum += scoreFor(answers['q'+i]); }
+
+    var calculatedTier = tierFromScore(sum);
+    var finalTier = calculatedTier;
+    var overrideApplied = false;
+
+    var ownership = answers.q5 && answers.q5.value;
+    if (ownership === 'no-engineer'){
+      finalTier = 'tier-4';
+      overrideApplied = true;
+    }
+
+    var qResponses = [];
+    for (var j=1; j<=6; j++){
+      var a = answers['q'+j];
+      qResponses.push(a ? (a.name + '=' + a.value) : '');
+    }
+
+    var rec = recommendation(finalTier, sum, answers);
+    rec.score = sum;
+    rec.calculatedTier = calculatedTier;
+    rec.finalTier = finalTier;
+    rec.overrideApplied = overrideApplied;
+
+    renderResult(rec);
+
+    if (window.gtag) {
+      window.gtag('event', 'ai_readiness_complete', {
+        calculated_tier: calculatedTier,
+        final_tier: finalTier,
+        override_applied: overrideApplied,
+        score: sum,
+        q_responses: qResponses.join('|')
+      });
+    }
+    if (window.clarity) { window.clarity('event', 'ai_readiness_complete'); }
+  }
+
+  function recommendation(tier, score, ans){
+    var budget = ans.q6 && ans.q6.value;
+
+    // Tier 4 OVERRIDE: no engineer to hand it to. Routes to fractional CTO fit check.
+    if (tier === 'tier-4'){
+      return {
+        tag: 'Solve the leadership question first',
+        tagClass: 'tag-pencil',
+        headline: 'No engineer to own it. <em>Solve that first.</em>',
+        summary: 'AI integration without an owner is a one-shot demo, not a feature. The first move is engineering capacity and technical leadership, not an AI vendor. Once an owner is in place, take this scorecard again.',
+        why: 'A €40K AI integration without a production owner ships a working prototype that nobody upgrades when the model deprecates, the rate limits change, or the cost spikes. That is the failure mode I see most often. Fractional CTOs and earlier engineering hires solve this. AI vendors do not.',
+        nextTitle: 'What to do',
+        nextBody: 'Take the fractional CTO fit check next. Six more questions, returns one of four shapes: hourly advisor, earlier engineering hire, fractional CTO retainer, or full-time CTO.',
+        nextCta: 'Take the fractional CTO fit check &rarr;',
+        nextHref: '/should-i-hire-a-fractional-cto',
+        related: 'Background: <a href="/writing/do-you-need-a-fractional-cto-at-seed-stage">Do you need a fractional CTO at seed stage</a> and <a href="/writing/fractional-cto-vs-full-time-cto">Fractional CTO vs full-time CTO</a>.'
+      };
+    }
+
+    // Tier 3: ready for build engagement.
+    if (tier === 'tier-3'){
+      var capabilityFraming = (budget === '60k-plus');
+      return {
+        tag: 'Build engagement',
+        tagClass: 'tag-ink',
+        headline: capabilityFraming
+          ? 'Past audit. Ready for a <em>capability build.</em>'
+          : 'Past audit only. Ready for a <em>build engagement.</em>',
+        summary: capabilityFraming
+          ? 'Your signals are tight: working product, a specific feature in mind, owned data, a measurement plan, an engineering owner, and a budget that funds a multi-feature capability rather than a single integration. The right shape is a fixed-scope build with a defined SOW per feature.'
+          : 'Your signals are tight: working product, a named feature, owned or accessible data, a measurement plan, an engineering owner, and a budget that funds a fixed-scope build. The right shape is a 6 to 10 week build engagement that ships the feature to production with eval, monitoring, and cost guardrails.',
+        why: 'At this readiness level, an audit is overhead. You already know what to build and you have the team to own it after launch. The audit value-add is mostly de-risking; you have already done that work. The build engagement scope, schedule, and acceptance criteria are what convert your readiness into a shipped feature.',
+        nextTitle: 'What to do next',
+        nextBody: 'Book a 30 minute call to walk through the feature, the data, and the success criteria. The fit becomes clear in the first 15 minutes. From there, a fixed-scope SOW with milestones.',
+        nextCta: 'Read the build engagement spec &rarr;',
+        nextHref: '/services/build-engagement',
+        related: 'Cost context: <a href="/writing/what-ai-integration-actually-costs">What an AI integration actually costs in 2026</a>. Regulated industries: <a href="/writing/ai-integration-in-regulated-industries">AI integration in regulated industries</a>.'
+      };
+    }
+
+    // Tier 2: ready for an audit.
+    if (tier === 'tier-2'){
+      return {
+        tag: 'AI integration audit',
+        tagClass: 'tag-blueprint',
+        headline: 'Right stage for an <em>AI integration audit.</em>',
+        summary: 'You have most of the readiness signals but at least one piece is unclear. The right move is a 1 to 2 week AI integration audit that names the right scope, validates the data path, defines the eval criteria, and either greenlights a build or tells you to wait. The audit is paid; the outcome is a written architecture and an honest go or no-go.',
+        why: 'Buyers who skip the audit at this readiness level pay for it twice. They ship a build that targets the wrong scope, then pay again to redo it. The audit is two weeks and a fraction of a build budget. It changes the build scope in roughly half the cases and saves the build in roughly all of them.',
+        nextTitle: 'What to do next',
+        nextBody: 'Read the AI integration page for the audit deliverable and pricing. Book a 30 minute call to confirm fit before scoping the audit.',
+        nextCta: 'Read the AI integration spec &rarr;',
+        nextHref: '/services/ai-integration',
+        related: 'Read first: <a href="/writing/what-ai-integration-actually-costs">What an AI integration actually costs in 2026</a>. If your sector is regulated: <a href="/writing/ai-integration-in-regulated-industries">AI integration in regulated industries</a>.'
+      };
+    }
+
+    // Tier 1: not ready. Decline to sell.
+    return {
+      tag: 'Not yet',
+      tagClass: 'tag-green',
+      headline: 'Not ready yet. <em>Come back in 6 months.</em>',
+      summary: 'The honest answer is that an AI integration would not produce a result your team could keep running. Most often the gap is one of three things: no working product, no specific feature, or data that nobody can query yet. Fix the gap, then the integration is straightforward.',
+      why: 'Founders who buy AI integration before they are ready end up with a demo that nobody owns and a vendor invoice that does not produce revenue. The first move is to get to a working product with paying users, name the AI feature in one sentence, and make the data queryable. None of that requires me. None of that costs €25K.',
+      nextTitle: 'What to do',
+      nextBody: 'Read the cost essay so you know what you are budgeting toward. Take the scorecard again when the working product, the named feature, and the queryable data are all in place. The recommendation will change.',
+      nextCta: 'Read what an AI integration actually costs &rarr;',
+      nextHref: '/writing/what-ai-integration-actually-costs',
+      related: 'If the gap is the engineering team, not the AI feature: <a href="/should-i-hire-a-fractional-cto">take the fractional CTO fit check</a> instead.'
+    };
+  }
+
+  function renderResult(rec){
+    quizHost.classList.add('hidden');
+    resultHost.classList.remove('hidden');
+    var scoreLine = '<div class="score-line">Score <span class="num">' + rec.score + '</span> of 12 &middot; Tier <span class="num">' + rec.finalTier.replace('tier-','') + '</span>' + (rec.overrideApplied ? ' &middot; ownership override applied' : '') + '</div>';
+    resultHost.innerHTML =
+      '<div class="result">' +
+      scoreLine +
+      '<span class="result-tag ' + (rec.tagClass || '') + '">' + rec.tag + '</span>' +
+      '<h2>' + rec.headline + '</h2>' +
+      '<p class="summary">' + rec.summary + '</p>' +
+      '<div class="why"><h4>Why</h4>' + rec.why + '</div>' +
+      '<div class="next"><h4>' + rec.nextTitle + '</h4><p>' + rec.nextBody + '</p>' +
+      '<a href="' + rec.nextHref + '">' + rec.nextCta + '</a></div>' +
+      (rec.related ? '<div class="related">' + rec.related + '</div>' : '') +
+      '<a class="restart" id="restart" tabindex="0" role="button">Start over</a>' +
+      '</div>';
+    var restartEl = document.getElementById('restart');
+    restartEl.addEventListener('click', resetQuiz);
+    restartEl.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); resetQuiz(); } });
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function resetQuiz(){
+    answers = {}; current = 1;
+    document.querySelectorAll('input[type="radio"]').forEach(function(r){ r.checked = false; });
+    resultHost.classList.add('hidden');
+    quizHost.classList.remove('hidden');
+    showQ(1);
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  showQ(1);
+})();
+</script>
+</body>
+</html>
