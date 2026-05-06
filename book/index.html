@@ -273,26 +273,17 @@ h1 em { font-style: italic; color: var(--blueprint); font-weight: 400; }
         <span>Calendar &middot; Live</span>
         <span class="pencil">Pick a slot</span>
       </div>
-      <div class="calendar-frame">
-        <iframe
-          id="booking-iframe"
-          title="Book a 30 minute call with Sagar Sutaria"
-          src="BOOKING_URL_PLACEHOLDER"
-          data-empty="true"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          frameborder="0"
-        ></iframe>
-        <div class="calendar-empty" id="calendar-empty">
-          <div class="big">Calendar warming up.</div>
-          <div class="help">If the calendar does not appear in a few seconds, the booking link below opens it in a new tab. Calendar pasted on the day of go-live.</div>
-        </div>
+      <div class="calendar-cta-wrap" style="padding: 32px 24px; display: flex; flex-direction: column; align-items: center; gap: 18px; border: 1px dashed var(--rule); background: var(--paper); position: relative;">
+        <div style="font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3);">Booking opens in Google Calendar</div>
+        <a href="https://calendar.app.google/hjgbvdpX4FbRaMdi9" target="_blank" rel="noopener" class="btn-stamp" style="font-family: var(--mono); font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--paper); background: var(--ink); padding: 16px 32px; border: 1px solid var(--ink); position: relative; transition: all 250ms; display: inline-flex; align-items: center; gap: 10px;">
+          Open booking calendar
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </a>
+        <div style="font-family: var(--display); font-style: italic; font-size: 14px; color: var(--ink-3); max-width: 36ch; text-align: center;">Pick a slot. Google sends the confirmation + Meet link automatically.</div>
       </div>
       <div class="fallback" style="padding-left: 16px; padding-right: 16px;">
-        <span class="label">Calendar not loading?</span>
-        <a href="mailto:hello@sagarsutaria.com?subject=Discovery%20call%20request" rel="noopener">Email hello@sagarsutaria.com</a>
-        <span class="sep" style="color: var(--ink-4);">&middot;</span>
-        <a href="https://calendar.google.com/calendar/appointments" target="_blank" rel="noopener">Open Google Calendar</a>
+        <span class="label">Prefer email?</span>
+        <a href="mailto:hello@sagarsutaria.com?subject=Discovery%20call%20request" rel="noopener">hello@sagarsutaria.com</a>
       </div>
     </section>
 
