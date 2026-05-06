@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1200">
+<title>Fractional CTO: founder's guide — OG Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500;1,6..72,600&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  :root {
+    --paper: #F4F1EA;
+    --paper-elevated: #FBF8F0;
+    --ink: #2B2B2B;
+    --ink-2: #4A4A4A;
+    --ink-3: #7A7A7A;
+    --rule: rgba(43,43,43,0.16);
+    --rule-2: rgba(43,43,43,0.30);
+    --grid: rgba(43,43,43,0.06);
+    --blueprint: #1E3A8A;
+    --pencil: #DC2626;
+    --display: 'Newsreader', Georgia, serif;
+    --body: 'Inter Tight', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  body {
+    width: 1200px;
+    height: 630px;
+    background: var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 8px 8px;
+    font-family: var(--body);
+    color: var(--ink);
+    position: relative;
+    padding: 48px 72px 110px 72px;
+  }
+
+  .sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink-3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 14px;
+    margin-bottom: 32px;
+  }
+  .sheet-header .ss-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .sheet-header .ss {
+    border: 1.5px solid var(--ink);
+    padding: 4px 10px;
+    font-size: 14px;
+  }
+  .sheet-header .live::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--pencil);
+    margin-right: 10px;
+    vertical-align: 1px;
+  }
+  .sheet-header .live { color: var(--pencil); }
+  .sheet-header .meta-right { color: var(--ink-3); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1.45fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .left { padding-top: 4px; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--blueprint);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .eyebrow .dash {
+    flex: 0 0 28px;
+    height: 1.5px;
+    background: var(--blueprint);
+    opacity: 0.7;
+  }
+
+  .headline {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 50px;
+    line-height: 1.04;
+    letter-spacing: -0.022em;
+    color: var(--ink);
+    margin-bottom: 20px;
+    font-variation-settings: "opsz" 60;
+    max-width: 22ch;
+  }
+  .headline em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--blueprint);
+  }
+  .headline .stamped {
+    display: inline-block;
+    background: rgba(220,38,38,0.12);
+    border-bottom: 2px solid var(--pencil);
+    color: var(--pencil);
+    font-style: italic;
+    font-weight: 500;
+    padding: 0 6px;
+    transform: rotate(-1deg);
+  }
+
+  .tagline {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 1.42;
+    color: var(--ink-2);
+    max-width: 30ch;
+    font-variation-settings: "opsz" 24;
+  }
+
+  .spec {
+    background: var(--paper-elevated);
+    border: 1px solid var(--rule);
+    padding: 20px 22px;
+    position: relative;
+    margin-top: 8px;
+  }
+  .spec::before, .spec::after, .spec-bl, .spec-br {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid var(--ink);
+  }
+  .spec::before { top: -4px; left: -4px; border-right: none; border-bottom: none; }
+  .spec::after { top: -4px; right: -4px; border-left: none; border-bottom: none; }
+  .spec-bl { bottom: -4px; left: -4px; border-right: none; border-top: none; }
+  .spec-br { bottom: -4px; right: -4px; border-left: none; border-top: none; }
+  .spec-title {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-3);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding-bottom: 11px;
+    margin-bottom: 14px;
+    border-bottom: 1px dashed var(--rule);
+    display: flex;
+    justify-content: space-between;
+  }
+  .spec-title .pencil { color: var(--pencil); }
+  dl {
+    display: grid;
+    grid-template-columns: 86px 1fr;
+    gap: 8px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  dt { color: var(--ink-3); letter-spacing: 0.04em; }
+  dd { color: var(--ink); font-weight: 500; word-break: break-word; }
+  dd .v-blue { color: var(--blueprint); }
+  dd .v-pencil { color: var(--pencil); }
+
+  .footer-line {
+    position: absolute;
+    bottom: 36px;
+    left: 72px;
+    right: 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-3);
+    letter-spacing: 0.08em;
+    border-top: 1px solid var(--rule);
+    padding-top: 14px;
+  }
+  .footer-line .domain {
+    color: var(--ink);
+    font-weight: 500;
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+    font-size: 14px;
+  }
+  .scale-bar {
+    display: flex;
+    gap: 0;
+    align-items: end;
+  }
+  .scale-bar .seg {
+    width: 22px;
+    height: 8px;
+    border: 1px solid var(--ink);
+    border-right: none;
+  }
+  .scale-bar .seg:last-child { border-right: 1px solid var(--ink); }
+  .scale-bar .seg.fill { background: var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="sheet-header">
+  <span class="ss-mark"><span class="ss">S.S</span>SAGAR SUTARIA</span>
+  <span><span class="live">LIVE</span> &middot; AHMEDABAD &middot; OPERATING SINCE 2011</span>
+  <span class="meta-right">SHEET W-H1 &middot; HUB &middot; 2026</span>
+</div>
+
+<div class="grid">
+  <div class="left">
+    <div class="eyebrow"><span class="dash"></span>Founder&rsquo;s guide / five essays</div>
+    <h1 class="headline">Fractional CTO: <em>when</em>, <em>what it costs</em>, <em>what to verify</em>.</h1>
+    <p class="tagline">Five essays answering every question that comes up at every stage of the fractional CTO hiring decision.</p>
+  </div>
+
+  <aside class="spec">
+    <span class="spec-bl"></span>
+    <span class="spec-br"></span>
+    <div class="spec-title"><span>Spec card &middot; W-H1</span><span class="pencil">DIM. CHK</span></div>
+    <dl>
+      <dt>Read</dt><dd><span class="v-blue">5 ESSAYS</span></dd>
+      <dt>Published</dt><dd>MAY 2026</dd>
+      <dt>Topic</dt><dd>Fractional CTO</dd>
+      <dt>Slug</dt><dd>/writing/fractional-cto</dd>
+      <dt>Essays</dt><dd><span class="v-blue">W-01 &rarr; W-06</span></dd>
+    </dl>
+  </aside>
+</div>
+
+<div class="footer-line">
+  <span class="domain">sagarsutaria.com</span>
+  <span class="scale-bar">
+    <span class="seg fill"></span><span class="seg"></span><span class="seg fill"></span><span class="seg"></span><span class="seg fill"></span>
+  </span>
+  <span>SCALE 1:1 &middot; STUDIO: QUANTALYNK</span>
+</div>
+
+</body>
+</html>
