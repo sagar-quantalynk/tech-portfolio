@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","vxm9ehsfth");</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2102GJ5G7M"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-2102GJ5G7M");</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>In-house vs fractional vs agency: who should run your AI integration? | Sagar Sutaria</title>
+<meta name="description" content="Three paths for shipping an AI integration: hire an in-house ML engineer, retain a fractional CTO with a paid audit, or engage an agency. Honest comparison with cost bands, accountability, and the question that picks the path.">
+<link rel="canonical" href="https://sagarsutaria.com/writing/in-house-vs-fractional-vs-agency-ai-integration">
+<meta name="author" content="Sagar Sutaria">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sagarsutaria.com/writing/in-house-vs-fractional-vs-agency-ai-integration">
+<meta property="og:title" content="In-house vs fractional vs agency: who should run your AI integration?">
+<meta property="og:description" content="Three paths, one decision. Cost, accountability, and the question that picks the path for an angel-to-Series-A buyer.">
+<meta property="og:image" content="https://sagarsutaria.com/assets/in-house-vs-fractional-vs-agency-ai-integration-preview.png?v=1">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Sagar Sutaria">
+<meta property="article:author" content="Sagar Sutaria">
+<meta property="article:published_time" content="2026-05-06">
+<meta property="article:section" content="AI integration">
+<meta property="article:tag" content="AI integration">
+<meta property="article:tag" content="fractional CTO">
+<meta property="article:tag" content="in-house ML engineer">
+<meta property="article:tag" content="AI agency">
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:title" content="In-house vs fractional vs agency: who should run your AI integration?">
+<meta property="twitter:description" content="Three paths, one decision. Cost, accountability, and the question that picks the path.">
+<meta property="twitter:image" content="https://sagarsutaria.com/assets/in-house-vs-fractional-vs-agency-ai-integration-preview.png?v=1">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23F4F1EA'/><g stroke='%232B2B2B' stroke-width='2' fill='none'><rect x='22' y='28' width='56' height='44'/><line x1='22' y1='50' x2='78' y2='50'/></g><text x='50' y='44' font-family='monospace' font-size='14' text-anchor='middle' fill='%232B2B2B'>S.S</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,300;1,6..72,400;1,6..72,500&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"In-house vs fractional vs agency: who should run your AI integration?","description":"Three paths for shipping an AI integration: in-house ML engineer, fractional CTO with paid audit, or agency. Honest comparison with cost bands, accountability, and the working test.","author":{"@type":"Person","name":"Sagar Sutaria","url":"https://sagarsutaria.com","sameAs":["https://www.linkedin.com/in/sagar-sutaria"]},"publisher":{"@type":"Organization","name":"QuantaLynk","logo":{"@type":"ImageObject","url":"https://quantalynk.com/icon.svg"}},"datePublished":"2026-05-06","dateModified":"2026-05-06","mainEntityOfPage":{"@type":"WebPage","@id":"https://sagarsutaria.com/writing/in-house-vs-fractional-vs-agency-ai-integration"},"keywords":"in-house vs fractional vs agency AI integration, AI integration team, AI integration agency, in-house ML engineer, fractional CTO AI integration"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://sagarsutaria.com/"},{"@type":"ListItem","position":2,"name":"Writing","item":"https://sagarsutaria.com/writing/"},{"@type":"ListItem","position":3,"name":"In-house vs fractional vs agency for AI integration"}]}
+</script>
+
+<link rel="stylesheet" href="/assets/architectural-shell.css?v=7">
+<style>
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --paper:#F4F1EA;
+  --paper-elevated:#FBF8F0;
+  --paper-2:#EFEBE2;
+  --paper-3:#E9E4D5;
+  --ink:#2B2B2B;
+  --ink-2:#4A4A4A;
+  --ink-3:#7A7A7A;
+  --ink-4:#A0A0A0;
+  --line:rgba(43,43,43,0.16);
+  --line-2:rgba(43,43,43,0.30);
+  --rule:rgba(43,43,43,0.16);
+  --grid:rgba(43,43,43,0.06);
+  --blueprint:#1E3A8A;
+  --blueprint-soft:rgba(30,58,138,0.08);
+  --blueprint-deep:#0B1E50;
+  --pencil:#DC2626;
+  --pencil-soft:rgba(220,38,38,0.08);
+  --green:#16653A;
+  --green-soft:rgba(22,101,58,0.10);
+  --sienna:#1E3A8A;
+  --sienna-soft:rgba(30,58,138,0.08);
+  --sienna-deep:#0B1E50;
+  --accent:#1E3A8A;
+  --display:'Newsreader',Georgia,serif;
+  --body:'Inter Tight',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  --r:0; --max:920px; --max-narrow:680px; --pad:clamp(20px,4vw,48px);
+}
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 18px; line-height: 1.7; -webkit-font-smoothing: antialiased;  background-image:linear-gradient(rgba(43,43,43,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(43,43,43,0.06) 1px,transparent 1px);background-size:8px 8px;}
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--sienna); color: var(--paper); }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--pad); }
+.wrap-narrow { max-width: var(--max-narrow); margin: 0 auto; padding: 0 var(--pad); }
+.brand { font-family: var(--display); font-weight: 600; font-size: 19px; letter-spacing: -0.01em; }
+.brand em { color: var(--sienna); font-style: italic; font-weight: 600; }
+.back { font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; transition: color 150ms; }
+.back:hover { color: var(--sienna); }
+article { padding: clamp(48px,7vw,96px) 0 0; }
+.crumb { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; color: var(--ink-3); margin-bottom: 28px; }
+.crumb a { color: var(--ink-3); transition: color 150ms; }
+.crumb a:hover { color: var(--sienna); }
+h1 { font-family: var(--display); font-weight: 700; font-size: clamp(34px, 5.2vw, 54px); line-height: 1.05; letter-spacing: -0.022em; margin-bottom: 20px; color: var(--ink); }
+h1 em { color: var(--sienna); font-style: italic; font-weight: 700; }
+.lede { font-size: 21px; line-height: 1.5; color: var(--ink-2); margin-bottom: 32px; }
+.byline { font-family: var(--mono); font-size: 12px; color: var(--ink-3); letter-spacing: 0.04em; padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 0; display: flex; gap: 16px; flex-wrap: wrap; }
+.byline strong { color: var(--ink); font-weight: 500; }
+.tldr { background: var(--sienna-soft); border-left: 4px solid var(--sienna); padding: 28px 32px; margin: 36px 0 48px; }
+.tldr h2 { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sienna); margin-bottom: 14px; }
+.tldr p { font-size: 18px; color: var(--ink); margin: 0; line-height: 1.55; }
+.tldr p strong { color: var(--ink); font-weight: 700; background: rgba(30,58,138,0.10); padding: 1px 6px; border-radius: 3px; }
+article p { margin-bottom: 22px; color: var(--ink-2); max-width: 65ch; }
+article p strong { color: var(--ink); font-weight: 600; }
+article a { color: var(--sienna); border-bottom: 1px solid currentColor; transition: opacity 150ms; }
+article a:hover { opacity: 0.7; }
+article h2 { font-family: var(--display); font-weight: 700; font-size: clamp(26px, 3.8vw, 34px); line-height: 1.15; letter-spacing: -0.018em; margin: 56px 0 16px; color: var(--ink); }
+article h2 em { font-style: italic; color: var(--sienna); font-weight: 700; }
+article h3 { font-family: var(--display); font-weight: 600; font-size: 22px; line-height: 1.25; margin: 32px 0 12px; color: var(--ink); }
+article ul { margin: 12px 0 24px; padding-left: 22px; }
+article ul li { margin-bottom: 8px; color: var(--ink-2); }
+
+/* Three-shape cards */
+.shapes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin: 24px 0 36px; }
+@media (max-width:880px) { .shapes { grid-template-columns: 1fr; } }
+.shape-card { padding: 24px 26px; background: var(--paper-2); border-top: 4px solid var(--ink); }
+.shape-card.fractional { border-top-color: var(--sienna); }
+.shape-card.agency { border-top-color: var(--pencil); }
+.shape-card .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px; }
+.shape-card h4 { font-family: var(--display); font-weight: 700; font-size: 19px; line-height: 1.2; color: var(--ink); margin-bottom: 12px; }
+.shape-card p.shape-lede { font-size: 14.5px; color: var(--ink-2); line-height: 1.5; margin-bottom: 14px; max-width: none; }
+.shape-card ul { list-style: none; padding: 0; margin: 0; }
+.shape-card ul li { padding: 6px 0 6px 22px; position: relative; font-size: 14px; color: var(--ink-2); line-height: 1.5; margin: 0; }
+.shape-card ul li::before { content: "+"; position: absolute; left: 0; top: 6px; color: var(--ink); font-family: var(--mono); font-weight: 500; }
+.shape-card.fractional ul li::before { color: var(--sienna); }
+.shape-card.agency ul li::before { color: var(--pencil); }
+
+/* Comparison matrix table */
+.matrix { width: 100%; margin: 24px 0 36px; border: 1px solid var(--line); background: var(--paper-2); border-collapse: collapse; }
+.matrix th, .matrix td { padding: 18px 20px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+.matrix th:last-child, .matrix td:last-child { border-right: none; }
+.matrix tr:last-child td { border-bottom: none; }
+.matrix thead th { background: var(--paper-3); border-bottom: 2px solid var(--line); font-family: var(--display); font-weight: 700; font-size: 16px; color: var(--ink); padding: 22px 20px; }
+.matrix thead th .sub { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); font-weight: 400; margin-top: 4px; }
+.matrix tbody th { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; background: rgba(43,43,43,0.02); width: 22%; }
+.matrix tbody td strong { color: var(--ink); font-weight: 500; }
+.matrix-wrap { margin: 24px 0 36px; }
+@media (max-width:760px) {
+  .matrix, .matrix thead, .matrix tbody, .matrix tr, .matrix th, .matrix td { display: block; }
+  .matrix thead { display: none; }
+  .matrix tbody tr { border-bottom: 2px solid var(--line); padding: 0; }
+  .matrix tbody tr:last-child { border-bottom: none; }
+  .matrix tbody th, .matrix tbody td { width: 100%; border-right: none; padding: 12px 18px; }
+  .matrix tbody th { background: var(--paper-3); border-bottom: 1px solid var(--line); padding-top: 16px; }
+  .matrix tbody td { border-bottom: 1px solid var(--line); }
+  .matrix tbody td::before { content: attr(data-label); display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
+  .matrix tbody td:last-child { border-bottom: none; }
+}
+
+/* When-each block */
+.when-each { display: grid; grid-template-columns: 1fr; gap: 22px; margin: 24px 0 36px; }
+.when-card { padding: 22px 26px; background: var(--paper-2); border-left: 4px solid var(--ink); }
+.when-card.fractional { border-left-color: var(--sienna); }
+.when-card.agency { border-left-color: var(--pencil); }
+.when-card .tag { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
+.when-card h4 { font-family: var(--display); font-weight: 700; font-size: 19px; line-height: 1.2; color: var(--ink); margin-bottom: 10px; }
+.when-card ul { margin: 0; padding-left: 0; list-style: none; }
+.when-card ul li { padding: 5px 0 5px 22px; position: relative; font-size: 15px; color: var(--ink-2); line-height: 1.5; margin: 0; }
+.when-card ul li::before { content: ">"; position: absolute; left: 0; top: 5px; color: var(--ink); font-family: var(--mono); font-weight: 500; }
+.when-card.fractional ul li::before { color: var(--sienna); }
+.when-card.agency ul li::before { color: var(--pencil); }
+
+/* Working test */
+.test-flow { background: var(--paper-2); border: 1px solid var(--line); padding: 28px clamp(20px,3vw,32px); margin: 24px 0 36px; }
+.test-question { font-family: var(--display); font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 14px; line-height: 1.4; }
+.test-answer { padding: 12px 16px; border-left: 3px solid var(--sienna); background: rgba(30,58,138,0.05); margin-bottom: 14px; font-size: 15px; color: var(--ink-2); line-height: 1.55; }
+.test-answer.inhouse { border-left-color: var(--ink); background: rgba(43,43,43,0.04); }
+.test-answer.agency { border-left-color: var(--pencil); background: rgba(220,38,38,0.05); }
+.test-answer:last-child { margin-bottom: 0; }
+.test-answer strong { color: var(--ink); font-weight: 600; }
+
+/* Disclosure block */
+.disclaimer { margin: 36px 0; padding: 18px 22px; background: rgba(43,43,43,0.04); border-left: 3px solid var(--ink-3); font-size: 14.5px; color: var(--ink-3); line-height: 1.6; }
+.disclaimer strong { color: var(--ink); font-weight: 600; }
+
+.cta-block { margin: 56px 0 0; padding: 36px 32px; background: var(--ink); color: var(--paper); }
+.cta-block h3 { font-family: var(--display); font-weight: 700; font-size: 24px; line-height: 1.15; color: var(--paper); margin-bottom: 12px; }
+.cta-block h3 em { color: #C7B6E6; font-style: italic; }
+.cta-block p { color: rgba(244,241,234,0.78); margin-bottom: 22px; font-size: 16px; line-height: 1.55; max-width: none; }
+.cta-block a { display: inline-block; background: var(--sienna); color: var(--paper); font-size: 14px; font-weight: 500; padding: 12px 22px; border-radius: var(--r); border-bottom: none; transition: opacity 200ms; }
+.cta-block a:hover { opacity: 0.85; }
+.related { margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--line); }
+.related h4 { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 16px; }
+.related ul { list-style: none; padding: 0; }
+.related li { padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 16px; }
+.related li:last-child { border-bottom: none; }
+.related a { color: var(--ink); border-bottom: none; }
+.related a:hover { color: var(--sienna); }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap-chrome nav-inner">
+    <a href="/" class="nav-brand"><span class="ss">S.S</span>Sagar Sutaria</a>
+    <span class="nav-coords"><span class="live">Live</span> &middot; Ahmedabad &middot; Operating since 2011</span>
+    <div class="nav-links">
+      <a href="/#shapes">Shapes</a>
+      <a href="/writing/" data-nav="writing">Writing</a>
+      <a href="/#work" data-nav="work">Work</a>
+      <a href="/#about">About</a>
+      <a href="https://quantalynk.com" title="QuantaLynk Technologies Private Limited">Studio</a>
+      <a href="/#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+<div class="wrap-chrome"><div class="sheet-meta">
+      <span><strong>Sheet W-11</strong> &middot; Comparison</span>
+      <span class="ref">In-house vs fractional vs agency for AI integration</span>
+      <span class="rev">2026 &middot; REV. 1</span>
+    </div></div>
+
+<article>
+  <div class="wrap-narrow">
+    <div class="crumb"><a href="/">Home</a> &nbsp;/&nbsp; <a href="/writing/">Writing</a> &nbsp;/&nbsp; In-house vs fractional vs agency for AI integration</div>
+
+    <h1>In-house vs fractional vs agency: <em>who should run your AI integration?</em></h1>
+    <p class="lede">Three paths for shipping the AI feature on your roadmap. Hire an in-house ML engineer. Retain a fractional CTO whose first deliverable is a paid audit. Engage an agency. They are not interchangeable, and the decision is not about cost. It is about who is responsible when the integration stalls in week six.</p>
+    <div class="byline">
+      <span><strong>Sagar Sutaria</strong></span>
+      <span>Published 6 May 2026</span>
+      <span>10 min read</span>
+    </div>
+
+    <p>Disclosure first, since the rest of the essay reads in light of it. I have hired in-house ML engineers, run AI integrations as a fractional CTO, and bought from agencies as a client. I currently sell the fractional path through <a href="https://quantalynk.com" title="QuantaLynk Technologies Private Limited">QuantaLynk</a>. The point of this comparison is to give you the working test, not to push you to fractional. The recommendation at the end concedes where in-house wins and where agency wins. If your situation matches one of those concessions, take that path.</p>
+
+    <div class="tldr">
+      <h2>TLDR</h2>
+      <p>For an angel-to-Series-A company with <strong>one</strong> AI integration on the roadmap and a founder who can hold a 90-minute architectural conversation, the fractional path with a paid audit usually wins on cost, time-to-first-value, and accountability. <strong>In-house</strong> wins post-Series-B when AI is product, not feature. <strong>Agency</strong> wins when integrations run in parallel across teams, or when the founder has zero capacity to manage a vendor relationship and needs a project manager contractually on the hook.</p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <h2>The three <em>shapes</em>.</h2>
+  </div>
+
+  <div class="wrap-narrow">
+    <p>Buyers conflate these three because the SERP groups them. They are not the same shape of help. The first decision is shape, not vendor.</p>
+  </div>
+
+  <div class="wrap">
+    <div class="shapes">
+      <div class="shape-card">
+        <span class="tag">Headcount model</span>
+        <h4>In-house ML engineer</h4>
+        <p class="shape-lede">A senior engineer with ML or applied-AI experience on payroll. Reports to the founder or to the head of engineering. Owns architecture, build, and ongoing operation.</p>
+        <ul>
+          <li>Salary band 140 to 220K total comp, EU senior</li>
+          <li>12 to 16 week ramp before first ship</li>
+          <li>Owns architecture and operates the integration</li>
+          <li>You manage them; they manage themselves between sprints</li>
+          <li>One person, one calendar, one risk vector</li>
+        </ul>
+      </div>
+      <div class="shape-card fractional">
+        <span class="tag">Retainer model</span>
+        <h4>Fractional CTO + paid audit</h4>
+        <p class="shape-lede">A senior operator who runs point on the integration on retainer. The engagement opens with a 2-week paid audit. Build follows, fixed scope, milestone holdback.</p>
+        <ul>
+          <li>Audit from 8K, 2 weeks. Build from 25K, 6 to 10 weeks</li>
+          <li>First deliverable in week 2 (the audit), shipped feature 6 to 12 weeks later</li>
+          <li>Owns architecture and decision velocity</li>
+          <li>Subcontracts to senior engineers for build hands</li>
+          <li>One accountable counterparty, written SOW</li>
+        </ul>
+      </div>
+      <div class="shape-card agency">
+        <span class="tag">Vendor model</span>
+        <h4>AI agency</h4>
+        <p class="shape-lede">A 30 to 80 person AI shop, or a named AI practice inside a larger consultancy. Engagement runs against a SOW with a delivery PM, lead engineer, and supporting bench.</p>
+        <ul>
+          <li>Engagement band 80 to 250K, 3 to 6 months</li>
+          <li>4 to 8 weeks from contract to first ship</li>
+          <li>PM contractually on the hook for delivery</li>
+          <li>Bench depth handles parallel workstreams</li>
+          <li>Change orders billed; scope locked at SOW</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>The <em>matrix</em>.</h2>
+  </div>
+
+  <div class="wrap">
+    <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th>Axis</th>
+          <th>In-house ML engineer<span class="sub">Headcount</span></th>
+          <th>Fractional CTO + audit<span class="sub">Retainer</span></th>
+          <th>AI agency<span class="sub">Vendor</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Cost band, first integration</th>
+          <td data-label="In-house"><strong>180 to 280K</strong> all-in (salary, benefits, ramp). Compounds over time, not down.</td>
+          <td data-label="Fractional + audit"><strong>33 to 60K</strong> total (10K audit + 25 to 50K build). Stops when the build stops.</td>
+          <td data-label="Agency"><strong>80 to 250K</strong> for the engagement. Often higher in regulated verticals or with named-PM premiums.</td>
+        </tr>
+        <tr>
+          <th scope="row">Time to first shipped feature</th>
+          <td data-label="In-house">14 to 20 weeks. 6 to 8 weeks hiring + 4 to 6 onboarding + 4 to 6 building.</td>
+          <td data-label="Fractional + audit">8 to 14 weeks. 2 weeks audit, 6 to 12 weeks build. No hiring lag.</td>
+          <td data-label="Agency">10 to 16 weeks. 2 to 4 weeks contracting, 6 to 10 weeks build, plus procurement cycle if you have one.</td>
+        </tr>
+        <tr>
+          <th scope="row">Ownership and IP</th>
+          <td data-label="In-house">Yours by default. The person stays, the code stays.</td>
+          <td data-label="Fractional + audit">Yours, contracted in the SOW. Code, prompts, eval suites transferred at acceptance.</td>
+          <td data-label="Agency">Yours per contract, but agencies often retain right-to-reuse on patterns and scaffolding. Check the SOW carefully.</td>
+        </tr>
+        <tr>
+          <th scope="row">Key-person risk</th>
+          <td data-label="In-house"><strong>High.</strong> Single point of failure. If they leave in month 9 the integration goes dark.</td>
+          <td data-label="Fractional + audit">Medium. The fractional has 2 to 3 other clients but a written handoff plan. The build engineers are subcontracted, replaceable.</td>
+          <td data-label="Agency">Low to medium. Bench depth, but the lead engineer rotates and product memory ages quickly.</td>
+        </tr>
+        <tr>
+          <th scope="row">Failure accountability</th>
+          <td data-label="In-house">The engineer reports to you. If the model regresses, you find out from the dashboard, not the engineer.</td>
+          <td data-label="Fractional + audit">Single counterparty, fixed-scope, 20% milestone holdback at acceptance. Their next month's invoice is on the line.</td>
+          <td data-label="Agency">PM is contractually accountable. Real recourse if the SOW is well-written. Scope-creep disputes are common.</td>
+        </tr>
+        <tr>
+          <th scope="row">Scale-out path (integration #2 onward)</th>
+          <td data-label="In-house">Strong. The engineer becomes the in-house ML lead and hires under them.</td>
+          <td data-label="Fractional + audit">Sequential, not parallel. Fits 2 to 3 integrations a year. Past that, the retainer caps the bandwidth.</td>
+          <td data-label="Agency">Strongest for parallel. Bench scales sideways. Cost scales with it.</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2>When <em>each one wins</em>.</h2>
+  </div>
+
+  <div class="wrap-narrow">
+    <p>The matrix is structured. The honest version of the recommendation is unstructured. Each path wins in a specific shape of company.</p>
+
+    <div class="when-each">
+      <div class="when-card fractional">
+        <span class="tag">Default for the cohort</span>
+        <h4>Fractional + audit wins when</h4>
+        <ul>
+          <li>You are angel through Series A, with one AI integration on the roadmap and no other live AI work.</li>
+          <li>The founder or a senior engineer can hold a 90-minute architectural conversation without a translator.</li>
+          <li>You want a written assessment before you commit to a build (the audit is a qualified-out gate, not a sales pitch).</li>
+          <li>You want fixed scope, milestone holdback, and one accountable counterparty rather than time-and-materials billing.</li>
+          <li>You expect 1 to 3 AI integrations over the next 18 months, not 5+.</li>
+        </ul>
+      </div>
+
+      <div class="when-card">
+        <span class="tag">Past a clear threshold</span>
+        <h4>In-house ML engineer wins when</h4>
+        <ul>
+          <li>You are post-Series-B and AI is product, not feature. The integration is the first of many that will be operated by the same team.</li>
+          <li>Your roadmap names a model-research arm, fine-tuning workstream, or evaluation infrastructure that runs continuously.</li>
+          <li>You have an existing engineering org of 8+ that can absorb the new hire without disrupting existing delivery.</li>
+          <li>You are comfortable with 14 to 20 weeks before first ship because the long-term cost curve flattens.</li>
+          <li>Your data, models, or domain are too proprietary to run through a vendor relationship.</li>
+        </ul>
+      </div>
+
+      <div class="when-card agency">
+        <span class="tag">Two narrow shapes</span>
+        <h4>An AI agency wins when</h4>
+        <ul>
+          <li>You have multiple AI integrations running in parallel across product teams and you need a delivery PM contractually on the hook for each.</li>
+          <li>You are a non-technical founder with no engineering team, no senior contractor on staff, and no capacity to absorb the architectural conversation. Fractional fails here. The agency model assumes nothing of the buyer.</li>
+          <li>You have institutional procurement that requires a multi-headcount vendor on the master services agreement.</li>
+          <li>The first AI integration was attempted internally and stalled. The second attempt benefits from PM discipline more than from senior architectural judgment.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>The <em>working test</em>.</h2>
+
+    <p>The matrix and the wins-when blocks are scaffolding. The actual decision usually collapses to one question.</p>
+
+    <div class="test-flow">
+      <div class="test-question">Q1: How many AI integrations will your company ship in the next 18 months?</div>
+      <div class="test-answer"><strong>One.</strong> Fractional + audit. The economics of in-house do not pencil for one ship. The contracting overhead and bench cost of an agency does not either. A 2-week audit followed by a 6 to 10 week build, with milestone holdback, is the shape that fits.</div>
+      <div class="test-answer agency"><strong>Two to four, sequential.</strong> Fractional still wins. A single retainer covers the architectural through-line across integrations. Cost stays linear, not stepwise.</div>
+      <div class="test-answer agency"><strong>Two to four, parallel across product teams.</strong> Agency wins. The bench handles parallelism, the PM holds the through-line. Fractional caps at sequential.</div>
+      <div class="test-answer inhouse"><strong>Five or more, or AI is the product.</strong> In-house. Hire the ML lead, build the team under them, scope the first integration as their onboarding project. Fractional and agency are both wrong shapes at this volume.</div>
+    </div>
+
+    <h2>What the matrix <em>doesn't say</em>.</h2>
+
+    <p>Three things the comparison glosses that change the call in real engagements.</p>
+
+    <p><strong>The audit is a qualifier, not a contract.</strong> The 2-week audit at the head of the fractional path is not a sales gate. It is a paid deliverable: a written assessment of feasibility, cost band, named risks, and a go/no-go recommendation. Half of the audits in my experience produce a "do not build this yet" or "build this differently" recommendation. The audit costs less than the contracted hours of a senior in-house hire's first month. If you can afford 8 to 12K to find out whether the integration is worth doing at all, the audit is structurally cheaper than committing to any of the three paths blind. <a href="/services/ai-integration">More on the audit shape and what's in scope</a>.</p>
+
+    <p><strong>Cost is more variable than the matrix suggests.</strong> RAG integrations land around 25 to 35K on the fractional path, agentic workflows 35 to 50K, regulated verticals add 10 to 20K of compliance overhead. Agency engagement bands shift more dramatically by vertical and by named PM. The cost essay covers the variance in detail; <a href="/writing/what-ai-integration-actually-costs">read the breakdown there</a> rather than re-litigating it on this page. The matrix's cost row is a band, not a quote.</p>
+
+    <p><strong>Regulated industries change the math twice.</strong> First, all three paths get more expensive (compliance review, audit trails, evaluation overhead). Second, the agency premium often pays for itself because regulated agencies have named compliance practices and the contracts are structured to absorb regulator-facing risk. <a href="/writing/ai-integration-in-regulated-industries">The regulated-industries essay</a> covers the multipliers and where the audit-first fractional path still works inside HIPAA, GDPR-Article-22, and SR 11-7 environments. If you are in finance, healthcare, or legal, do not pick a path based on this essay alone.</p>
+
+    <h2>Pricing, <em>side by side</em>.</h2>
+
+    <p>Numbers a buyer can actually plug into a finance model. Same scope across the three paths: a single RAG-backed AI feature for a SaaS product, no fine-tuning, EU compliance baseline, ship to production with an evaluation harness.</p>
+
+    <p><strong>In-house.</strong> Hire a senior ML engineer at €170K base + 30K benefits + 10K equipment and tooling = €210K year-one. They start week 8 (hiring lag), ramp to first commit at week 12, ship the integration around week 18. The integration costs the company €210K of payroll plus the opportunity cost of the founder's hiring time. Cost in year two is €210K to operate one integration.</p>
+
+    <p><strong>Fractional + audit.</strong> €10K audit week 1 to 2. €30 to 45K build weeks 3 to 12 (depending on RAG complexity). €5 to 10K stabilization in weeks 13 to 14. Total €45 to 65K across roughly 14 calendar weeks. Operations after handoff is the founder's existing team, not a recurring cost. <a href="/pricing/ai-integration">Public pricing here</a>.</p>
+
+    <p><strong>Agency.</strong> €120 to 180K for a 14-week engagement with a delivery PM, lead engineer, and bench depth. Includes scoping (weeks 1 to 3), build (weeks 4 to 11), and stabilization (weeks 12 to 14). Operations after handoff is a separate support contract, typically €4 to 8K/month if you want SLAs.</p>
+
+    <p>The price comparison flatters fractional at 1x scope and flatters in-house and agency at higher scopes. If you only ever ship one integration, fractional is roughly a third of in-house and roughly half of an agency. If you ship five integrations across 18 months, in-house is the cheapest of the three. The matrix axis that separates the three is integration count, not unit price.</p>
+
+    <h2>The <em>bait</em> in this decision.</h2>
+
+    <p>Buyers fall into a fourth shape that looks like the right answer and is not. <strong>The AI strategy advisory retainer.</strong> A consultant or boutique firm at €4 to 6K per month, no build attached, no audit, no SOW. You get monthly slide decks, a vendor short-list, and a roadmap. The integration never ships because nobody on the retainer has hands on the codebase.</p>
+
+    <p>Three signs you are about to buy advisory-only when you needed build:</p>
+    <ul>
+      <li>The contract has no fixed deliverable past month one.</li>
+      <li>The advisor has not asked to see the actual product or codebase.</li>
+      <li>"AI strategy" appears in the SOW without "AI integration" appearing.</li>
+    </ul>
+
+    <p>If your roadmap names an AI feature, the engagement should ship that feature. Advisory without build is the worst of both worlds: cost without code. None of the three paths in this essay are advisory-only. All three put a shipped feature on the table.</p>
+
+    <h2>What this <em>doesn't replace</em>.</h2>
+
+    <p>This essay decides path, not provider. Once you know whether you need fractional, agency, or in-house, the second decision (which fractional, which agency, which engineer) is a different essay. <a href="/tools/ai-readiness-scorecard">The AI readiness scorecard</a> is the working tool for the next step: it scores your situation across feasibility, data readiness, team capacity, and integration risk before you spend on any of the three paths. If the scorecard shows red on data readiness or team capacity, the path question is premature.</p>
+
+    <div class="disclaimer">
+      <strong>Disclosure.</strong> This essay is written by Sagar Sutaria, who runs the fractional path through <a href="https://quantalynk.com" title="QuantaLynk Technologies Private Limited">QuantaLynk</a>. The intent is to help you pick the right path, not to push you to the fractional one. If you are post-Series-B with a multi-integration roadmap, hire in-house. If you are running parallel integrations across product teams, engage an agency. If you are a non-technical founder with no engineering bench, the agency model assumes less of you than the fractional model does. The fractional + audit path is the right answer for the angel-to-Series-A buyer with one integration ahead and a founder who can hold the architectural conversation. That is roughly the cohort sagarsutaria.com is written for. If your situation matches a different concession, take that path; the working test above is calibrated to tell you which.
+    </div>
+
+    <div class="cta-block">
+      <h3>Sitting on one AI integration <em>and reading this</em>.</h3>
+      <p>The fractional + audit path opens with a 2-week paid audit: feasibility, cost band, named risks, go/no-go. If the audit says do not build, you saved a build budget. If it says build, you have the architecture, vendor short-list, and evaluation strategy on paper before contracts are signed. First call is 30 minutes.</p>
+      <a href="/services/ai-integration">View the audit and integration scope &rarr;</a>
+    </div>
+
+    <div class="related">
+      <h4>Related</h4>
+      <ul>
+        <li><a href="/writing/what-ai-integration-actually-costs">What an AI integration actually costs in 2026</a></li>
+        <li><a href="/writing/ai-integration-in-regulated-industries">AI integration in regulated industries</a></li>
+        <li><a href="/services/ai-integration">Service: AI integration audit and roadmap</a></li>
+        <li><a href="/pricing/ai-integration">Pricing: AI integration audit and build</a></li>
+        <li><a href="/tools/ai-readiness-scorecard">Tool: AI readiness scorecard</a></li>
+        <li><a href="/writing/fractional-cto-vs-full-time-cto">Fractional CTO vs full-time CTO: when each makes sense</a></li>
+        <li><a href="/writing/quantalynk-vs-toptal">QuantaLynk vs Toptal: when each makes sense</a></li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<footer class="site-footer">
+  <div class="wrap-chrome site-footer-row">
+    <div class="legend">
+      <div class="row"><span class="swatch ink"></span><span>Ink &middot; primary stroke</span></div>
+      <div class="row"><span class="swatch blueprint"></span><span>Blueprint &middot; active / link</span></div>
+      <div class="row"><span class="swatch pencil"></span><span>Pencil &middot; emphasis / annotation</span></div>
+      <div class="row"><span class="swatch dash"></span><span>Dashed &middot; provisional / future</span></div>
+    </div>
+    <div class="scale-bar">
+      <div class="bar"><span class="seg fill"></span><span class="seg"></span><span class="seg fill"></span><span class="seg"></span><span class="seg fill"></span></div>
+      <span style="font-size: 10px; color: var(--ink-3);">SCALE 1:1 &middot; 2026 &middot; <a href="https://quantalynk.com" title="QuantaLynk Technologies Private Limited">QuantaLynk</a></span>
+    </div>
+  </div>
+  <div class="wrap-chrome meta-line">&copy; 2026 Sagar Sutaria &middot; Operating from Ahmedabad, India &middot; Drawn by hand</div>
+</footer>
+
+</body>
+</html>
