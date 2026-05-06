@@ -147,6 +147,9 @@ h1.headline .stamped {
 .btn-stamp:hover { background: var(--blueprint); border-color: var(--blueprint); }
 .btn-line { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); border-bottom: 1px solid var(--ink); padding-bottom: 1px; transition: all 250ms; }
 .btn-line:hover { color: var(--blueprint); border-color: var(--blueprint); }
+.hero-tertiary { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.04em; margin-top: 14px; }
+.hero-tertiary a { color: var(--ink-3); border-bottom: 1px dotted var(--ink-4); padding-bottom: 1px; transition: color 200ms; }
+.hero-tertiary a:hover { color: var(--blueprint); border-color: var(--blueprint); }
 
 /* SVG diagram block */
 .diagram { background: var(--paper); border: 1px solid var(--rule-2); padding: 20px; position: relative; }
@@ -358,13 +361,15 @@ svg .label-display { font-family: 'Newsreader', serif; font-size: 14px; fill: va
       <div class="hero-text">
         <h1 class="headline">Senior <em>judgment,</em> not <span class="stamped">headcount.</span></h1>
         <div class="intro">
+          <p><strong>Most engagements start with a 2 week audit. &euro;10K. Refundable after kickoff.</strong> Then integration, build, or retainer follow.</p>
           <p>I help founders and CTOs ship the work that compounds. AI features that hold up in production. Platforms that survive the second year. Architectural calls that do not have to be unwound at Series A.</p>
-          <p>Three engagement shapes. <strong>AI integration from &euro;25K. Build engagements from &euro;30K, capped at &euro;60K. Advisory retainer from &euro;8K per month.</strong> Three to four engagements per quarter, no more.</p>
+          <p>Three engagement shapes after the audit. <strong>AI integration from &euro;25K. Build engagements from &euro;30K, capped at &euro;60K. Advisory retainer from &euro;8K per month.</strong> Three to four engagements per quarter, no more.</p>
         </div>
         <div class="hero-cta">
-          <a href="#contact" class="btn-stamp">Book a 30 min call</a>
-          <a href="/should-i-hire-a-fractional-cto" class="btn-line">Or run the fit check &rarr;</a>
+          <a href="/book/" class="btn-stamp">Book a 30 min call</a>
+          <a href="/services/ai-integration" class="btn-line">Start with the &euro;10K audit &rarr;</a>
         </div>
+        <p class="hero-tertiary"><a href="/should-i-hire-a-fractional-cto">Or run the fit check first.</a></p>
       </div>
 
       <figure class="diagram" aria-label="System diagram of the studio">
